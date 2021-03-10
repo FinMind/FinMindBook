@@ -1,10 +1,11 @@
 import datetime
+import io
 import time
 import typing
-import io
+
 import pandas as pd
 import requests
-from pydantic import BaseModel, validator
+from pydantic import BaseModel
 
 
 def futures_header():
