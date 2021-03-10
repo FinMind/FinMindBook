@@ -37,7 +37,7 @@ def clear_data(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def colname_zh2en(df: pd.DataFrame, colname: typing.List[str]):
+def colname_zh2en(df: pd.DataFrame, colname: typing.List[str]) -> pd.DataFrame:
     """ 資料欄位轉換, 英文有助於我們接下來存入資料庫 """
     taiwan_stock_price = {
         "證券代號": "StockID",
