@@ -151,4 +151,5 @@ def main():
         df = clear_data(df.copy())
         # 檢查資料型態
         df = check_schema(df.copy())
+        # 這邊先暫時存成 file，下個章節將會上傳資料庫
         df.to_csv(f"taiwan_stock_price_twse_{date}.csv", index=False)
