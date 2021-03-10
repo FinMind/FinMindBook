@@ -2,7 +2,7 @@ version: '3.3'
 services:
 
   mysql:
-      image: mysql:latest
+      image: mysql:8.0
       ports:  # docker publish port 3306 to 3306 (將 docker 內部 ip 3306, 跟外部 3306 做連結)
           - 3306:3306
         # - target: 3306
@@ -23,7 +23,7 @@ services:
           - dev
 
   phpmyadmin:
-      image: phpmyadmin/phpmyadmin:latest
+      image: phpmyadmin/phpmyadmin:5.1.0
       links: 
           - mysql:db
       ports:
