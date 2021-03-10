@@ -5,20 +5,8 @@ import time
 from pydantic import BaseModel
 
 
-class TaiwanStockPrice(BaseModel):
-    StockID: str
-    TradeVolume: int
-    Transaction: int
-    TradeValue: int
-    Open: float
-    Max: float
-    Min: float
-    Close: float
-    Change: float
-    date: str
-
-
 def clear_data(df: pd.DataFrame) -> pd.DataFrame:
+    """資料清理, 將文字轉成數字"""
     df["Dir"] = df["Dir"].str.split(">").str[1].str.split("<").str[0]
     df["Change"] = df["Dir"] + df["Change"]
     df["Change"] = (
@@ -50,6 +38,7 @@ def clear_data(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def colname_zh2en(df: pd.DataFrame, colname: typing.List[str]):
+    """ 資料欄位轉換, 英文有助於我們接下來存入資料庫 """
     taiwan_stock_price = {
         "證券代號": "StockID",
         "證券名稱": "",
@@ -73,6 +62,7 @@ def colname_zh2en(df: pd.DataFrame, colname: typing.List[str]):
 
 
 def twse_header():
+    """網頁瀏覽時, 所帶的 request header 參數, 模仿瀏覽器發送 request"""
     return {
         "Accept": "application/json, text/javascript, */*; q=0.01",
         "Accept-Encoding": "gzip, deflate",
@@ -86,10 +76,13 @@ def twse_header():
 
 
 def crawler_twse(date: str) -> pd.DataFrame:
+    """證交所網址 https://www.twse.com.tw/zh/page/trading/exchange/MI_INDEX.html"""
+    # headers 中的 Request url
     url = "https://www.twse.com.tw/exchangeReport/MI_INDEX?response=json&date={date}&type=ALL"
     url = url.format(date=date.replace("-", ""))
-    # 避免被證交所 ban ip
+    # 避免被證交所 ban ip, 在每次爬蟲時, 先 sleep 5 秒
     time.sleep(5)
+    # request method
     res = requests.get(url, headers=twse_header())
     df = pd.DataFrame(res.json()["data9"])
     colname = res.json()["fields9"]
@@ -98,11 +91,27 @@ def crawler_twse(date: str) -> pd.DataFrame:
     # 資料清理
     df = clear_data(df.copy())
     df["date"] = date
+    # 檢查資料型態
     df = check_schema(df.copy())
     return df
 
 
+class TaiwanStockPrice(BaseModel):
+    StockID: str
+    TradeVolume: int
+    Transaction: int
+    TradeValue: int
+    Open: float
+    Max: float
+    Min: float
+    Close: float
+    Change: float
+    date: str
+
+
 def check_schema(df: pd.DataFrame) -> pd.DataFrame:
+    """ 檢查資料型態, 確保每次要上傳資料庫前, 型態正確 """
+
     df_dict = df.to_dict("r")
     df_schema = [TaiwanStockPrice(**dd).__dict__ for dd in df_dict]
     df = pd.DataFrame(df_schema)
