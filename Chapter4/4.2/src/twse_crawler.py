@@ -1,7 +1,9 @@
-import requests
-import pandas as pd
-import typing
+import datetime
 import time
+import typing
+
+import pandas as pd
+import requests
 from pydantic import BaseModel
 
 
@@ -84,15 +86,28 @@ def crawler_twse(date: str) -> pd.DataFrame:
     time.sleep(5)
     # request method
     res = requests.get(url, headers=twse_header())
-    df = pd.DataFrame(res.json()["data9"])
-    colname = res.json()["fields9"]
+    # 2009 年以後的資料, 股價在 response 中的 data9
+    # 2009 年以後的資料, 股價在 response 中的 data8
+    # 不同格式, 在證交所的資料中, 是很常見的,
+    # 沒資料的情境也要考慮進去，例如現在週六沒有交易，但在 2007 年週六是有交易的
+    try:
+        if "data9" in res.json():
+            df = pd.DataFrame(res.json()["data9"])
+            colname = res.json()["fields9"]
+
+        elif "data8" in res.json():
+            df = pd.DataFrame(res.json()["data8"])
+            colname = res.json()["fields8"]
+        elif res.json()["stat"] in ["查詢日期小於93年2月11日，請重新查詢!", "很抱歉，沒有符合條件的資料!"]:
+            return pd.DataFrame()
+    except BaseException:
+        return pd.DataFrame()
+
+    if len(df) == 0:
+        return pd.DataFrame()
     # 欄位中英轉換
     df = colname_zh2en(df.copy(), colname)
-    # 資料清理
-    df = clear_data(df.copy())
     df["date"] = date
-    # 檢查資料型態
-    df = check_schema(df.copy())
     return df
 
 
@@ -111,12 +126,29 @@ class TaiwanStockPrice(BaseModel):
 
 def check_schema(df: pd.DataFrame) -> pd.DataFrame:
     """ 檢查資料型態, 確保每次要上傳資料庫前, 型態正確 """
-
     df_dict = df.to_dict("r")
     df_schema = [TaiwanStockPrice(**dd).__dict__ for dd in df_dict]
     df = pd.DataFrame(df_schema)
     return df
 
 
+def gen_date_list(start_date: str) -> typing.List[str]:
+    start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
+    end_date = datetime.date.today()
+    days = (end_date - start_date).days + 1
+    date_list = [
+        str(start_date + datetime.timedelta(days=day)) for day in range(days)
+    ]
+    return date_list
+
+
 def main():
-    df = crawler_twse("2021-03-09")
+    """ 證交所寫明, ※ 本資訊自民國93年2月11日起提供 """
+    date_list = gen_date_list("2004-02-11")
+    for date in date_list:
+        df = crawler_twse(date)
+        # 資料清理
+        df = clear_data(df.copy())
+        # 檢查資料型態
+        df = check_schema(df.copy())
+        df.to_csv(f"taiwan_stock_price_twse_{date}.csv", index=False)

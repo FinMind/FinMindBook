@@ -1,6 +1,9 @@
-import requests
-import pandas as pd
+import datetime
 import time
+import typing
+
+import pandas as pd
+import requests
 from pydantic import BaseModel
 
 
@@ -28,7 +31,7 @@ def clear_data(df: pd.DataFrame) -> pd.DataFrame:
             .str.replace(" ", "")
             .str.replace("除權息", "0")
             .str.replace("除息", "0")
-            .str.replace("除權", "0")    
+            .str.replace("除權", "0")
         )
     return df
 
@@ -78,16 +81,18 @@ def crawler_tpex(date: str) -> pd.DataFrame:
     time.sleep(5)
     # request method
     res = requests.get(url, headers=tpex_header())
-    df = pd.DataFrame(res.json()["aaData"])
+    data = res.json().get("aaData", "")
+    if not data:
+        return pd.DataFrame()
+    df = pd.DataFrame(data)
+
+    if len(df) == 0:
+        return pd.DataFrame()
     # 櫃買中心回傳的資料, 並無資料欄位, 因此這裡我們直接用 index 取特定欄位
     df = df[[0, 2, 3, 4, 5, 6, 7, 8, 9]]
     # 欄位中英轉換
     df = set_column(df.copy())
-    # 資料清理
-    df = clear_data(df.copy())
     df["date"] = date
-    # 檢查資料型態
-    df = check_schema(df.copy())
     return df
 
 
@@ -112,5 +117,23 @@ def check_schema(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def gen_date_list(start_date: str) -> typing.List[str]:
+    start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
+    end_date = datetime.date.today()
+    days = (end_date - start_date).days + 1
+    date_list = [
+        str(start_date + datetime.timedelta(days=day)) for day in range(days)
+    ]
+    return date_list
+
+
 def main():
-    df = crawler_twse("2021-03-09")
+    """ 櫃買中心寫明, 本資訊自民國96年7月起開始提供 """
+    date_list = gen_date_list("2007-07-01")
+    for date in date_list:
+        df = crawler_tpex(date)
+        # 資料清理
+        df = clear_data(df.copy())
+        # 檢查資料型態
+        df = check_schema(df.copy())
+        df.to_csv(f"taiwan_stock_price_tpex_{date}.csv", index=False)
