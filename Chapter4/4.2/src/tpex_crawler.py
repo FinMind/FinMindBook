@@ -8,7 +8,7 @@ from pydantic import BaseModel
 
 
 def clear_data(df: pd.DataFrame) -> pd.DataFrame:
-    """資料清理, 將文字轉成數字"""
+    """ 資料清理, 將文字轉成數字 """
     for col in [
         "TradeVolume",
         "Transaction",
@@ -53,7 +53,7 @@ def set_column(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def tpex_header():
-    """網頁瀏覽時, 所帶的 request header 參數, 模仿瀏覽器發送 request"""
+    """ 網頁瀏覽時, 所帶的 request header 參數, 模仿瀏覽器發送 request """
     return {
         "Accept": "application/json, text/javascript, */*; q=0.01",
         "Accept-Encoding": "gzip, deflate",
@@ -73,7 +73,10 @@ def convert_date(date: str) -> str:
 
 
 def crawler_tpex(date: str) -> pd.DataFrame:
-    """櫃買中心網址 https://www.tpex.org.tw/web/stock/aftertrading/otc_quotes_no1430/stk_wn1430.php?l=zh-tw"""
+    """ 
+    櫃買中心網址 
+    https://www.tpex.org.tw/web/stock/aftertrading/otc_quotes_no1430/stk_wn1430.php?l=zh-tw
+    """
     # headers 中的 Request url
     url = "https://www.tpex.org.tw/web/stock/aftertrading/otc_quotes_no1430/stk_wn1430_result.php?l=zh-tw&d={date}&se=AL"
     url = url.format(date=convert_date(date))

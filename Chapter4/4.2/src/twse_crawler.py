@@ -8,7 +8,7 @@ from pydantic import BaseModel
 
 
 def clear_data(df: pd.DataFrame) -> pd.DataFrame:
-    """資料清理, 將文字轉成數字"""
+    """ 資料清理, 將文字轉成數字 """
     df["Dir"] = df["Dir"].str.split(">").str[1].str.split("<").str[0]
     df["Change"] = df["Dir"] + df["Change"]
     df["Change"] = (
@@ -64,7 +64,7 @@ def colname_zh2en(df: pd.DataFrame, colname: typing.List[str]) -> pd.DataFrame:
 
 
 def twse_header():
-    """網頁瀏覽時, 所帶的 request header 參數, 模仿瀏覽器發送 request"""
+    """ 網頁瀏覽時, 所帶的 request header 參數, 模仿瀏覽器發送 request """
     return {
         "Accept": "application/json, text/javascript, */*; q=0.01",
         "Accept-Encoding": "gzip, deflate",
@@ -78,7 +78,10 @@ def twse_header():
 
 
 def crawler_twse(date: str) -> pd.DataFrame:
-    """證交所網址 https://www.twse.com.tw/zh/page/trading/exchange/MI_INDEX.html"""
+    """ 
+    證交所網址 
+    https://www.twse.com.tw/zh/page/trading/exchange/MI_INDEX.html 
+    """
     # headers 中的 Request url
     url = "https://www.twse.com.tw/exchangeReport/MI_INDEX?response=json&date={date}&type=ALL"
     url = url.format(date=date.replace("-", ""))
@@ -133,6 +136,7 @@ def check_schema(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def gen_date_list(start_date: str) -> typing.List[str]:
+    """ 建立時間列表, 用於爬取所有資料 """
     start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
     end_date = datetime.date.today()
     days = (end_date - start_date).days + 1
