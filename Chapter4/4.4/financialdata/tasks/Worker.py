@@ -3,13 +3,8 @@ import socket
 import typing
 
 import pymysql
-from celery import Celery
+from celery import Celery, Task
 from loguru import logger
-
-try:
-    from celery.task import Task
-except:
-    from celery import Task
 
 
 class CallbackTask(Task):

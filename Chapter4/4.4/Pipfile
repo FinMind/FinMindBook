@@ -11,6 +11,9 @@ requests = "*"
 pydantic = "*"
 celery = "*"
 sqlalchemy = "*"
+financialdata = {editable = true,path = "."}
+pymysql = "*"
+loguru = "*"
 
 [requires]
 python_version = "3.6"
