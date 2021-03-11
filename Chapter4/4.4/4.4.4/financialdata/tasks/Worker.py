@@ -3,6 +3,7 @@ import socket
 import typing
 
 import pymysql
+from financialdata.backend import db
 from celery import Celery, Task
 from loguru import logger
 
@@ -13,7 +14,7 @@ class CallbackTask(Task):
     ):
         logger.info(f"retry: {args}")
         crawler_new = getattr(
-            importlib.import_module("financialdata.Tasks.task"), "crawler_new"
+            importlib.import_module("financialdata.tasks.task"), "crawler_new"
         )
         dataset = args[0]
         parameter = args[1]
@@ -46,8 +47,8 @@ class CallbackTask(Task):
 
 
 app = Celery(
-    "Tasks",
-    include="financialdata.Tasks.task",
+    "tasks",
+    include="financialdata.tasks.task",
     # backend='rpc://',
     broker='pyamqp://worker:worker@localhost:5672/',
 )

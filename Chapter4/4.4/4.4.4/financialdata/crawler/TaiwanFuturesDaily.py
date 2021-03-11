@@ -5,7 +5,6 @@ import typing
 
 import pandas as pd
 import requests
-from pydantic import BaseModel
 
 
 def futures_header():
@@ -105,50 +104,37 @@ def crawler_futures(date: str) -> pd.DataFrame:
     return df
 
 
-class TaiwanFuturesDaily(BaseModel):
-    date: str
-    FuturesID: str
-    ContractDate: str
-    Open: float
-    Max: float
-    Min: float
-    Close: float
-    Change: float
-    ChangePer: float
-    Volume: float
-    SettlementPrice: float
-    OpenInterest: int
-    TradingSession: str
-
-
-def check_schema(df: pd.DataFrame) -> pd.DataFrame:
-    """ 檢查資料型態, 確保每次要上傳資料庫前, 型態正確 """
-    df_dict = df.to_dict("r")
-    df_schema = [TaiwanFuturesDaily(**dd).__dict__ for dd in df_dict]
-    df = pd.DataFrame(df_schema)
-    return df
-
-
-def gen_date_list(start_date: str) -> typing.List[str]:
-    """ 建立時間列表, 用於爬取所有資料 """
+def gen_parameter_list(history: bool) -> typing.Dict[str, typing.List[str]]:
+    """ 建立時間列表, 用於爬取所有資料, 這時有兩種狀況
+    1. 抓取歷史資料
+    2. 每日更新
+    因此, 爬蟲日期列表, 根據 history 參數進行判斷
+    """
+    if history:
+        # 1. 抓取歷史資料
+        start_date = "1999-01-01"
+    else:
+        # 2. 每日更新
+        start_date = str(datetime.date.today())
     start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
     end_date = datetime.date.today()
     days = (end_date - start_date).days + 1
-    date_list = [
-        str(start_date + datetime.timedelta(days=day)) for day in range(days)
+    parameter_list = [
+        dict(date=str(start_date + datetime.timedelta(days=day)))
+        for day in range(days)
     ]
-    return date_list
+    return parameter_list
 
 
-def main():
-    date_list = gen_date_list("1999-01-01")
-    for date in date_list:
-        df = crawler_futures(date)
-        # 欄位中英轉換
-        df = colname_zh2en(df.copy())
-        # 資料清理
-        df = clean_data(df.copy())
-        # 檢查資料型態
-        df = check_schema(df.copy())
-        # 這邊先暫時存成 file，下個章節將會上傳資料庫
-        df.to_csv(f"taiwan_futures_price_{date}.csv", index=False)
+def crawler(
+    parameter: typing.Dict[str, typing.List[typing.Union[str, int, float]]]
+) -> pd.DataFrame:
+    date = parameter.get("date", "")
+    df = crawler_futures(date)
+    # 欄位中英轉換
+    df = colname_zh2en(df.copy())
+    # 資料清理
+    df = clean_data(df.copy())
+    # # 檢查資料型態
+    # df = check_schema(df.copy())
+    return df
