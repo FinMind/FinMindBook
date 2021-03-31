@@ -9,6 +9,7 @@ verify_ssl = true
 pandas = "*"
 requests = "*"
 pydantic = "*"
+loguru = "*"
 
 [requires]
 python_version = "3.6"

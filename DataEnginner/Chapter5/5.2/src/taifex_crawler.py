@@ -1,10 +1,12 @@
 import datetime
 import io
+import sys
 import time
 import typing
 
 import pandas as pd
 import requests
+from loguru import logger
 from pydantic import BaseModel
 
 
@@ -129,10 +131,10 @@ def check_schema(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def gen_date_list(start_date: str) -> typing.List[str]:
+def gen_date_list(start_date: str, end_date: str) -> typing.List[str]:
     """ 建立時間列表, 用於爬取所有資料 """
     start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
-    end_date = datetime.date.today()
+    end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d").date()
     days = (end_date - start_date).days + 1
     date_list = [
         str(start_date + datetime.timedelta(days=day)) for day in range(days)
@@ -140,15 +142,22 @@ def gen_date_list(start_date: str) -> typing.List[str]:
     return date_list
 
 
-def main():
-    date_list = gen_date_list("1999-01-01")
+def main(start_date: str, end_date: str):
+    date_list = gen_date_list(start_date, end_date)
     for date in date_list:
+        logger.info(date)
         df = crawler_futures(date)
-        # 欄位中英轉換
-        df = colname_zh2en(df.copy())
-        # 資料清理
-        df = clean_data(df.copy())
-        # 檢查資料型態
-        df = check_schema(df.copy())
-        # 這邊先暫時存成 file，下個章節將會上傳資料庫
-        df.to_csv(f"taiwan_futures_price_{date}.csv", index=False)
+        if len(df) > 0:
+            # 欄位中英轉換
+            df = colname_zh2en(df.copy())
+            # 資料清理
+            df = clean_data(df.copy())
+            # 檢查資料型態
+            df = check_schema(df.copy())
+            # 這邊先暫時存成 file，下個章節將會上傳資料庫
+            df.to_csv(f"taiwan_futures_price_{date}.csv", index=False)
+
+
+if __name__ == "__main__":
+    start_date, end_date = sys.argv[1:]
+    main(start_date, end_date)

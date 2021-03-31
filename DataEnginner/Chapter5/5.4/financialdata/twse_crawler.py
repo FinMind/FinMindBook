@@ -1,9 +1,11 @@
 import datetime
+import sys
 import time
 import typing
-import sys
+
 import pandas as pd
 import requests
+from loguru import logger
 from pydantic import BaseModel
 
 
@@ -89,6 +91,9 @@ def crawler_twse(date: str) -> pd.DataFrame:
     time.sleep(5)
     # request method
     res = requests.get(url, headers=twse_header())
+    if res.json()["stat"] == "很抱歉，沒有符合條件的資料!":
+        # 如果 date 是周末，會回傳很抱歉，沒有符合條件的資料!
+        return pd.DataFrame()
     # 2009 年以後的資料, 股價在 response 中的 data9
     # 2009 年以後的資料, 股價在 response 中的 data8
     # 不同格式, 在證交所的資料中, 是很常見的,
@@ -97,7 +102,6 @@ def crawler_twse(date: str) -> pd.DataFrame:
         if "data9" in res.json():
             df = pd.DataFrame(res.json()["data9"])
             colname = res.json()["fields9"]
-
         elif "data8" in res.json():
             df = pd.DataFrame(res.json()["data8"])
             colname = res.json()["fields8"]
@@ -135,10 +139,10 @@ def check_schema(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def gen_date_list(start_date: str) -> typing.List[str]:
+def gen_date_list(start_date: str, end_date: str) -> typing.List[str]:
     """ 建立時間列表, 用於爬取所有資料 """
     start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
-    end_date = datetime.date.today()
+    end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d").date()
     days = (end_date - start_date).days + 1
     date_list = [
         str(start_date + datetime.timedelta(days=day)) for day in range(days)
@@ -146,19 +150,21 @@ def gen_date_list(start_date: str) -> typing.List[str]:
     return date_list
 
 
-def main(date: str):
+def main(start_date: str, end_date: str):
     """ 證交所寫明, ※ 本資訊自民國93年2月11日起提供 """
-    date_list = gen_date_list(date)
+    date_list = gen_date_list(start_date, end_date)
     for date in date_list:
+        logger.info(date)
         df = crawler_twse(date)
-        # 資料清理
-        df = clear_data(df.copy())
-        # 檢查資料型態
-        df = check_schema(df.copy())
-        # 這邊先暫時存成 file，下個章節將會上傳資料庫
-        df.to_csv(f"taiwan_stock_price_twse_{date}.csv", index=False)
+        if len(df) > 0:
+            # 資料清理
+            df = clear_data(df.copy())
+            # 檢查資料型態
+            df = check_schema(df.copy())
+            # 這邊先暫時存成 file，下個章節將會上傳資料庫
+            df.to_csv(f"taiwan_stock_price_twse_{date}.csv", index=False)
 
 
-if __name__ == '__main__':
-    date = sys.argv[1:]
-    main(date)
+if __name__ == "__main__":
+    start_date, end_date = sys.argv[1:]
+    main(start_date, end_date)
