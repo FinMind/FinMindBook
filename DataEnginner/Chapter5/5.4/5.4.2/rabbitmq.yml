@@ -1,0 +1,27 @@
+version: '3'
+services:
+
+  rabbitmq:
+    image: 'rabbitmq:3.6-management-alpine'
+    ports: # docker publish port 5672/15672 to 5672/15672 (將 docker 內部 ip 5672/15672, 跟外部 5672/15672 做連結)
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      RABBITMQ_DEFAULT_USER: "worker"
+      RABBITMQ_DEFAULT_PASS: "worker"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    networks:
+      - dev
+
+  flower:
+    image: mher/flower:0.9.5
+    command: ["flower", "--broker=amqp://worker:worker@rabbitmq", "--port=5555"]
+    ports: # docker publish port 5555 to 5555 (將 docker 內部 ip 5555, 跟外部 5555 做連結)
+      - 5555:5555
+    depends_on:
+      - rabbitmq
+    networks:
+      - dev
+
+networks:
+  dev:
