@@ -7,7 +7,7 @@
     pipenv sync
 
 ### run worker
-    pipenv run celery -A Worker worker --loglevel=info
+    pipenv run celery -A worker worker --loglevel=info
 
 ### sent task
-    pipenv run python Producer.py
+    pipenv run python producer.py
