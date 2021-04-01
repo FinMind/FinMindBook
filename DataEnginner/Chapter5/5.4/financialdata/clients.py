@@ -1,22 +1,17 @@
-import config
 from sqlalchemy import create_engine, engine
 
 
 def get_mysql_financialdata_conn() -> engine.base.Connection:
-    address = (
-        f"mysql+pymysql://{config.MYSQL_DATA_USER}:{config.MYSQL_DATA_PASSWORD}"
-        f"@{config.MYSQL_DATA_HOST}:{config.MYSQL_DATA_PORT}/{config.MYSQL_DATA_DATABASE}"
-    )
+    """
+        user: root
+        password: test
+        host: localhost
+        port: 3306
+        database: financialdata
+        如果有實體 IP，以上設定可以自行更改
+    """
+    address = "mysql+pymysql://root:test@localhost:3306/financialdata"
     engine = create_engine(address)
     connect = engine.connect()
     return connect
 
-
-def get_mysql_monitor_conn() -> engine.base.Connection:
-    address = (
-        f"mysql+pymysql://{config.MYSQL_MONITOR_USER}:{config.MYSQL_MONITOR_PASSWORD}"
-        f"@{config.MYSQL_MONITOR_HOST}:{config.MYSQL_MONITOR_PORT}/{config.MYSQL_MONITOR_DATABASE}"
-    )
-    engine = create_engine(address)
-    connect = engine.connect()
-    return connect
