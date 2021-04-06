@@ -1,4 +1,4 @@
-# FinMindBook 4.4.3
+# FinMindBook 5.5.4
 
 ### run rabbitmq
     docker-compose -f rabbitmq.yml up -d
