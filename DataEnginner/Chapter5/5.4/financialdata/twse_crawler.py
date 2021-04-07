@@ -7,6 +7,7 @@ import pandas as pd
 import requests
 from loguru import logger
 from pydantic import BaseModel
+from financialdata.router import Router
 
 
 def clear_data(df: pd.DataFrame) -> pd.DataFrame:
