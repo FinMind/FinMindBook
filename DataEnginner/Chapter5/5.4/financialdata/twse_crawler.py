@@ -114,7 +114,7 @@ def crawler_twse(date: str) -> pd.DataFrame:
         return pd.DataFrame()
     # 欄位中英轉換
     df = colname_zh2en(df.copy(), colname)
-    df["date"] = date
+    df["Date"] = date
     return df
 
 
@@ -128,7 +128,7 @@ class TaiwanStockPrice(BaseModel):
     Min: float
     Close: float
     Change: float
-    date: str
+    Date: str
 
 
 def check_schema(df: pd.DataFrame) -> pd.DataFrame:

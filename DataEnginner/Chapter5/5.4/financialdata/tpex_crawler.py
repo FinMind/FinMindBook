@@ -97,7 +97,7 @@ def crawler_tpex(date: str) -> pd.DataFrame:
     df = df[[0, 2, 3, 4, 5, 6, 7, 8, 9]]
     # 欄位中英轉換
     df = set_column(df.copy())
-    df["date"] = date
+    df["Date"] = date
     return df
 
 
@@ -111,7 +111,7 @@ class TaiwanStockPrice(BaseModel):
     Min: float
     Close: float
     Change: float
-    date: str
+    Date: str
 
 
 def check_schema(df: pd.DataFrame) -> pd.DataFrame:
