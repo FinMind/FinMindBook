@@ -7,6 +7,8 @@ import pandas as pd
 import requests
 from loguru import logger
 from pydantic import BaseModel
+from tqdm import tqdm
+
 from financialdata.router import Router
 
 
@@ -81,9 +83,9 @@ def twse_header():
 
 
 def crawler_twse(date: str) -> pd.DataFrame:
-    """ 
-    證交所網址 
-    https://www.twse.com.tw/zh/page/trading/exchange/MI_INDEX.html 
+    """
+    證交所網址
+    https://www.twse.com.tw/zh/page/trading/exchange/MI_INDEX.html
     """
     # headers 中的 Request url
     url = "https://www.twse.com.tw/exchangeReport/MI_INDEX?response=json&date={date}&type=ALL"
@@ -154,16 +156,26 @@ def gen_date_list(start_date: str, end_date: str) -> typing.List[str]:
 def main(start_date: str, end_date: str):
     """ 證交所寫明, ※ 本資訊自民國93年2月11日起提供 """
     date_list = gen_date_list(start_date, end_date)
-    for date in date_list:
+    db_router = Router()
+    for date in tqdm(date_list):
         logger.info(date)
-        df = crawler_twse(date)
+        df = crawler_twse(date=date)
         if len(df) > 0:
             # 資料清理
             df = clear_data(df.copy())
             # 檢查資料型態
             df = check_schema(df.copy())
-            # 這邊先暫時存成 file，下個章節將會上傳資料庫
-            df.to_csv(f"taiwan_stock_price_twse_{date}.csv", index=False)
+            # upload db
+            try:
+                df.to_sql(
+                    name="TaiwanStockPrice",
+                    con=db_router.mysql_financialdata_conn,
+                    if_exists="append",
+                    index=False,
+                    chunksize=1000
+                )
+            except Exception as e:
+                logger.info(e)
 
 
 if __name__ == "__main__":

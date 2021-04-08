@@ -8,6 +8,9 @@ import pandas as pd
 import requests
 from loguru import logger
 from pydantic import BaseModel
+from tqdm import tqdm
+
+from financialdata.router import Router
 
 
 def futures_header():
@@ -144,7 +147,8 @@ def gen_date_list(start_date: str, end_date: str) -> typing.List[str]:
 
 def main(start_date: str, end_date: str):
     date_list = gen_date_list(start_date, end_date)
-    for date in date_list:
+    db_router = Router()
+    for date in tqdm(date_list):
         logger.info(date)
         df = crawler_futures(date)
         if len(df) > 0:
@@ -154,9 +158,17 @@ def main(start_date: str, end_date: str):
             df = clean_data(df.copy())
             # 檢查資料型態
             df = check_schema(df.copy())
-            # 這邊先暫時存成 file，下個章節將會上傳資料庫
-            df.to_csv(f"taiwan_futures_price_{date}.csv", index=False)
-
+            # upload db
+            try:
+                df.to_sql(
+                    name="TaiwanFutures",
+                    con=db_router.mysql_financialdata_conn,
+                    if_exists="append",
+                    index=False,
+                    chunksize=1000
+                )
+            except Exception as e:
+                logger.info(e)
 
 if __name__ == "__main__":
     start_date, end_date = sys.argv[1:]
