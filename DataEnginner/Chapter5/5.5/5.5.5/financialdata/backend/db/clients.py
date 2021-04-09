@@ -10,13 +10,3 @@ def get_mysql_financialdata_conn() -> engine.base.Connection:
     engine = create_engine(address)
     connect = engine.connect()
     return connect
-
-
-def get_mysql_monitor_conn() -> engine.base.Connection:
-    address = (
-        f"mysql+pymysql://{config.MYSQL_MONITOR_USER}:{config.MYSQL_MONITOR_PASSWORD}"
-        f"@{config.MYSQL_MONITOR_HOST}:{config.MYSQL_MONITOR_PORT}/{config.MYSQL_MONITOR_DATABASE}"
-    )
-    engine = create_engine(address)
-    connect = engine.connect()
-    return connect

@@ -4,25 +4,26 @@ import typing
 
 import pandas as pd
 import requests
+from pydantic import BaseModel
 
 
-def gen_date_list(history: bool) -> typing.List[str]:
-    """ 建立時間列表, 用於爬取所有資料, 這時有兩種狀況
-    1. 抓取歷史資料
-    2. 每日更新
-    因此, 爬蟲日期列表, 根據 history 參數進行判斷
-    """
-    if history:
-        # 1. 抓取歷史資料
-        start_date = "2004-02-11"
-    else:
-        # 2. 每日更新
-        start_date = str(datetime.date.today())
+def is_weekend(day: int) -> bool:
+    return day in [0, 6]
+
+
+def gen_task_paramter_list(start_date: str, end_date: str) -> typing.List[str]:
     start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
-    end_date = datetime.date.today()
+    end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d").date()
     days = (end_date - start_date).days + 1
     date_list = [
-        str(start_date + datetime.timedelta(days=day)) for day in range(days)
+        start_date + datetime.timedelta(days=day) for day in range(days)
+    ]
+    # 排除掉周末非交易日
+    date_list = [
+        dict(date=str(d), data_source=data_source)
+        for d in date_list
+        for data_source in ["twse", "tpex"]
+        if not is_weekend(d.weekday())
     ]
     return date_list
 
@@ -207,6 +208,27 @@ def convert_date(date: str) -> str:
     return f"{year}/{month}/{day}"
 
 
+class TaiwanStockPrice(BaseModel):
+    StockID: str
+    TradeVolume: int
+    Transaction: int
+    TradeValue: int
+    Open: float
+    Max: float
+    Min: float
+    Close: float
+    Change: float
+    Date: str
+
+
+def check_schema(df: pd.DataFrame) -> pd.DataFrame:
+    """ 檢查資料型態, 確保每次要上傳資料庫前, 型態正確 """
+    df_dict = df.to_dict("r")
+    df_schema = [TaiwanStockPrice(**dd).__dict__ for dd in df_dict]
+    df = pd.DataFrame(df_schema)
+    return df
+
+
 def crawler(
     parameter: typing.Dict[str, typing.List[typing.Union[str, int, float]]]
 ) -> pd.DataFrame:
@@ -216,4 +238,5 @@ def crawler(
         df = crawler_twse(date)
     elif data_source == "tpex":
         df = crawler_tpex(date)
+    df = check_schema(df)
     return df
