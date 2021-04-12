@@ -5,6 +5,7 @@ import typing
 
 import pandas as pd
 import requests
+from financialdata.schema.dataset import check_schema
 
 
 def futures_header():
@@ -136,5 +137,5 @@ def crawler(
     # 資料清理
     df = clean_data(df.copy())
     # # 檢查資料型態
-    # df = check_schema(df.copy())
+    df = check_schema(df.copy(), dataset="TaiwanFuturesDaily")
     return df

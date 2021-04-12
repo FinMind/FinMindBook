@@ -4,7 +4,6 @@ import typing
 import redis
 from loguru import logger
 from sqlalchemy import engine
-
 from financialdata.backend.db import clients
 
 
@@ -21,12 +20,20 @@ def check_connect_alive(
             check_alive(connect)
             return connect
         except Exception as e:
-            logger.info(f"{connect_func.__name__} reconnect, error: {e}")
+            logger.info(
+                f"""
+                {connect_func.__name__} reconnect, error: {e}
+                """
+            )
             time.sleep(1)
             try:
                 connect = connect_func()
             except Exception as e:
-                logger.info(f"{connect_func.__name__} connect error")
+                logger.info(
+                    f"""
+                    {connect_func.__name__} connect error, error: {e}
+                    """
+                )
             return check_connect_alive(connect, connect_func)
 
 
@@ -43,3 +50,6 @@ class Router:
     @property
     def mysql_financialdata_conn(self):
         return self.check_mysql_financialdata_conn_alive()
+
+    def close_connection(self):
+        self._mysql_financialdata_conn.close()

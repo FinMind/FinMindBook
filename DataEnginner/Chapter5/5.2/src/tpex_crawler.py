@@ -80,7 +80,11 @@ def crawler_tpex(date: str) -> pd.DataFrame:
     https://www.tpex.org.tw/web/stock/aftertrading/otc_quotes_no1430/stk_wn1430.php?l=zh-tw
     """
     # headers 中的 Request url
-    url = "https://www.tpex.org.tw/web/stock/aftertrading/otc_quotes_no1430/stk_wn1430_result.php?l=zh-tw&d={date}&se=AL"
+    url = (
+        "https://www.tpex.org.tw/web/stock/aftertrading/"
+        "otc_quotes_no1430/stk_wn1430_result.php?"
+        "l=zh-tw&d={date}&se=AL"
+    )
     url = url.format(date=convert_date(date))
     # 避免被櫃買中心 ban ip, 在每次爬蟲時, 先 sleep 5 秒
     time.sleep(5)
@@ -116,7 +120,7 @@ class TaiwanStockPrice(BaseModel):
 
 def check_schema(df: pd.DataFrame) -> pd.DataFrame:
     """ 檢查資料型態, 確保每次要上傳資料庫前, 型態正確 """
-    df_dict = df.to_dict("r")
+    df_dict = df.to_dict("records")
     df_schema = [TaiwanStockPrice(**dd).__dict__ for dd in df_dict]
     df = pd.DataFrame(df_schema)
     return df

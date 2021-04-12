@@ -4,7 +4,8 @@ import typing
 
 import pandas as pd
 import requests
-from pydantic import BaseModel
+from loguru import logger
+from financialdata.schema.dataset import check_schema
 
 
 def is_weekend(day: int) -> bool:
@@ -147,7 +148,7 @@ def crawler_tpex(date: str) -> pd.DataFrame:
     df = df[[0, 2, 3, 4, 5, 6, 7, 8, 9]]
     # 欄位中英轉換
     df = set_column(df.copy())
-    df["date"] = date
+    df["Date"] = date
     df = clear_data(df.copy())
     return df
 
@@ -185,7 +186,7 @@ def crawler_twse(date: str) -> pd.DataFrame:
         return pd.DataFrame()
     # 欄位中英轉換
     df = colname_zh2en(df.copy(), colname)
-    df["date"] = date
+    df["Date"] = date
     df = convert_change(df.copy())
     df = clear_data(df.copy())
     return df
@@ -208,35 +209,15 @@ def convert_date(date: str) -> str:
     return f"{year}/{month}/{day}"
 
 
-class TaiwanStockPrice(BaseModel):
-    StockID: str
-    TradeVolume: int
-    Transaction: int
-    TradeValue: int
-    Open: float
-    Max: float
-    Min: float
-    Close: float
-    Change: float
-    Date: str
-
-
-def check_schema(df: pd.DataFrame) -> pd.DataFrame:
-    """ 檢查資料型態, 確保每次要上傳資料庫前, 型態正確 """
-    df_dict = df.to_dict("r")
-    df_schema = [TaiwanStockPrice(**dd).__dict__ for dd in df_dict]
-    df = pd.DataFrame(df_schema)
-    return df
-
-
 def crawler(
     parameter: typing.Dict[str, typing.List[typing.Union[str, int, float]]]
 ) -> pd.DataFrame:
+    logger.info(parameter)
     date = parameter.get("date", "")
     data_source = parameter.get("data_source", "")
     if data_source == "twse":
         df = crawler_twse(date)
     elif data_source == "tpex":
         df = crawler_tpex(date)
-    df = check_schema(df)
+    df = check_schema(df.copy(), dataset="TaiwanStockPrice")
     return df

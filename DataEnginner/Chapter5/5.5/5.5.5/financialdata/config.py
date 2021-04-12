@@ -10,5 +10,4 @@ WORKER_ACCOUNT = os.environ.get("WORKER_ACCOUNT", "worker")
 WORKER_PASSWORD = os.environ.get("WORKER_PASSWORD", "worker")
 
 MESSAGE_QUEUE_HOST = os.environ.get("MESSAGE_QUEUE_HOST", "127.0.0.1")
-MESSAGE_QUEUE_PORT = int(os.environ.get("MESSAGE_QUEUE_PORT", "6379"))
-
+MESSAGE_QUEUE_PORT = int(os.environ.get("MESSAGE_QUEUE_PORT", "5672"))

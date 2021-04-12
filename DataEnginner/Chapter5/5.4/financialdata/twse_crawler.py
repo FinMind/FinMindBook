@@ -44,7 +44,10 @@ def clear_data(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def colname_zh2en(df: pd.DataFrame, colname: typing.List[str]) -> pd.DataFrame:
+def colname_zh2en(
+    df: pd.DataFrame, 
+    colname: typing.List[str]
+    ) -> pd.DataFrame:
     """ 資料欄位轉換, 英文有助於我們接下來存入資料庫 """
     taiwan_stock_price = {
         "證券代號": "StockID",
@@ -88,7 +91,10 @@ def crawler_twse(date: str) -> pd.DataFrame:
     https://www.twse.com.tw/zh/page/trading/exchange/MI_INDEX.html
     """
     # headers 中的 Request url
-    url = "https://www.twse.com.tw/exchangeReport/MI_INDEX?response=json&date={date}&type=ALL"
+    url = (
+        "https://www.twse.com.tw/exchangeReport/MI_INDEX"
+        "?response=json&date={date}&type=ALL"
+    )
     url = url.format(date=date.replace("-", ""))
     # 避免被證交所 ban ip, 在每次爬蟲時, 先 sleep 5 秒
     time.sleep(5)
@@ -108,7 +114,10 @@ def crawler_twse(date: str) -> pd.DataFrame:
         elif "data8" in res.json():
             df = pd.DataFrame(res.json()["data8"])
             colname = res.json()["fields8"]
-        elif res.json()["stat"] in ["查詢日期小於93年2月11日，請重新查詢!", "很抱歉，沒有符合條件的資料!"]:
+        elif res.json()["stat"] in [
+            "查詢日期小於93年2月11日，請重新查詢!", 
+            "很抱歉，沒有符合條件的資料!"
+        ]:
             return pd.DataFrame()
     except BaseException:
         return pd.DataFrame()
@@ -136,7 +145,7 @@ class TaiwanStockPrice(BaseModel):
 
 def check_schema(df: pd.DataFrame) -> pd.DataFrame:
     """ 檢查資料型態, 確保每次要上傳資料庫前, 型態正確 """
-    df_dict = df.to_dict("r")
+    df_dict = df.to_dict("records")
     df_schema = [TaiwanStockPrice(**dd).__dict__ for dd in df_dict]
     df = pd.DataFrame(df_schema)
     return df
@@ -148,7 +157,8 @@ def gen_date_list(start_date: str, end_date: str) -> typing.List[str]:
     end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d").date()
     days = (end_date - start_date).days + 1
     date_list = [
-        str(start_date + datetime.timedelta(days=day)) for day in range(days)
+        str(start_date + datetime.timedelta(days=day)) 
+        for day in range(days)
     ]
     return date_list
 

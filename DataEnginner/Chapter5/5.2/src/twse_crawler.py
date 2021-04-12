@@ -80,12 +80,15 @@ def twse_header():
 
 
 def crawler_twse(date: str) -> pd.DataFrame:
-    """ 
-    證交所網址 
-    https://www.twse.com.tw/zh/page/trading/exchange/MI_INDEX.html 
+    """
+    證交所網址
+    https://www.twse.com.tw/zh/page/trading/exchange/MI_INDEX.html
     """
     # headers 中的 Request url
-    url = "https://www.twse.com.tw/exchangeReport/MI_INDEX?response=json&date={date}&type=ALL"
+    url = (
+        "https://www.twse.com.tw/exchangeReport/MI_INDEX"
+        "?response=json&date={date}&type=ALL"
+    )
     url = url.format(date=date.replace("-", ""))
     # 避免被證交所 ban ip, 在每次爬蟲時, 先 sleep 5 秒
     time.sleep(5)
@@ -133,7 +136,7 @@ class TaiwanStockPrice(BaseModel):
 
 def check_schema(df: pd.DataFrame) -> pd.DataFrame:
     """ 檢查資料型態, 確保每次要上傳資料庫前, 型態正確 """
-    df_dict = df.to_dict("r")
+    df_dict = df.to_dict("records")
     df_schema = [TaiwanStockPrice(**dd).__dict__ for dd in df_dict]
     df = pd.DataFrame(df_schema)
     return df

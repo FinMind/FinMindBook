@@ -51,7 +51,14 @@ def colname_zh2en(df: pd.DataFrame) -> pd.DataFrame:
         "交易時段": "TradingSession",
     }
     df = df.drop(
-        ["最後最佳買價", "最後最佳賣價", "歷史最高價", "歷史最低價", "是否因訊息面暫停交易", "價差對單式委託成交量"],
+        [
+            "最後最佳買價", 
+            "最後最佳賣價", 
+            "歷史最高價", 
+            "歷史最低價", 
+            "是否因訊息面暫停交易", 
+            "價差對單式委託成交量",
+        ],
         axis=1,
     )
     df.columns = [colname_dict[col] for col in df.columns]
@@ -62,7 +69,9 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     """ 資料清理 """
     df["date"] = df["date"].str.replace("/", "-")
     df["ChangePer"] = df["ChangePer"].str.replace("%", "")
-    df["ContractDate"] = df["ContractDate"].astype(str).str.replace(" ", "")
+    df["ContractDate"] = (
+        df["ContractDate"].astype(str).str.replace(" ", "")
+    )
     if "TradingSession" in df.columns:
         df["TradingSession"] = df["TradingSession"].map(
             {"一般": "Position", "盤後": "AfterMarket"}
@@ -125,7 +134,7 @@ class TaiwanFuturesDaily(BaseModel):
 
 def check_schema(df: pd.DataFrame) -> pd.DataFrame:
     """ 檢查資料型態, 確保每次要上傳資料庫前, 型態正確 """
-    df_dict = df.to_dict("r")
+    df_dict = df.to_dict("records")
     df_schema = [TaiwanFuturesDaily(**dd).__dict__ for dd in df_dict]
     df = pd.DataFrame(df_schema)
     return df

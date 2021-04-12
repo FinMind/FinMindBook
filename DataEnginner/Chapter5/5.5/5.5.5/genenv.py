@@ -14,5 +14,9 @@ elif HOST_NAME in local_config:
 else:
     section = local_config["DEFAULT"]
 
+env_content = ""
+for sec in section:
+    env_content += "{}={}\n".format(sec.upper(), section[sec])
+
 with open(".env", "w", encoding="utf8") as env:
     env.write(env_content)
