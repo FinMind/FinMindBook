@@ -7,10 +7,7 @@ COPY . /FinMindProject/
 WORKDIR /FinMindProject/
 
 # install package
-RUN pip install pipenv && \
-    pipenv sync
+RUN pip install pipenv && pipenv sync
 
 # genenv
-RUN VERSION=DEPLOY python genenv.py
-
-CMD ["/bin/bash"]
+RUN VERSION=RELEASE python genenv.py

@@ -34,3 +34,6 @@ gen-staging-env-variable:
 # 建立 release 環境變數
 gen-release-env-variable:
 	VERSION=RELEASE python genenv.py
+
+build-image:
+	docker build -f Dockerfile -t crawler:dev .
