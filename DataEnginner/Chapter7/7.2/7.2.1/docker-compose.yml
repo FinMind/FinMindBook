@@ -1,0 +1,67 @@
+version: '3.0'
+services:
+  crawler_twse:
+    build:
+      context: .
+      dockerfile: Dockerfile.cache
+    image: crawler:dev
+    hostname: "twse"
+    command: pipenv run celery -A financialdata.Tasks.Worker worker --loglevel=error --maxtasksperchild=1 --concurrency=1  --hostname=%h -Q twse
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      placement:
+        max_replicas_per_node: 1
+        constraints: [node.labels.crawler_twse == true]
+    restart: always
+    environment:
+      - TZ=Asia/Taipei
+    networks:
+        - dev
+
+  crawler_tpex:
+    build:
+      context: .
+      dockerfile: Dockerfile.cache
+    image: crawler:dev
+    hostname: "tpex"
+    command: pipenv run celery -A financialdata.Tasks.Worker worker --loglevel=error --maxtasksperchild=1 --concurrency=1  --hostname=%h -Q tpex
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      placement:
+        max_replicas_per_node: 1
+        constraints: [node.labels.crawler_tpex == true]
+    restart: always
+    environment:
+      - TZ=Asia/Taipei
+    networks:
+        - dev
+        
+  crawler_taifex:
+    build:
+      context: .
+      dockerfile: Dockerfile.cache
+    image: crawler:dev
+    hostname: "taifex"
+    command: pipenv run celery -A financialdata.Tasks.Worker worker --loglevel=error --maxtasksperchild=1 --concurrency=1  --hostname=%h -Q taifex
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      placement:
+        max_replicas_per_node: 1
+        constraints: [node.labels.crawler_taifex == true]
+    restart: always
+    environment:
+      - TZ=Asia/Taipei
+    networks:
+        - dev
+
+networks:
+  dev:
