@@ -1,7 +1,6 @@
 import time
 import typing
 
-import redis
 from loguru import logger
 from sqlalchemy import engine
 from financialdata.backend.db import clients
@@ -12,7 +11,7 @@ def check_alive(connect: engine.base.Connection):
 
 
 def check_connect_alive(
-    connect: typing.Union[engine.base.Connection, redis.Redis],
+    connect: engine.base.Connection,
     connect_func: typing.Callable,
 ):
     if connect:

@@ -3,7 +3,9 @@ services:
 
   mysql:
       image: mysql:8.0
-      ports:  # docker publish port 3306 to 3306 (將 docker 內部 ip 3306, 跟外部 3306 做連結)
+      ports: 
+        # docker publish port 3306 to 3306 
+        # (將 docker 內部 ip 3306, 跟外部 3306 做連結)
           - 3306:3306
         # - target: 3306
         #   published: 3306
@@ -16,7 +18,8 @@ services:
       volumes:
           - ./dump:/docker-entrypoint-initdb.d
           - mysql:/var/lib/mysql
-          # share volumes of docker container to outside volume, let data persist
+          # share volumes of docker container to outside volume, 
+          # let data persist
           # 將 docker container 的 volumes 跟外部 volumes 做連結, 
           # 讓資料不會因為, container close or update, 而遺失
       networks:
@@ -37,4 +40,5 @@ networks:
   dev:
 
 volumes:
-    mysql:
+  mysql:
+    external: true
