@@ -5,6 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile.cache
     image: crawler:dev
+    # env_file: .env
     hostname: "twse"
     command: pipenv run celery -A financialdata.tasks.worker worker --loglevel=info --concurrency=1  --hostname=%h -Q twse
     restart: always
