@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3'
 services:
 
   mysql:
@@ -35,3 +35,4 @@ networks:
 
 volumes:
     mysql:
+        external: true
