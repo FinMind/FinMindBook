@@ -20,7 +20,7 @@ services:
       dockerfile: Dockerfile.cache
     image: crawler:dev
     # env_file: .env
-    hostname: "twse"
+    hostname: "tpex"
     command: pipenv run celery -A financialdata.tasks.worker worker --loglevel=info --concurrency=1  --hostname=%h -Q tpex
     restart: always
     environment:
@@ -34,7 +34,7 @@ services:
       dockerfile: Dockerfile.cache
     image: crawler:dev
     # env_file: .env
-    hostname: "twse"
+    hostname: "taifex"
     command: pipenv run celery -A financialdata.tasks.worker worker --loglevel=info --concurrency=1  --hostname=%h -Q taifex
     restart: always
     environment:
