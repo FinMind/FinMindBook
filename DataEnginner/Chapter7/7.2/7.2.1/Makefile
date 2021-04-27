@@ -37,3 +37,9 @@ gen-release-env-variable:
 
 build-image:
 	docker build -f Dockerfile -t crawler:dev .
+
+up-crawler:
+	docker-compose -f crawler.yml up
+
+up-multi-crawler:
+	docker-compose -f crawler_multi_celery.yml up

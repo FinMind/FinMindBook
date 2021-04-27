@@ -9,6 +9,7 @@ pandas = "*"
 pymysql = "*"
 sqlalchemy = "*"
 api = {editable = true, path = "."}
+uvicorn = "*"
 
 [dev-packages]
 

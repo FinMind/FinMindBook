@@ -16,3 +16,6 @@ gen-release-env-variable:
 
 build-image:
 	docker build -f Dockerfile -t api:dev .
+
+up-api:
+	docker-compose -f api.yml up

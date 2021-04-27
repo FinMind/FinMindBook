@@ -1,0 +1,22 @@
+version: '3.0'
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.cache
+    image: api:dev
+    ports:
+        - 8888:8888
+    # env_file: .env
+    hostname: "api"
+    command: pipenv run uvicorn api.main:app --host 0.0.0.0 --port 8888
+    restart: always
+    environment:
+      - TZ=Asia/Taipei
+    networks:
+        - my_network
+
+networks:
+  my_network:
+    # 加入已經存在的網路
+    external: true
