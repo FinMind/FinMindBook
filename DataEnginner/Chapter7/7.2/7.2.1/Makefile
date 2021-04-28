@@ -36,7 +36,7 @@ gen-release-env-variable:
 	VERSION=RELEASE python genenv.py
 
 build-image:
-	docker build -f Dockerfile -t crawler:dev .
+	docker build -f Dockerfile -t crawler:7.2.1 .
 
 up-crawler:
 	docker-compose -f crawler.yml up

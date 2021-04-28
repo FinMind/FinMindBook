@@ -15,7 +15,7 @@ gen-release-env-variable:
 	VERSION=RELEASE python genenv.py
 
 build-image:
-	docker build -f Dockerfile -t api:dev .
+	docker build -f Dockerfile -t api:7.2.2 .
 
 up-api:
 	docker-compose -f api.yml up
