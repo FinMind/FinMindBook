@@ -19,3 +19,9 @@ build-image:
 
 up-api:
 	docker-compose -f api.yml up
+
+tag-image:
+	docker tag api:7.2.2 linsamtw/api:7.2.2
+
+push-image:
+	docker push linsamtw/api:7.2.2

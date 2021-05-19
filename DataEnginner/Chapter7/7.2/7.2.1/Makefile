@@ -43,3 +43,9 @@ up-crawler:
 
 up-multi-crawler:
 	docker-compose -f crawler_multi_celery.yml up
+
+tag-image:
+	docker tag crawler:7.2.1 linsamtw/crawler:7.2.1
+
+push-image:
+	docker push linsamtw/crawler:7.2.1

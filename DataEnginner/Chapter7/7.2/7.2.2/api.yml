@@ -7,9 +7,7 @@ services:
     image: api:7.2.2
     ports:
         - 8888:8888
-    # env_file: .env
     hostname: "api"
-    command: pipenv run uvicorn api.main:app --host 0.0.0.0 --port 8888
     restart: always
     environment:
       - TZ=Asia/Taipei
