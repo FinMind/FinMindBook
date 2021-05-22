@@ -16,8 +16,11 @@ services:
         constraints: [node.platform.os == linux]
 
   portainer:
-    image: portainer/portainer:latest
+    image: portainer/portainer:1.24.2
     command: -H tcp://tasks.agent:9001 --tlsskipverify
+    ports:
+      - "9000:9000"
+      - "8000:8000"
     volumes:
       - portainer_data:/data
     networks:
@@ -27,7 +30,7 @@ services:
       replicas: 1
       placement:
         constraints: [node.role == manager]
-        
+
 networks:
   agent_network:
     driver: overlay
