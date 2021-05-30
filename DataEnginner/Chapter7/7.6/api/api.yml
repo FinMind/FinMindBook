@@ -1,0 +1,20 @@
+version: '3.0'
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.cache
+    image: api:7.2.2
+    ports:
+        - 8888:8888
+    hostname: "api"
+    restart: always
+    environment:
+      - TZ=Asia/Taipei
+    networks:
+        - my_network
+
+networks:
+  my_network:
+    # 加入已經存在的網路
+    external: true

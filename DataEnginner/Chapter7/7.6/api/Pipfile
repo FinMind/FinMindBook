@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = "==0.63.0"
+pandas = "*"
+pymysql = "*"
+sqlalchemy = "*"
+api = {editable = true, path = "."}
+uvicorn = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.6"
