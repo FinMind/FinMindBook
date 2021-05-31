@@ -16,7 +16,6 @@ services:
           MYSQL_PASSWORD: test
           MYSQL_ROOT_PASSWORD: test
       volumes:
-          - ./dump:/docker-entrypoint-initdb.d
           - mysql:/var/lib/mysql
           # share volumes of docker container to outside volume, 
           # let data persist
