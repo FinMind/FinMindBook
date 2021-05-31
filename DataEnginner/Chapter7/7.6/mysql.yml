@@ -22,7 +22,7 @@ services:
           - my_network
 
   phpmyadmin:
-      image: phpmyadmin/phpmyadmin:5.1.0
+      image: phpmyadmin/phpmyadmin:latest
       links: 
           - mysql:db
       ports:
