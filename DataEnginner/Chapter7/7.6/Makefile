@@ -3,7 +3,7 @@ create-mysql-volume:
 	docker volume create mysql
 
 create-network:
-	docker network create --scope=swarm --driver=bridge my_network
+	docker network create --scope=swarm --driver=overlay my_network
 
 deploy-mysql:
 	docker stack deploy --with-registry-auth -c mysql.yml mysql

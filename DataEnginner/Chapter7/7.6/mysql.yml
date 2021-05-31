@@ -22,17 +22,11 @@ services:
           - my_network
 
   phpmyadmin:
-      image: phpmyadmin/phpmyadmin:latest
+      image: phpmyadmin/phpmyadmin:5.1.0
       links: 
           - mysql:db
       ports:
           - 8080:80
-      environment:
-          MYSQL_USER: user
-          MYSQL_PASSWORD: test
-          MYSQL_ROOT_PASSWORD: test
-          PMA_HOST: mysql
-          UPLOAD_LIMIT: 512M
       depends_on:
         - mysql
       # swarm 設定
