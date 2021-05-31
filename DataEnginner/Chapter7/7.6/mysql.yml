@@ -27,6 +27,12 @@ services:
           - mysql:db
       ports:
           - 8080:80
+      environment:
+          MYSQL_USER: user
+          MYSQL_PASSWORD: test
+          MYSQL_ROOT_PASSWORD: test
+          PMA_HOST: mysql
+          UPLOAD_LIMIT: 512M
       depends_on:
         - mysql
       # swarm 設定
@@ -44,5 +50,5 @@ networks:
     external: true
 
 volumes:
-    mysql:
-        external: true
+  mysql:
+    external: true
