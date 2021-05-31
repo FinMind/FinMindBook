@@ -1,11 +1,4 @@
 
-# 啟動 mysql
-create-mysql:
-	docker-compose -f mysql.yml up -d
-
-# 啟動 rabbitmq
-create-rabbitmq:
-	docker-compose -f rabbitmq.yml up -d
 
 # 安裝環境
 install-python-env:
