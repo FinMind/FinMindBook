@@ -27,6 +27,11 @@ services:
           - mysql:db
       ports:
           - 8080:80
+      environment:
+          MYSQL_USER: user
+          MYSQL_PASSWORD: test
+          MYSQL_ROOT_PASSWORD: test
+          PMA_HOST: mysql
       depends_on:
         - mysql
       # swarm 設定
