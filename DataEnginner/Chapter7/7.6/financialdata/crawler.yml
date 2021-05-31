@@ -5,10 +5,15 @@ services:
       context: .
       dockerfile: Dockerfile.cache
     image: linsamtw/crawler:7.2.1
-    # env_file: .env
     hostname: "twse"
     command: pipenv run celery -A financialdata.tasks.worker worker --loglevel=info --concurrency=1  --hostname=%h -Q twse
     restart: always
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.crawler_twse == true]
     environment:
       - TZ=Asia/Taipei
     networks:
