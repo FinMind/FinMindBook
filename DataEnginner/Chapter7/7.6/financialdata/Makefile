@@ -1,4 +1,19 @@
 
+# 建立 network
+create-network:
+	docker network create my_network
+
+# 建立 mysql volume
+create-mysql-volume:
+	docker volume create mysql
+
+# 啟動 mysql
+create-mysql:
+	docker-compose -f mysql.yml up -d
+
+# 啟動 rabbitmq
+create-rabbitmq:
+	docker-compose -f rabbitmq.yml up -d
 
 # 安裝環境
 install-python-env:
@@ -37,8 +52,15 @@ up-crawler:
 up-multi-crawler:
 	docker-compose -f crawler_multi_celery.yml up
 
+up-scheduler:
+	docker-compose -f scheduler.yml up
+
 tag-image:
 	docker tag crawler:7.2.1 linsamtw/crawler:7.2.1
 
 push-image:
 	docker push linsamtw/crawler:7.2.1
+
+run-scheduler:
+	pipenv run python financialdata/scheduler.py
+	
