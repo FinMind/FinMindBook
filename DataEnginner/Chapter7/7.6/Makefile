@@ -14,3 +14,5 @@ deploy-rabbitmq:
 deploy-financialdata:
 	docker stack deploy --with-registry-auth -c financialdata/crawler.yml financialdata
 
+deploy-api:
+	docker stack deploy --with-registry-auth -c api/api.yml api
