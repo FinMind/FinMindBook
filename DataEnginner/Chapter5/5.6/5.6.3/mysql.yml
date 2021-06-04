@@ -3,6 +3,8 @@ services:
 
   mysql:
       image: mysql:8.0
+      # 設定 mysql 使用原生認證的密碼 hash
+      command: mysqld --default-authentication-plugin=mysql_native_password
       ports: 
         # docker publish port 3306 to 3306 
         # (將 docker 內部 ip 3306, 跟外部 3306 做連結)

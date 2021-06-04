@@ -7,7 +7,7 @@ services:
     image: crawler:7.2.1
     # env_file: .env
     hostname: "twse"
-    command: pipenv run python scheduler.py
+    command: pipenv run python financialdata/scheduler.py
     restart: always
     environment:
       - TZ=Asia/Taipei

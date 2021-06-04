@@ -1,4 +1,12 @@
 
+# 建立 network
+create-network:
+	docker network create my_network
+
+# 建立 mysql volume
+create-mysql-volume:
+	docker volume create mysql
+
 # 啟動 mysql
 create-mysql:
 	docker-compose -f mysql.yml up -d
@@ -53,7 +61,6 @@ tag-image:
 push-image:
 	docker push linsamtw/crawler:7.2.1
 
-# run scheduler
 run-scheduler:
-	pipenv run python scheduler.py
+	pipenv run python financialdata/scheduler.py
 	
