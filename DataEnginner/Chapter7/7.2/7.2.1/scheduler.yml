@@ -1,0 +1,20 @@
+version: '3.0'
+services:
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile.cache
+    image: crawler:7.2.1
+    # env_file: .env
+    hostname: "twse"
+    command: pipenv run python scheduler.py
+    restart: always
+    environment:
+      - TZ=Asia/Taipei
+    networks:
+        - my_network
+
+networks:
+  my_network:
+    # 加入已經存在的網路
+    external: true
