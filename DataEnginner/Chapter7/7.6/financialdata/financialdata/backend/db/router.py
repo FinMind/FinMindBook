@@ -42,7 +42,8 @@ class Router:
 
     def check_mysql_financialdata_conn_alive(self):
         self._mysql_financialdata_conn = check_connect_alive(
-            self._mysql_financialdata_conn, clients.get_mysql_financialdata_conn
+            self._mysql_financialdata_conn,
+            clients.get_mysql_financialdata_conn,
         )
         return self._mysql_financialdata_conn
 

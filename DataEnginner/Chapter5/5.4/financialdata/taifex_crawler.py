@@ -14,7 +14,7 @@ from financialdata.router import Router
 
 
 def futures_header():
-    """ 網頁瀏覽時, 所帶的 request header 參數, 模仿瀏覽器發送 request """
+    """網頁瀏覽時, 所帶的 request header 參數, 模仿瀏覽器發送 request"""
     return {
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
         "Accept-Encoding": "gzip, deflate, br",
@@ -37,7 +37,7 @@ def futures_header():
 
 
 def colname_zh2en(df: pd.DataFrame) -> pd.DataFrame:
-    """ 資料欄位轉換, 英文有助於我們接下來存入資料庫 """
+    """資料欄位轉換, 英文有助於我們接下來存入資料庫"""
     colname_dict = {
         "交易日期": "Date",
         "契約": "FuturesID",
@@ -62,7 +62,7 @@ def colname_zh2en(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:
-    """ 資料清理 """
+    """資料清理"""
     df["Date"] = df["Date"].str.replace("/", "-")
     df["ChangePer"] = df["ChangePer"].str.replace("%", "")
     df["ContractDate"] = df["ContractDate"].astype(str).str.replace(" ", "")
@@ -89,7 +89,7 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def crawler_futures(date: str) -> pd.DataFrame:
-    """ 期交所爬蟲 """
+    """期交所爬蟲"""
     url = "https://www.taifex.com.tw/cht/3/futDataDown"
     form_data = {
         "down_type": "1",
@@ -127,7 +127,7 @@ class TaiwanFuturesDaily(BaseModel):
 
 
 def check_schema(df: pd.DataFrame) -> pd.DataFrame:
-    """ 檢查資料型態, 確保每次要上傳資料庫前, 型態正確 """
+    """檢查資料型態, 確保每次要上傳資料庫前, 型態正確"""
     df_dict = df.to_dict("records")
     df_schema = [TaiwanFuturesDaily(**dd).__dict__ for dd in df_dict]
     df = pd.DataFrame(df_schema)
@@ -135,7 +135,7 @@ def check_schema(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def gen_date_list(start_date: str, end_date: str) -> typing.List[str]:
-    """ 建立時間列表, 用於爬取所有資料 """
+    """建立時間列表, 用於爬取所有資料"""
     start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
     end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d").date()
     days = (end_date - start_date).days + 1
@@ -165,10 +165,11 @@ def main(start_date: str, end_date: str):
                     con=db_router.mysql_financialdata_conn,
                     if_exists="append",
                     index=False,
-                    chunksize=1000
+                    chunksize=1000,
                 )
             except Exception as e:
                 logger.info(e)
+
 
 if __name__ == "__main__":
     start_date, end_date = sys.argv[1:]

@@ -2,7 +2,7 @@ import socket
 import os
 from configparser import ConfigParser
 
-HOME_PATH = "/".join(os.path.abspath(__file__).split('/')[:-1])
+HOME_PATH = "/".join(os.path.abspath(__file__).split("/")[:-1])
 HOST_NAME = socket.gethostname()
 
 local_config = ConfigParser()

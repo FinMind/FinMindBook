@@ -12,4 +12,3 @@ def read_root():
 def taiwan_stock_price():
     print("get data from mysql")
     return {"data": 123}
-    

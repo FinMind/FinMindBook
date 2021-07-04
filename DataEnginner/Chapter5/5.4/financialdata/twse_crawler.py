@@ -13,7 +13,7 @@ from financialdata.router import Router
 
 
 def clear_data(df: pd.DataFrame) -> pd.DataFrame:
-    """ 資料清理, 將文字轉成數字 """
+    """資料清理, 將文字轉成數字"""
     df["Dir"] = df["Dir"].str.split(">").str[1].str.split("<").str[0]
     df["Change"] = df["Dir"] + df["Change"]
     df["Change"] = (
@@ -44,11 +44,8 @@ def clear_data(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def colname_zh2en(
-    df: pd.DataFrame, 
-    colname: typing.List[str]
-    ) -> pd.DataFrame:
-    """ 資料欄位轉換, 英文有助於我們接下來存入資料庫 """
+def colname_zh2en(df: pd.DataFrame, colname: typing.List[str]) -> pd.DataFrame:
+    """資料欄位轉換, 英文有助於我們接下來存入資料庫"""
     taiwan_stock_price = {
         "證券代號": "StockID",
         "證券名稱": "",
@@ -68,11 +65,12 @@ def colname_zh2en(
         "本益比": "",
     }
     df.columns = [taiwan_stock_price[col] for col in colname]
+    df = df.drop([""], axis=1)
     return df
 
 
 def twse_header():
-    """ 網頁瀏覽時, 所帶的 request header 參數, 模仿瀏覽器發送 request """
+    """網頁瀏覽時, 所帶的 request header 參數, 模仿瀏覽器發送 request"""
     return {
         "Accept": "application/json, text/javascript, */*; q=0.01",
         "Accept-Encoding": "gzip, deflate",
@@ -114,10 +112,7 @@ def crawler_twse(date: str) -> pd.DataFrame:
         elif "data8" in res.json():
             df = pd.DataFrame(res.json()["data8"])
             colname = res.json()["fields8"]
-        elif res.json()["stat"] in [
-            "查詢日期小於93年2月11日，請重新查詢!", 
-            "很抱歉，沒有符合條件的資料!"
-        ]:
+        elif res.json()["stat"] in ["查詢日期小於93年2月11日，請重新查詢!", "很抱歉，沒有符合條件的資料!"]:
             return pd.DataFrame()
     except BaseException:
         return pd.DataFrame()
@@ -144,7 +139,7 @@ class TaiwanStockPrice(BaseModel):
 
 
 def check_schema(df: pd.DataFrame) -> pd.DataFrame:
-    """ 檢查資料型態, 確保每次要上傳資料庫前, 型態正確 """
+    """檢查資料型態, 確保每次要上傳資料庫前, 型態正確"""
     df_dict = df.to_dict("records")
     df_schema = [TaiwanStockPrice(**dd).__dict__ for dd in df_dict]
     df = pd.DataFrame(df_schema)
@@ -152,19 +147,18 @@ def check_schema(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def gen_date_list(start_date: str, end_date: str) -> typing.List[str]:
-    """ 建立時間列表, 用於爬取所有資料 """
+    """建立時間列表, 用於爬取所有資料"""
     start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
     end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d").date()
     days = (end_date - start_date).days + 1
     date_list = [
-        str(start_date + datetime.timedelta(days=day)) 
-        for day in range(days)
+        str(start_date + datetime.timedelta(days=day)) for day in range(days)
     ]
     return date_list
 
 
 def main(start_date: str, end_date: str):
-    """ 證交所寫明, ※ 本資訊自民國93年2月11日起提供 """
+    """證交所寫明, ※ 本資訊自民國93年2月11日起提供"""
     date_list = gen_date_list(start_date, end_date)
     db_router = Router()
     for date in tqdm(date_list):
@@ -182,7 +176,7 @@ def main(start_date: str, end_date: str):
                     con=db_router.mysql_financialdata_conn,
                     if_exists="append",
                     index=False,
-                    chunksize=1000
+                    chunksize=1000,
                 )
             except Exception as e:
                 logger.info(e)

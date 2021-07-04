@@ -12,9 +12,8 @@ from tqdm import tqdm
 from financialdata.router import Router
 
 
-
 def clear_data(df: pd.DataFrame) -> pd.DataFrame:
-    """ 資料清理, 將文字轉成數字 """
+    """資料清理, 將文字轉成數字"""
     for col in [
         "TradeVolume",
         "Transaction",
@@ -43,7 +42,7 @@ def clear_data(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def set_column(df: pd.DataFrame) -> pd.DataFrame:
-    """ 設定資料欄位名稱 """
+    """設定資料欄位名稱"""
     df.columns = [
         "StockID",
         "Close",
@@ -59,7 +58,7 @@ def set_column(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def tpex_header():
-    """ 網頁瀏覽時, 所帶的 request header 參數, 模仿瀏覽器發送 request """
+    """網頁瀏覽時, 所帶的 request header 參數, 模仿瀏覽器發送 request"""
     return {
         "Accept": "application/json, text/javascript, */*; q=0.01",
         "Accept-Encoding": "gzip, deflate",
@@ -79,8 +78,8 @@ def convert_date(date: str) -> str:
 
 
 def crawler_tpex(date: str) -> pd.DataFrame:
-    """ 
-    櫃買中心網址 
+    """
+    櫃買中心網址
     https://www.tpex.org.tw/web/stock/aftertrading/otc_quotes_no1430/stk_wn1430.php?l=zh-tw
     """
     # headers 中的 Request url
@@ -119,7 +118,7 @@ class TaiwanStockPrice(BaseModel):
 
 
 def check_schema(df: pd.DataFrame) -> pd.DataFrame:
-    """ 檢查資料型態, 確保每次要上傳資料庫前, 型態正確 """
+    """檢查資料型態, 確保每次要上傳資料庫前, 型態正確"""
     df_dict = df.to_dict("records")
     df_schema = [TaiwanStockPrice(**dd).__dict__ for dd in df_dict]
     df = pd.DataFrame(df_schema)
@@ -127,7 +126,7 @@ def check_schema(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def gen_date_list(start_date: str, end_date: str) -> typing.List[str]:
-    """ 建立時間列表, 用於爬取所有資料 """
+    """建立時間列表, 用於爬取所有資料"""
     start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
     end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d").date()
     days = (end_date - start_date).days + 1
@@ -138,7 +137,7 @@ def gen_date_list(start_date: str, end_date: str) -> typing.List[str]:
 
 
 def main(start_date: str, end_date: str):
-    """ 櫃買中心寫明, 本資訊自民國96年7月起開始提供 """
+    """櫃買中心寫明, 本資訊自民國96年7月起開始提供"""
     date_list = gen_date_list(start_date, end_date)
     db_router = Router()
     for date in tqdm(date_list):
@@ -156,11 +155,10 @@ def main(start_date: str, end_date: str):
                     con=db_router.mysql_financialdata_conn,
                     if_exists="append",
                     index=False,
-                    chunksize=1000
+                    chunksize=1000,
                 )
             except Exception as e:
                 logger.info(e)
-
 
 
 if __name__ == "__main__":

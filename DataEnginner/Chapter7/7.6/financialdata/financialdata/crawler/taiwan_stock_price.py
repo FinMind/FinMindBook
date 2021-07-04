@@ -30,7 +30,7 @@ def gen_task_paramter_list(start_date: str, end_date: str) -> typing.List[str]:
 
 
 def clear_data(df: pd.DataFrame) -> pd.DataFrame:
-    """ 資料清理, 將文字轉成數字 """
+    """資料清理, 將文字轉成數字"""
     for col in [
         "TradeVolume",
         "Transaction",
@@ -59,7 +59,7 @@ def clear_data(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def colname_zh2en(df: pd.DataFrame, colname: typing.List[str]) -> pd.DataFrame:
-    """ 資料欄位轉換, 英文有助於我們接下來存入資料庫 """
+    """資料欄位轉換, 英文有助於我們接下來存入資料庫"""
     taiwan_stock_price = {
         "證券代號": "StockID",
         "證券名稱": "",
@@ -79,11 +79,12 @@ def colname_zh2en(df: pd.DataFrame, colname: typing.List[str]) -> pd.DataFrame:
         "本益比": "",
     }
     df.columns = [taiwan_stock_price[col] for col in colname]
+    df = df.drop([""], axis=1)
     return df
 
 
 def twse_header():
-    """ 網頁瀏覽時, 所帶的 request header 參數, 模仿瀏覽器發送 request """
+    """網頁瀏覽時, 所帶的 request header 參數, 模仿瀏覽器發送 request"""
     return {
         "Accept": "application/json, text/javascript, */*; q=0.01",
         "Accept-Encoding": "gzip, deflate",
@@ -97,7 +98,7 @@ def twse_header():
 
 
 def tpex_header():
-    """ 網頁瀏覽時, 所帶的 request header 參數, 模仿瀏覽器發送 request """
+    """網頁瀏覽時, 所帶的 request header 參數, 模仿瀏覽器發送 request"""
     return {
         "Accept": "application/json, text/javascript, */*; q=0.01",
         "Accept-Encoding": "gzip, deflate",
@@ -111,7 +112,7 @@ def tpex_header():
 
 
 def set_column(df: pd.DataFrame) -> pd.DataFrame:
-    """ 設定資料欄位名稱 """
+    """設定資料欄位名稱"""
     df.columns = [
         "StockID",
         "Close",

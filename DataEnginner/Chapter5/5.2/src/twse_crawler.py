@@ -10,7 +10,7 @@ from pydantic import BaseModel
 
 
 def clear_data(df: pd.DataFrame) -> pd.DataFrame:
-    """ 資料清理, 將文字轉成數字 """
+    """資料清理, 將文字轉成數字"""
     df["Dir"] = df["Dir"].str.split(">").str[1].str.split("<").str[0]
     df["Change"] = df["Dir"] + df["Change"]
     df["Change"] = (
@@ -42,7 +42,7 @@ def clear_data(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def colname_zh2en(df: pd.DataFrame, colname: typing.List[str]) -> pd.DataFrame:
-    """ 資料欄位轉換, 英文有助於我們接下來存入資料庫 """
+    """資料欄位轉換, 英文有助於我們接下來存入資料庫"""
     taiwan_stock_price = {
         "證券代號": "StockID",
         "證券名稱": "",
@@ -62,11 +62,12 @@ def colname_zh2en(df: pd.DataFrame, colname: typing.List[str]) -> pd.DataFrame:
         "本益比": "",
     }
     df.columns = [taiwan_stock_price[col] for col in colname]
+    df = df.drop([""], axis=1)
     return df
 
 
 def twse_header():
-    """ 網頁瀏覽時, 所帶的 request header 參數, 模仿瀏覽器發送 request """
+    """網頁瀏覽時, 所帶的 request header 參數, 模仿瀏覽器發送 request"""
     return {
         "Accept": "application/json, text/javascript, */*; q=0.01",
         "Accept-Encoding": "gzip, deflate",
@@ -135,7 +136,7 @@ class TaiwanStockPrice(BaseModel):
 
 
 def check_schema(df: pd.DataFrame) -> pd.DataFrame:
-    """ 檢查資料型態, 確保每次要上傳資料庫前, 型態正確 """
+    """檢查資料型態, 確保每次要上傳資料庫前, 型態正確"""
     df_dict = df.to_dict("records")
     df_schema = [TaiwanStockPrice(**dd).__dict__ for dd in df_dict]
     df = pd.DataFrame(df_schema)
@@ -143,7 +144,7 @@ def check_schema(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def gen_date_list(start_date: str, end_date: str) -> typing.List[str]:
-    """ 建立時間列表, 用於爬取所有資料 """
+    """建立時間列表, 用於爬取所有資料"""
     start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
     end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d").date()
     days = (end_date - start_date).days + 1
@@ -154,7 +155,7 @@ def gen_date_list(start_date: str, end_date: str) -> typing.List[str]:
 
 
 def main(start_date: str, end_date: str):
-    """ 證交所寫明, ※ 本資訊自民國93年2月11日起提供 """
+    """證交所寫明, ※ 本資訊自民國93年2月11日起提供"""
     date_list = gen_date_list(start_date, end_date)
     for date in date_list:
         logger.info(date)

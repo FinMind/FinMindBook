@@ -10,11 +10,7 @@ def sent_crawler_task():
     # 將此段，改成發送任務的程式碼
     # logger.info(f"sent_crawler_task {dataset}")
     today = datetime.datetime.today().date().strftime("%Y-%m-%d")
-    Update(
-        dataset="taiwan_stock_price",
-        start_date=today,
-        end_date=today
-    )
+    Update(dataset="taiwan_stock_price", start_date=today, end_date=today)
 
 
 def main():
