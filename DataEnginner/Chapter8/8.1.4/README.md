@@ -1,2 +1,2 @@
 # FinMindBook
-FinMind Book
+

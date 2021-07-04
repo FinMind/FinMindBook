@@ -63,7 +63,10 @@ push-image:
 
 run-scheduler:
 	pipenv run python financialdata/scheduler.py
-	
+
+test-cov:
+	pipenv run pytest --cov-report term-missing --cov-config=.coveragerc --cov=./ tests/
+
 # format
 format:
-	black -l 79 financialdata tests
+	black -l 80 financialdata tests

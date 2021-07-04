@@ -16,6 +16,7 @@ financialdata = {editable = true,path = "."}
 pymysql = "*"
 loguru = "*"
 apscheduler = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.6"

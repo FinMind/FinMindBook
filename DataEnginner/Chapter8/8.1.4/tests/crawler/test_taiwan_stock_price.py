@@ -136,9 +136,7 @@ def test_colname_zh2en():
 
 
 def test_crawler():
-    result_df = crawler(
-        parameter={"date": "2021-01-05", "data_source": "twse"}
-    )
+    result_df = crawler(parameter={"date": "2021-01-05", "data_source": "twse"})
     result_df = check_schema(result_df, "TaiwanStockPrice")
     result_df = result_df[:2]
     excepted_df = pd.DataFrame(

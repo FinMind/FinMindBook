@@ -8,3 +8,4 @@
 .cache
 *.csv
 .python-version
+.coverage
