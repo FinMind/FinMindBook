@@ -140,11 +140,9 @@ def crawler_tpex(date: str) -> pd.DataFrame:
     time.sleep(5)
     # request method
     res = requests.get(url, headers=tpex_header())
-    data = res.json().get("aaData", "")
-    if not data:
-        return pd.DataFrame()
+    data = res.json().get("aaData", [])
     df = pd.DataFrame(data)
-    if len(df) == 0:
+    if not data or len(df) == 0:
         return pd.DataFrame()
     # 櫃買中心回傳的資料, 並無資料欄位, 因此這裡我們直接用 index 取特定欄位
     df = df[[0, 2, 3, 4, 5, 6, 7, 8, 9]]
@@ -172,6 +170,7 @@ def crawler_twse(date: str) -> pd.DataFrame:
     # 2009 年以後的資料, 股價在 response 中的 data8
     # 不同格式, 在證交所的資料中, 是很常見的,
     # 沒資料的情境也要考慮進去，例如現在週六沒有交易，但在 2007 年週六是有交易的
+    df = pd.DataFrame()
     try:
         if "data9" in res.json():
             df = pd.DataFrame(res.json()["data9"])
@@ -180,8 +179,9 @@ def crawler_twse(date: str) -> pd.DataFrame:
             df = pd.DataFrame(res.json()["data8"])
             colname = res.json()["fields8"]
         elif res.json()["stat"] in ["查詢日期小於93年2月11日，請重新查詢!", "很抱歉，沒有符合條件的資料!"]:
-            return pd.DataFrame()
-    except BaseException:
+            pass
+    except Exception as e:
+        logger.error(e)
         return pd.DataFrame()
 
     if len(df) == 0:

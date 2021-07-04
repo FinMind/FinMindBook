@@ -65,7 +65,7 @@ run-scheduler:
 	pipenv run python financialdata/scheduler.py
 
 test-cov:
-	pipenv run pytest --cov-report term-missing --cov-config=.coveragerc --cov=./ tests/
+	pipenv run pytest --cov-report term-missing --cov-config=.coveragerc --cov=./financialdata/ tests/
 
 # format
 format:
