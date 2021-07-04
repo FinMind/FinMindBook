@@ -202,7 +202,7 @@ def convert_change(df: pd.DataFrame) -> pd.DataFrame:
         df["Change"].str.replace(" ", "").str.replace("X", "").astype(float)
     )
     df = df.fillna("")
-    df = df.drop(["", "Dir"], axis=1)
+    df = df.drop(["Dir"], axis=1)
     return df
 
 

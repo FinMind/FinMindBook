@@ -20,7 +20,7 @@ def clear_data(df: pd.DataFrame) -> pd.DataFrame:
         df["Change"].str.replace(" ", "").str.replace("X", "").astype(float)
     )
     df = df.fillna("")
-    df = df.drop(["", "Dir"], axis=1)
+    df = df.drop(["Dir"], axis=1)
     for col in [
         "TradeVolume",
         "Transaction",
