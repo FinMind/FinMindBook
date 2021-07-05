@@ -22,8 +22,8 @@ def test_is_weekend_false():
     測試, 非周末, 輸入周一 1, 回傳 False
     """
     result = is_weekend(day=1)  # 真實結果
-    excepted = False  # 預期結果
-    assert result == excepted  # 檢查, 真實結果 == 預期結果
+    expected = False  # 預期結果
+    assert result == expected  # 檢查, 真實結果 == 預期結果
 
 
 def test_is_weekend_true():
@@ -31,8 +31,8 @@ def test_is_weekend_true():
     測試, 是周末, 輸入週日 0, 回傳 False
     """
     result = is_weekend(day=0)  # 真實結果
-    excepted = True  # 預期結果
-    assert result == excepted  # 檢查, 真實結果 == 預期結果
+    expected = True  # 預期結果
+    assert result == expected  # 檢查, 真實結果 == 預期結果
 
 
 def test_gen_task_paramter_list():
@@ -42,7 +42,7 @@ def test_gen_task_paramter_list():
     result = gen_task_paramter_list(
         start_date="2021-01-01", end_date="2021-01-05"
     )  # 真實結果
-    excepted = [
+    expected = [
         {"date": "2021-01-01", "data_source": "twse"},
         {"date": "2021-01-01", "data_source": "tpex"},
         {"date": "2021-01-02", "data_source": "twse"},
@@ -50,7 +50,7 @@ def test_gen_task_paramter_list():
         {"date": "2021-01-05", "data_source": "twse"},
         {"date": "2021-01-05", "data_source": "tpex"},
     ]  # 預期結果
-    assert result == excepted  # 檢查, 真實結果 == 預期結果
+    assert result == expected  # 檢查, 真實結果 == 預期結果
 
 
 def test_clear_data():
@@ -96,7 +96,7 @@ def test_clear_data():
         ]
     )
     result_df = clear_data(df.copy())  # 輸入函數, 得到結果
-    excepted_df = pd.DataFrame(
+    expected_df = pd.DataFrame(
         [
             {
                 "StockID": "0050",
@@ -137,7 +137,7 @@ def test_clear_data():
         ]
     )  # 預期結果
     assert (
-        pd.testing.assert_frame_equal(result_df, excepted_df) is None
+        pd.testing.assert_frame_equal(result_df, expected_df) is None
     )  # 檢查, 真實結果 == 預期結果
 
 
@@ -202,7 +202,7 @@ def test_colname_zh2en():
         "本益比",
     ]
     result_df = colname_zh2en(result_df.copy(), colname)  # 輸入函數, 得到結果
-    excepted_df = pd.DataFrame(
+    expected_df = pd.DataFrame(
         [
             {
                 "StockID": "0050",
@@ -231,13 +231,13 @@ def test_colname_zh2en():
         ]
     )  # 預期結果
     assert (
-        pd.testing.assert_frame_equal(result_df, excepted_df) is None
+        pd.testing.assert_frame_equal(result_df, expected_df) is None
     )  # 檢查, 真實結果 == 預期結果
 
 
 def test_twse_header():
     result = twse_header()
-    excepted = {
+    expected = {
         "Accept": "application/json, text/javascript, */*; q=0.01",
         "Accept-Encoding": "gzip, deflate",
         "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
@@ -247,12 +247,12 @@ def test_twse_header():
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36",
         "X-Requested-With": "XMLHttpRequest",
     }
-    assert result == excepted
+    assert result == expected
 
 
 def test_tpex_header():
     result = tpex_header()
-    excepted = {
+    expected = {
         "Accept": "application/json, text/javascript, */*; q=0.01",
         "Accept-Encoding": "gzip, deflate",
         "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
@@ -262,7 +262,7 @@ def test_tpex_header():
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36",
         "X-Requested-With": "XMLHttpRequest",
     }
-    assert result == excepted
+    assert result == expected
 
 
 def test_set_column():
@@ -305,7 +305,7 @@ def test_set_column():
         ]
     )
     result_df = set_column(df)  # 輸入函數, 得到結果
-    excepted_df = pd.DataFrame(
+    expected_df = pd.DataFrame(
         [
             {
                 "StockID": "00679B",
@@ -343,7 +343,7 @@ def test_set_column():
         ]
     )  # 預期結果
     assert (
-        pd.testing.assert_frame_equal(result_df, excepted_df) is None
+        pd.testing.assert_frame_equal(result_df, expected_df) is None
     )  # 檢查, 真實結果 == 預期結果
 
 
@@ -489,7 +489,7 @@ def test_convert_change():
         ]
     )
     result_df = convert_change(df)  # 真實結果
-    excepted_df = pd.DataFrame(
+    expected_df = pd.DataFrame(
         [
             {
                 "StockID": "0050",
@@ -530,15 +530,15 @@ def test_convert_change():
         ]
     )  # 預期結果
     assert (
-        pd.testing.assert_frame_equal(result_df, excepted_df) is None
+        pd.testing.assert_frame_equal(result_df, expected_df) is None
     )  # 檢查, 真實結果 == 預期結果
 
 
 def test_convert_date():
     date = "2021-07-01"  #  準備好 input 的假資料
     result = convert_date(date)  # 真實結果
-    excepted = "110/07/01"  # 預期結果
-    assert result == excepted  # 檢查, 真實結果 == 預期結果
+    expected = "110/07/01"  # 預期結果
+    assert result == expected  # 檢查, 真實結果 == 預期結果
 
 
 def test_crawler_twse():
