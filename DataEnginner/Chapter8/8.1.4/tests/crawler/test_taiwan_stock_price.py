@@ -21,18 +21,22 @@ def test_is_weekend_false():
     """
     測試, 非周末, 輸入周一 1, 回傳 False
     """
-    result = is_weekend(day=1)  # 真實結果
-    expected = False  # 預期結果
-    assert result == expected  # 檢查, 真實結果 == 預期結果
+    result = is_weekend(day=1)  # 執行結果
+    expected = False
+    # 先寫好預期結果, 這樣即使不執行程式,
+    # 單純看測試, 也能了解這個程式的執行結果
+    assert result == expected  # 檢查, 執行結果 == 預期結果
 
 
 def test_is_weekend_true():
     """
     測試, 是周末, 輸入週日 0, 回傳 False
     """
-    result = is_weekend(day=0)  # 真實結果
-    expected = True  # 預期結果
-    assert result == expected  # 檢查, 真實結果 == 預期結果
+    result = is_weekend(day=0)  # 執行結果
+    expected = True
+    # 先寫好預期結果, 這樣即使不執行程式,
+    # 單純看測試, 也能了解這個程式的執行結果
+    assert result == expected  # 檢查, 執行結果 == 預期結果
 
 
 def test_gen_task_paramter_list():
@@ -41,7 +45,7 @@ def test_gen_task_paramter_list():
     """
     result = gen_task_paramter_list(
         start_date="2021-01-01", end_date="2021-01-05"
-    )  # 真實結果
+    )  # 執行結果
     expected = [
         {"date": "2021-01-01", "data_source": "twse"},
         {"date": "2021-01-01", "data_source": "tpex"},
@@ -49,8 +53,10 @@ def test_gen_task_paramter_list():
         {"date": "2021-01-02", "data_source": "tpex"},
         {"date": "2021-01-05", "data_source": "twse"},
         {"date": "2021-01-05", "data_source": "tpex"},
-    ]  # 預期結果
-    assert result == expected  # 檢查, 真實結果 == 預期結果
+    ]
+    # 預期得到 2021-01-01 ~ 2021-01-05 的任務參數列表
+    # 再發送這些參數到 rabbitmq, 給每個 worker 單獨執行爬蟲
+    assert result == expected  # 檢查, 執行結果 == 預期結果
 
 
 def test_clear_data():
@@ -135,10 +141,13 @@ def test_clear_data():
                 "Date": "2021-01-05",
             },
         ]
-    )  # 預期結果
+    )
+    # 預期結果, 做完資料清理
+    # 將原先的會計數字, 如 1,536,598
+    # 轉換為一般數字 1536598
     assert (
         pd.testing.assert_frame_equal(result_df, expected_df) is None
-    )  # 檢查, 真實結果 == 預期結果
+    )  # 檢查, 執行結果 == 預期結果
 
 
 def test_colname_zh2en():
@@ -229,10 +238,12 @@ def test_colname_zh2en():
                 "Change": "0.04",
             },
         ]
-    )  # 預期結果
+    )
+    # 預期結果, 將 raw data , 包含中文欄位,
+    # 轉換成英文欄位, 以便存進資料庫
     assert (
         pd.testing.assert_frame_equal(result_df, expected_df) is None
-    )  # 檢查, 真實結果 == 預期結果
+    )  # 檢查, 執行結果 == 預期結果
 
 
 def test_twse_header():
@@ -341,18 +352,20 @@ def test_set_column():
                 "Transaction": "35",
             },
         ]
-    )  # 預期結果
+    )
+    # 預期結果, 根據資料的位置, 設置對應的欄位名稱
     assert (
         pd.testing.assert_frame_equal(result_df, expected_df) is None
-    )  # 檢查, 真實結果 == 預期結果
+    )  # 檢查, 執行結果 == 預期結果
 
 
 def test_crawler_twse_data9():
     """
     測試在證交所, 2021 正常爬到資料的情境,
     data 在 response 底下的 key, data9
+    一般政府網站, 長時間的資料, 格式常常不一致
     """
-    result_df = crawler_twse(date="2021-01-05")  # 真實結果
+    result_df = crawler_twse(date="2021-01-05")  # 執行結果
     assert len(result_df) == 20596  # 檢查, 資料量是否正確
     assert list(result_df.columns) == [
         "StockID",
@@ -372,6 +385,7 @@ def test_crawler_twse_data8():
     """
     測試在證交所, 2008 正常爬到資料的情境, 時間不同, 資料格式不同
     data 在 response 底下的 key, data8
+    一般政府網站, 長時間的資料, 格式常常不一致
     """
     result_df = crawler_twse(date="2008-01-04")
     assert len(result_df) == 2760  # 檢查, 資料量是否正確
@@ -401,11 +415,20 @@ def test_crawler_twse_no_data():
 
 def test_crawler_twse_error(mocker):
     """
-    測試對方網站回傳例外狀況時, 爬蟲是否會失敗
+    測試對方網站回傳例外狀況時, 或是被 ban IP 時, 爬蟲是否會失敗
+
+    這邊使用特別的技巧, mocker,
+    因為在測試階段, 我們無法保證對方一定會給錯誤的結果
+    因此使用 mocker, 對 requests 做"替換", 換成我們設定的結果
+    如下
     """
+    # 將特定路徑下的 requests 替換掉
     mock_requests = mocker.patch(
         "financialdata.crawler.taiwan_stock_price.requests"
     )
+    # 將 requests.get 的回傳值 response, 替換掉成 ""
+    # 如此一來, 當我們在測試爬蟲時,
+    # 發送 requests 得到的 response, 就會是 ""
     mock_requests.get.return_value = ""
     result_df = crawler_twse(date="2000-01-04")
     assert len(result_df) == 0  # 沒 data, 回傳 0
@@ -417,7 +440,7 @@ def test_crawler_tpex_success():
     """
     測試櫃買中心, 爬蟲成功時的狀況
     """
-    result_df = crawler_tpex(date="2021-01-05")  # 真實結果
+    result_df = crawler_tpex(date="2021-01-05")  # 執行結果
     assert len(result_df) == 6609  # 檢查, 資料量是否正確
     assert list(result_df.columns) == [
         "StockID",
@@ -488,7 +511,7 @@ def test_convert_change():
             },
         ]
     )
-    result_df = convert_change(df)  # 真實結果
+    result_df = convert_change(df)  # 執行結果
     expected_df = pd.DataFrame(
         [
             {
@@ -528,17 +551,19 @@ def test_convert_change():
                 "Date": "2021-07-01",
             },
         ]
-    )  # 預期結果
+    )
+    # 預期結果,
+    # 將 Dir (正負號) 與 Change (漲跌幅) 結合
     assert (
         pd.testing.assert_frame_equal(result_df, expected_df) is None
-    )  # 檢查, 真實結果 == 預期結果
+    )  # 檢查, 執行結果 == 預期結果
 
 
 def test_convert_date():
     date = "2021-07-01"  #  準備好 input 的假資料
-    result = convert_date(date)  # 真實結果
+    result = convert_date(date)  # 執行結果
     expected = "110/07/01"  # 預期結果
-    assert result == expected  # 檢查, 真實結果 == 預期結果
+    assert result == expected  # 檢查, 執行結果 == 預期結果
 
 
 def test_crawler_twse():
