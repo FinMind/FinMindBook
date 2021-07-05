@@ -18,21 +18,30 @@ from financialdata.schema.dataset import check_schema
 
 
 def test_is_weekend_false():
-    result = is_weekend(day=1)
-    excepted = False
-    assert result == excepted
+    """
+    測試, 非周末, 輸入周一 1, 回傳 False
+    """
+    result = is_weekend(day=1)  # 真實結果
+    excepted = False  # 預期結果
+    assert result == excepted  # 檢查, 真實結果 == 預期結果
 
 
 def test_is_weekend_true():
-    result = is_weekend(day=0)
-    excepted = True
-    assert result == excepted
+    """
+    測試, 是周末, 輸入週日 0, 回傳 False
+    """
+    result = is_weekend(day=0)  # 真實結果
+    excepted = True  # 預期結果
+    assert result == excepted  # 檢查, 真實結果 == 預期結果
 
 
 def test_gen_task_paramter_list():
+    """
+    測試建立 task 參數列表, 2021-01-01 ~ 2021-01-05
+    """
     result = gen_task_paramter_list(
         start_date="2021-01-01", end_date="2021-01-05"
-    )
+    )  # 真實結果
     excepted = [
         {"date": "2021-01-01", "data_source": "twse"},
         {"date": "2021-01-01", "data_source": "tpex"},
@@ -40,11 +49,12 @@ def test_gen_task_paramter_list():
         {"date": "2021-01-02", "data_source": "tpex"},
         {"date": "2021-01-05", "data_source": "twse"},
         {"date": "2021-01-05", "data_source": "tpex"},
-    ]
-    assert result == excepted
+    ]  # 預期結果
+    assert result == excepted  # 檢查, 真實結果 == 預期結果
 
 
 def test_clear_data():
+    #  準備好 input 的假資料
     df = pd.DataFrame(
         [
             {
@@ -85,7 +95,7 @@ def test_clear_data():
             },
         ]
     )
-    result_df = clear_data(df.copy())
+    result_df = clear_data(df.copy())  # 輸入函數, 得到結果
     excepted_df = pd.DataFrame(
         [
             {
@@ -125,11 +135,14 @@ def test_clear_data():
                 "Date": "2021-01-05",
             },
         ]
-    )
-    assert pd.testing.assert_frame_equal(result_df, excepted_df) is None
+    )  # 預期結果
+    assert (
+        pd.testing.assert_frame_equal(result_df, excepted_df) is None
+    )  # 檢查, 真實結果 == 預期結果
 
 
 def test_colname_zh2en():
+    #  準備好 input 的假資料
     result_df = pd.DataFrame(
         [
             {
@@ -188,7 +201,7 @@ def test_colname_zh2en():
         "最後揭示賣量",
         "本益比",
     ]
-    result_df = colname_zh2en(result_df.copy(), colname)
+    result_df = colname_zh2en(result_df.copy(), colname)  # 輸入函數, 得到結果
     excepted_df = pd.DataFrame(
         [
             {
@@ -216,8 +229,10 @@ def test_colname_zh2en():
                 "Change": "0.04",
             },
         ]
-    )
-    assert pd.testing.assert_frame_equal(result_df, excepted_df) is None
+    )  # 預期結果
+    assert (
+        pd.testing.assert_frame_equal(result_df, excepted_df) is None
+    )  # 檢查, 真實結果 == 預期結果
 
 
 def test_twse_header():
@@ -251,6 +266,7 @@ def test_tpex_header():
 
 
 def test_set_column():
+    #  準備好 input 的假資料
     df = pd.DataFrame(
         [
             {
@@ -288,7 +304,7 @@ def test_set_column():
             },
         ]
     )
-    result_df = set_column(df)
+    result_df = set_column(df)  # 輸入函數, 得到結果
     excepted_df = pd.DataFrame(
         [
             {
@@ -325,13 +341,19 @@ def test_set_column():
                 "Transaction": "35",
             },
         ]
-    )
-    assert pd.testing.assert_frame_equal(result_df, excepted_df) is None
+    )  # 預期結果
+    assert (
+        pd.testing.assert_frame_equal(result_df, excepted_df) is None
+    )  # 檢查, 真實結果 == 預期結果
 
 
 def test_crawler_twse_data9():
-    result_df = crawler_twse(date="2021-01-05")
-    assert len(result_df) == 20596
+    """
+    測試在證交所, 2021 正常爬到資料的情境,
+    data 在 response 底下的 key, data9
+    """
+    result_df = crawler_twse(date="2021-01-05")  # 真實結果
+    assert len(result_df) == 20596  # 檢查, 資料量是否正確
     assert list(result_df.columns) == [
         "StockID",
         "TradeVolume",
@@ -343,12 +365,16 @@ def test_crawler_twse_data9():
         "Close",
         "Change",
         "Date",
-    ]
+    ]  # 檢查, 資料欄位是否正確
 
 
 def test_crawler_twse_data8():
+    """
+    測試在證交所, 2008 正常爬到資料的情境, 時間不同, 資料格式不同
+    data 在 response 底下的 key, data8
+    """
     result_df = crawler_twse(date="2008-01-04")
-    assert len(result_df) == 2760
+    assert len(result_df) == 2760  # 檢查, 資料量是否正確
     assert list(result_df.columns) == [
         "StockID",
         "TradeVolume",
@@ -360,26 +386,39 @@ def test_crawler_twse_data8():
         "Close",
         "Change",
         "Date",
-    ]
+    ]  # 檢查, 資料欄位是否正確
 
 
 def test_crawler_twse_no_data():
+    """
+    測試沒 data 的時間點, 爬蟲是否正常
+    """
     result_df = crawler_twse(date="2000-01-04")
-    assert len(result_df) == 0
+    assert len(result_df) == 0  # 沒 data, 回傳 0
+    # 沒 data, 一樣要回傳 pd.DataFrame 型態
+    assert isinstance(result_df, pd.DataFrame)
 
 
 def test_crawler_twse_error(mocker):
+    """
+    測試對方網站回傳例外狀況時, 爬蟲是否會失敗
+    """
     mock_requests = mocker.patch(
         "financialdata.crawler.taiwan_stock_price.requests"
     )
     mock_requests.get.return_value = ""
     result_df = crawler_twse(date="2000-01-04")
-    assert len(result_df) == 0
+    assert len(result_df) == 0  # 沒 data, 回傳 0
+    # 沒 data, 一樣要回傳 pd.DataFrame 型態
+    assert isinstance(result_df, pd.DataFrame)
 
 
 def test_crawler_tpex_success():
-    result_df = crawler_tpex(date="2021-01-05")
-    assert len(result_df) == 6609
+    """
+    測試櫃買中心, 爬蟲成功時的狀況
+    """
+    result_df = crawler_tpex(date="2021-01-05")  # 真實結果
+    assert len(result_df) == 6609  # 檢查, 資料量是否正確
     assert list(result_df.columns) == [
         "StockID",
         "Close",
@@ -395,11 +434,17 @@ def test_crawler_tpex_success():
 
 
 def test_crawler_tpex_no_data():
+    """
+    測試沒 data 的時間點, 爬蟲是否正常
+    """
     result_df = crawler_tpex(date="2021-01-01")
-    assert len(result_df) == 0
+    assert len(result_df) == 0  # 沒 data, 回傳 0
+    # 沒 data, 一樣要回傳 pd.DataFrame 型態
+    assert isinstance(result_df, pd.DataFrame)
 
 
 def test_convert_change():
+    #  準備好 input 的假資料
     df = pd.DataFrame(
         [
             {
@@ -443,7 +488,7 @@ def test_convert_change():
             },
         ]
     )
-    result_df = convert_change(df)
+    result_df = convert_change(df)  # 真實結果
     excepted_df = pd.DataFrame(
         [
             {
@@ -483,24 +528,28 @@ def test_convert_change():
                 "Date": "2021-07-01",
             },
         ]
-    )
-    assert pd.testing.assert_frame_equal(result_df, excepted_df) is None
+    )  # 預期結果
+    assert (
+        pd.testing.assert_frame_equal(result_df, excepted_df) is None
+    )  # 檢查, 真實結果 == 預期結果
 
 
 def test_convert_date():
-    date = "2021-07-01"
-    result = convert_date(date)
-    excepted = "110/07/01"
-    assert result == excepted
+    date = "2021-07-01"  #  準備好 input 的假資料
+    result = convert_date(date)  # 真實結果
+    excepted = "110/07/01"  # 預期結果
+    assert result == excepted  # 檢查, 真實結果 == 預期結果
 
 
 def test_crawler_twse():
+    # 測試證交所爬蟲, end to end test
     result_df = crawler(parameter={"date": "2021-01-05", "data_source": "twse"})
     result_df = check_schema(result_df, "TaiwanStockPrice")
     assert len(result_df) > 0
 
 
 def test_crawler_tpex():
+    # 測試櫃買中心爬蟲, end to end test
     result_df = crawler(parameter={"date": "2021-01-05", "data_source": "tpex"})
     result_df = check_schema(result_df, "TaiwanStockPrice")
     assert len(result_df) > 0
