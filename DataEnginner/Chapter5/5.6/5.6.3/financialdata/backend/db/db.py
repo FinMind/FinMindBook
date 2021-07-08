@@ -4,7 +4,9 @@ from sqlalchemy import engine
 
 
 def upload_data(
-    df: pd.DataFrame, table: str, mysql_conn: engine.base.Connection
+    df: pd.DataFrame,
+    table: str,
+    mysql_conn: engine.base.Connection,
 ):
     if len(df) > 0:
         try:

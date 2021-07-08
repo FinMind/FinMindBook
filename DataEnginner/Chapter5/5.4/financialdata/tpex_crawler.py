@@ -12,7 +12,9 @@ from tqdm import tqdm
 from financialdata.router import Router
 
 
-def clear_data(df: pd.DataFrame) -> pd.DataFrame:
+def clear_data(
+    df: pd.DataFrame,
+) -> pd.DataFrame:
     """資料清理, 將文字轉成數字"""
     for col in [
         "TradeVolume",
@@ -41,7 +43,9 @@ def clear_data(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def set_column(df: pd.DataFrame) -> pd.DataFrame:
+def set_column(
+    df: pd.DataFrame,
+) -> pd.DataFrame:
     """設定資料欄位名稱"""
     df.columns = [
         "StockID",
@@ -77,18 +81,24 @@ def convert_date(date: str) -> str:
     return f"{year}/{month}/{day}"
 
 
-def crawler_tpex(date: str) -> pd.DataFrame:
+def crawler_tpex(
+    date: str,
+) -> pd.DataFrame:
     """
     櫃買中心網址
     https://www.tpex.org.tw/web/stock/aftertrading/otc_quotes_no1430/stk_wn1430.php?l=zh-tw
     """
     # headers 中的 Request url
     url = "https://www.tpex.org.tw/web/stock/aftertrading/otc_quotes_no1430/stk_wn1430_result.php?l=zh-tw&d={date}&se=AL"
-    url = url.format(date=convert_date(date))
+    url = url.format(
+        date=convert_date(date)
+    )
     # 避免被櫃買中心 ban ip, 在每次爬蟲時, 先 sleep 5 秒
     time.sleep(5)
     # request method
-    res = requests.get(url, headers=tpex_header())
+    res = requests.get(
+        url, headers=tpex_header()
+    )
     data = res.json().get("aaData", "")
     if not data:
         return pd.DataFrame()
@@ -117,28 +127,55 @@ class TaiwanStockPrice(BaseModel):
     Date: str
 
 
-def check_schema(df: pd.DataFrame) -> pd.DataFrame:
+def check_schema(
+    df: pd.DataFrame,
+) -> pd.DataFrame:
     """檢查資料型態, 確保每次要上傳資料庫前, 型態正確"""
     df_dict = df.to_dict("records")
-    df_schema = [TaiwanStockPrice(**dd).__dict__ for dd in df_dict]
+    df_schema = [
+        TaiwanStockPrice(**dd).__dict__
+        for dd in df_dict
+    ]
     df = pd.DataFrame(df_schema)
     return df
 
 
-def gen_date_list(start_date: str, end_date: str) -> typing.List[str]:
+def gen_date_list(
+    start_date: str, end_date: str
+) -> typing.List[str]:
     """建立時間列表, 用於爬取所有資料"""
-    start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
-    end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d").date()
-    days = (end_date - start_date).days + 1
+    start_date = (
+        datetime.datetime.strptime(
+            start_date, "%Y-%m-%d"
+        ).date()
+    )
+    end_date = (
+        datetime.datetime.strptime(
+            end_date, "%Y-%m-%d"
+        ).date()
+    )
+    days = (
+        end_date - start_date
+    ).days + 1
     date_list = [
-        str(start_date + datetime.timedelta(days=day)) for day in range(days)
+        str(
+            start_date
+            + datetime.timedelta(
+                days=day
+            )
+        )
+        for day in range(days)
     ]
     return date_list
 
 
-def main(start_date: str, end_date: str):
+def main(
+    start_date: str, end_date: str
+):
     """櫃買中心寫明, 本資訊自民國96年7月起開始提供"""
-    date_list = gen_date_list(start_date, end_date)
+    date_list = gen_date_list(
+        start_date, end_date
+    )
     db_router = Router()
     for date in tqdm(date_list):
         logger.info(date)

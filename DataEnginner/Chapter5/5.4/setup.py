@@ -12,7 +12,8 @@ setup(
     version="1.0.1",  # Required
     description="financial mining",  # Optional
     long_description=long_description,  # Optional
-    long_description_content_type="text/markdown",  # Optional (see note above)
+    long_description_content_type="text/markdown",  
+    # Optional (see note above)
     url="https://github.com/linsamtw",  # Optional
     author="linsam",  # Optional
     author_email="samlin266118@gmail.com",  # Optional
@@ -24,7 +25,6 @@ setup(
         "Programming Language :: Python :: 3.6",
     ],
     keywords="financial, python",  # Optional
-    # packages=find_packages(exclude=["importlib", "pymysql", "pandas"]),
     project_urls={  # Optional
         "documentation": "https://linsamtw.github.io/FinMindDoc/",
         "Source": "https://github.com/linsamtw/FinMind",

@@ -1,9 +1,3 @@
-"""
-由於書本排版, 
-這裡使用 black -l 40 taiwan_stock_price.py
-調整程式最大行數,
-使用者可再自行調整
-"""
 import datetime
 import time
 import typing
