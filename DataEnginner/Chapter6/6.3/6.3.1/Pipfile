@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 fastapi = "==0.63.0"
-uvicorn = "*"
+uvicorn = "==0.14.0"
 
 [dev-packages]
 

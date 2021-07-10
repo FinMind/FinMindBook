@@ -5,10 +5,10 @@ name = "pypi"
 
 [packages]
 fastapi = "==0.63.0"
-pandas = "*"
-pymysql = "*"
-sqlalchemy = "*"
-uvicorn = "*"
+pandas = "==1.1.5"
+pymysql = "==1.0.2"
+sqlalchemy = "==1.4.20"
+uvicorn = "==0.14.0"
 
 [dev-packages]
 
