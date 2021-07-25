@@ -30,4 +30,4 @@ test-cov:
 	pipenv run pytest --cov-report term-missing --cov-config=.coveragerc --cov=./api/ tests/
 
 format:
-	black -l 80 api tests
+	black -l 40 api tests

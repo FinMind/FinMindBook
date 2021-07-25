@@ -1,6 +1,9 @@
 import pandas as pd
 from fastapi import FastAPI
-from sqlalchemy import create_engine, engine
+from sqlalchemy import (
+    create_engine,
+    engine,
+)
 from api import config
 
 
@@ -34,7 +37,13 @@ def taiwan_stock_price(
     and Date>= '{start_date}'
     and Date<= '{end_date}'
     """
-    mysql_conn = get_mysql_financialdata_conn()
-    data_df = pd.read_sql(sql, con=mysql_conn)
-    data_dict = data_df.to_dict("records")
+    mysql_conn = (
+        get_mysql_financialdata_conn()
+    )
+    data_df = pd.read_sql(
+        sql, con=mysql_conn
+    )
+    data_dict = data_df.to_dict(
+        "records"
+    )
     return {"data": data_dict}

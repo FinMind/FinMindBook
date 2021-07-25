@@ -4,10 +4,15 @@ from multiprocessing import Process
 import pytest
 import requests
 import uvicorn
-from fastapi.testclient import TestClient
+from fastapi.testclient import (
+    TestClient,
+)
 from sqlalchemy import engine
 
-from api.main import app, get_mysql_financialdata_conn
+from api.main import (
+    app,
+    get_mysql_financialdata_conn,
+)
 
 client = TestClient(app)
 # 使用 fastapi 官方教學
@@ -15,21 +20,27 @@ client = TestClient(app)
 # 測試框架
 
 # 測試對資料庫的連線,
-# assert 回傳的物件, 是一個 sqlalchemy 的 connect
+# assert 回傳的物件, 是一個 sqlalchemy 的 connect 物件
 def test_get_mysql_financialdata_conn():
-    conn = get_mysql_financialdata_conn()
-    assert isinstance(conn, engine.Connection)
+    conn = (
+        get_mysql_financialdata_conn()
+    )
+    assert isinstance(
+        conn, engine.Connection
+    )
 
 
-# 測試對 '/' 頁面發送 request,
+# 測試對 'http://127.0.0.1:5000/' 頁面發送 request,
 # 得到的回應 response 的狀態 status_code, json data
 def test_read_root():
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json() == {"Hello": "World"}
+    assert response.json() == {
+        "Hello": "World"
+    }
 
 
-# 測試對 '/taiwan_stock_price' 頁面發送 request,
+# 測試對 'http://127.0.0.1:5000/taiwan_stock_price' 頁面發送 request,
 # 並帶 stock_id, start_date, end_date 參數
 # 得到的回應 response 的狀態 status_code, json data
 def test_taiwan_stock_price():
@@ -67,14 +78,19 @@ def test_taiwan_stock_price():
     }
 
 
-# end to end 測試, 使用 Process 開另一個進程, 模擬啟動 api
+# end to end 測試, 模擬真實使用 request 套件發送請求
+# 使用 Process 開另一個進程, 模擬啟動 api
 # 之後會在主進程, 對此 api 發送 request
 @pytest.fixture(scope="module")
 def setUp():
     proc = Process(
         target=uvicorn.run,
         args=(app,),
-        kwargs={"host": "127.0.0.1", "port": 5000, "log_level": "info"},
+        kwargs={
+            "host": "127.0.0.1",
+            "port": 5000,
+            "log_level": "info",
+        },
         daemon=True,
     )
     proc.start()
@@ -85,8 +101,12 @@ def setUp():
 # 測試對 api 發送 requests,
 # assert 回傳結果是 {"Hello": "World"}
 def test_index(setUp):
-    response = requests.get("http://127.0.0.1:5000")
-    assert response.json() == {"Hello": "World"}
+    response = requests.get(
+        "http://127.0.0.1:5000"
+    )
+    assert response.json() == {
+        "Hello": "World"
+    }
 
 
 # 測試對 api 發送 requests,
@@ -100,7 +120,8 @@ def test_TaiwanStockPriceID(setUp):
         "end_date": "2021-04-01",
     }
     res = requests.get(
-        "http://127.0.0.1:5000/taiwan_stock_price", params=payload
+        "http://127.0.0.1:5000/taiwan_stock_price",
+        params=payload,
     )
     resp = res.json()["data"]
     assert resp == [
