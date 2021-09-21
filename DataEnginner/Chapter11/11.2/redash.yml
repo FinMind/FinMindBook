@@ -1,0 +1,154 @@
+version: "3.0"
+services:
+  server:
+    image: redash/redash:8.0.0.b32245
+    depends_on:
+      - postgres
+      - redis
+    restart: always
+    command: server
+    ports:
+      - "5000:5000"
+    environment:
+      PYTHONUNBUFFERED: 0
+      REDASH_LOG_LEVEL: INFO
+      REDASH_REDIS_URL: redis://redis:6379/0
+      POSTGRES_PASSWORD: postgres_password
+      REDASH_COOKIE_SECRET: r4ZKkbdEQpcdzGS0rTEoN53ZzGOrW6jn
+      REDASH_SECRET_KEY: 2pbvFOJeGZ3W7DFyqN6Vh0ggAmV5zzxt
+      REDASH_DATABASE_URL: postgresql://postgres:postgres_password@postgres/postgres
+      REDASH_ADDITIONAL_QUERY_RUNNERS: redash.query_runner.python
+      REDASH_WEB_WORKERS: 4
+    networks:
+        - dev
+
+  create_table:
+    image: redash/redash:8.0.0.b32245
+    depends_on:
+      - postgres
+      - redis
+    restart: always
+    command: python /app/manage.py database create_tables
+    environment:
+      PYTHONUNBUFFERED: 0
+      REDASH_LOG_LEVEL: INFO
+      REDASH_REDIS_URL: redis://redis:6379/0
+      POSTGRES_PASSWORD: postgres_password
+      REDASH_COOKIE_SECRET: r4ZKkbdEQpcdzGS0rTEoN53ZzGOrW6jn
+      REDASH_SECRET_KEY: 2pbvFOJeGZ3W7DFyqN6Vh0ggAmV5zzxt
+      REDASH_DATABASE_URL: postgresql://postgres:postgres_password@postgres/postgres
+      REDASH_ADDITIONAL_QUERY_RUNNERS: redash.query_runner.python
+      REDASH_WEB_WORKERS: 4
+    networks:
+        - dev
+
+  scheduler:
+    image: redash/redash:8.0.0.b32245
+    depends_on:
+      - postgres
+      - redis
+    restart: always
+    command: scheduler
+    environment:
+      PYTHONUNBUFFERED: 0
+      REDASH_LOG_LEVEL: INFO
+      REDASH_REDIS_URL: redis://redis:6379/0
+      POSTGRES_PASSWORD: postgres_password
+      REDASH_COOKIE_SECRET: r4ZKkbdEQpcdzGS0rTEoN53ZzGOrW6jn
+      REDASH_SECRET_KEY: 2pbvFOJeGZ3W7DFyqN6Vh0ggAmV5zzxt
+      REDASH_DATABASE_URL: postgresql://postgres:postgres_password@postgres/postgres
+      REDASH_ADDITIONAL_QUERY_RUNNERS: redash.query_runner.python
+      QUEUES: "celery"
+      WORKERS_COUNT: 1
+    networks:
+        - dev
+      
+  scheduled_worker:
+    image: redash/redash:8.0.0.b32245
+    depends_on:
+      - postgres
+      - redis
+    restart: always
+    command: worker
+    environment:
+      PYTHONUNBUFFERED: 0
+      REDASH_LOG_LEVEL: INFO
+      REDASH_REDIS_URL: redis://redis:6379/0
+      POSTGRES_PASSWORD: postgres_password
+      REDASH_COOKIE_SECRET: r4ZKkbdEQpcdzGS0rTEoN53ZzGOrW6jn
+      REDASH_SECRET_KEY: 2pbvFOJeGZ3W7DFyqN6Vh0ggAmV5zzxt
+      REDASH_DATABASE_URL: postgresql://postgres:postgres_password@postgres/postgres
+      REDASH_ADDITIONAL_QUERY_RUNNERS: redash.query_runner.python
+      QUEUES: "scheduled_queries,schemas"
+      WORKERS_COUNT: 1
+    networks:
+        - dev
+
+  adhoc_worker:
+    image: redash/redash:8.0.0.b32245
+    depends_on:
+      - postgres
+      - redis
+    restart: always
+    command: worker
+    environment:
+      PYTHONUNBUFFERED: 0
+      REDASH_LOG_LEVEL: INFO
+      REDASH_REDIS_URL: redis://redis:6379/0
+      POSTGRES_PASSWORD: postgres_password
+      REDASH_COOKIE_SECRET: r4ZKkbdEQpcdzGS0rTEoN53ZzGOrW6jn
+      REDASH_SECRET_KEY: 2pbvFOJeGZ3W7DFyqN6Vh0ggAmV5zzxt
+      REDASH_DATABASE_URL: postgresql://postgres:postgres_password@postgres/postgres
+      REDASH_ADDITIONAL_QUERY_RUNNERS: redash.query_runner.python
+      QUEUES: "queries"
+      WORKERS_COUNT: 2
+    networks:
+        - dev
+
+  redis:
+    image: redis:5.0
+    restart: always
+    volumes:
+      - redis-redash:/bitnami/redis/data
+    networks:
+        - dev
+
+  postgres:
+    image: postgres:9.6-alpine
+    environment:
+      PYTHONUNBUFFERED: 0
+      REDASH_LOG_LEVEL: INFO
+      REDASH_REDIS_URL: redis://redis:6379/0
+      POSTGRES_PASSWORD: postgres_password
+      REDASH_COOKIE_SECRET: r4ZKkbdEQpcdzGS0rTEoN53ZzGOrW6jn
+      REDASH_SECRET_KEY: 2pbvFOJeGZ3W7DFyqN6Vh0ggAmV5zzxt
+      REDASH_DATABASE_URL: postgresql://postgres:postgres_password@postgres/postgres
+      REDASH_ADDITIONAL_QUERY_RUNNERS: redash.query_runner.python
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    restart: always
+    networks:
+        - dev
+
+  nginx:
+    image: redash/nginx:latest
+    depends_on:
+      - server
+    links:
+      - server:redash
+    restart: always
+    networks:
+        - dev
+
+networks:
+  dev:
+    # external: true
+
+volumes:
+  postgres:
+    # external: true
+
+  redis-redash:
+    # external: true
+
+
