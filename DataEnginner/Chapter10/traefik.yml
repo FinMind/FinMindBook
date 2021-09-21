@@ -3,26 +3,35 @@ version: "3.8"
 services:
 
   traefik:
-    image: "traefik:v2.2"
+    image: "traefik:v2.2" # image 版本
     command:
+      # 設定顯示 dashboard
       - --api.insecure=true
       - --api.dashboard=true
+      # log 模式，有 DEBUG、ERROR、INFO 等模式
       - --api.debug=true
       - --log.level=ERROR
+      # https://doc.traefik.io/traefik/v2.0/routing/providers/docker/
+      # 根據官方文件，有 docker、k8s 等模式可做選擇
+      # 在此我們選擇 docker 
       - --providers.docker=true
       - --providers.docker.endpoint=unix:///var/run/docker.sock
       - --providers.docker.swarmMode=true
       - --providers.docker.exposedbydefault=false
       - --providers.docker.network=traefik-public
-      - --api.insecure=true
+      # 進入點，80、443 分別對應 http、https
       - --entrypoints.web.address=:80
       - --entrypoints.web-secured.address=:443
-      # ssl
+      # SSL 設定
       - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
       - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
       - "--certificatesresolvers.myresolver.acme.email=samlin266118@gmail.com"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports:
+      # 開對外 port，除了 80、443 是給 http、https 外
+      # 8080 port 給 dashboard
+      # 但我們 8080 已經給 phpmyadmin 
+      # 因此這裡 published 到 8888
       - target: 80
         published: 80
         mode: host
@@ -33,13 +42,16 @@ services:
         published: 8888
         mode: host
     volumes:
+      # 存放 SSL 憑證
       - "letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     restart: unless-stopped
+    # log 最大 size
     logging:
         driver: "json-file"
         options:
             max-size: "50m"
+    # deploy 設定
     deploy:
       replicas: 1
       update_config:
