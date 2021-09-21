@@ -11,7 +11,7 @@ services:
       # log 模式，有 DEBUG、ERROR、INFO 等模式
       - --api.debug=true
       - --log.level=ERROR
-      # https://doc.traefik.io/traefik/v2.0/routing/providers/docker/
+      # https://doc.traefik.io/traefik/v2.2/routing/providers/docker/
       # 根據官方文件，有 docker、k8s 等模式可做選擇
       # 在此我們選擇 docker 
       - --providers.docker=true
