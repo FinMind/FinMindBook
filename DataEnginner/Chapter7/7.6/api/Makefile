@@ -25,3 +25,6 @@ tag-image:
 
 push-image:
 	docker push linsamtw/api:7.2.2
+
+deploy:
+	docker stack deploy -c api.yml api
