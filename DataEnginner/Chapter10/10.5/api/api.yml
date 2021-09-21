@@ -16,16 +16,17 @@ services:
       labels:
         - traefik.enable=true
         - traefik.frontend.passHostHeader=true
-        # dns
+        # routers 設定，這裡
         - traefik.http.routers.api-https.rule=
           Host(`testapi.ddns.net`) && PathPrefix(`/docs`) || 
           Host(`testapi.ddns.net`) && PathPrefix(`/openapi.json`) || 
-          Host(`testapi.ddns.net`) && PathPrefix(`/api`)
-        # api service port
+          Host(`testapi.ddns.net`)
+        # api loading balance 的 port
+        # traefik 的好處之一，會幫你處理分流
         - traefik.http.services.api-https.loadbalancer.server.port=80
-        # ssl
+        # SSL 設定
         - traefik.http.routers.api-https.tls.certresolver=myresolver
-        # http to https
+        # http 自動導向 https
         - "traefik.http.routers.api-http-catchall.rule=hostregexp(`{host:.+}`)"
         - "traefik.http.routers.api-http-catchall.entrypoints=web"
         - "traefik.http.routers.api-http-catchall.middlewares=api-redirect-to-https@docker"
@@ -41,5 +42,5 @@ networks:
     # 加入已經存在的網路
     external: true
   traefik-public:
-    # 加入已經存在的網路
+    # 需加入 traefik 的網路
     external: true
