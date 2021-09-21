@@ -16,7 +16,17 @@ services:
       labels:
         - traefik.enable=true
         - traefik.frontend.passHostHeader=true
-        # routers 設定，這裡
+        # routers 設定，
+        # 這裡根據 fastapi 所需的 router 做額外設定
+        # fastapi 預設在 /docs 作為文件頁面，
+        # 並根據 /openapi.json 去製作文件
+        # 因此需額外設定 
+        # testapi.ddns.net/docs 與 
+        # testapi.ddns.net/openapi.json
+        # 可被 traefik 訪問，方法如下
+        # 指定 Host 與 Path
+        # &&：代表 and，將 Host 與 Path 連在一起使用
+        # ||：代表 or，在多個 router 時使用
         - traefik.http.routers.api-https.rule=
           Host(`testapi.ddns.net`) && PathPrefix(`/docs`) || 
           Host(`testapi.ddns.net`) && PathPrefix(`/openapi.json`) || 
