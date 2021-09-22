@@ -1,33 +1,55 @@
-version: "3.0"
+version: "3.8"
 services:
-  server:
+  redash:
+    # 選用此版本的 redash image
     image: redash/redash:8.0.0.b32245
+    # depends 代表依賴關係
+    # 需要等 postgres、redis 先架設完成
+    # 才會開始架設 redash services
     depends_on:
       - postgres
       - redis
     restart: always
+    # redash 啟動 server 指令
     command: server
+    # redash 使用 5000 port
     ports:
-      - "5000:5000"
+      - target: 5000
+        published: 5000
+        mode: host
+    # 相關的環境變數，包含
     environment:
       PYTHONUNBUFFERED: 0
+      # log 等級
       REDASH_LOG_LEVEL: INFO
+      # redis 的連線設定
       REDASH_REDIS_URL: redis://redis:6379/0
+      # postgres 的密碼
       POSTGRES_PASSWORD: postgres_password
       REDASH_COOKIE_SECRET: r4ZKkbdEQpcdzGS0rTEoN53ZzGOrW6jn
       REDASH_SECRET_KEY: 2pbvFOJeGZ3W7DFyqN6Vh0ggAmV5zzxt
+      # postgres 的連線設定
       REDASH_DATABASE_URL: postgresql://postgres:postgres_password@postgres/postgres
+      # 允許在 redash 上使用 python
       REDASH_ADDITIONAL_QUERY_RUNNERS: redash.query_runner.python
-      REDASH_WEB_WORKERS: 4
+      # worker 數量
+      # 這是做範例，設定 1，
+      # 未來可根據需求自行增加
+      REDASH_WEB_WORKERS: 1
     networks:
         - dev
 
   create_table:
+    # 相關設定與 redash services 相同
+    # 也用相同的 image
     image: redash/redash:8.0.0.b32245
     depends_on:
       - postgres
       - redis
     restart: always
+    # 主要差異在此
+    # 初始化需要建立 table
+    # 建立完成後，可在 portainer 上刪除此 services
     command: python /app/manage.py database create_tables
     environment:
       PYTHONUNBUFFERED: 0
@@ -38,11 +60,12 @@ services:
       REDASH_SECRET_KEY: 2pbvFOJeGZ3W7DFyqN6Vh0ggAmV5zzxt
       REDASH_DATABASE_URL: postgresql://postgres:postgres_password@postgres/postgres
       REDASH_ADDITIONAL_QUERY_RUNNERS: redash.query_runner.python
-      REDASH_WEB_WORKERS: 4
+      REDASH_WEB_WORKERS: 1
     networks:
         - dev
 
   scheduler:
+    # 用於 redash 相關的 scheduler 排程
     image: redash/redash:8.0.0.b32245
     depends_on:
       - postgres
@@ -58,12 +81,15 @@ services:
       REDASH_SECRET_KEY: 2pbvFOJeGZ3W7DFyqN6Vh0ggAmV5zzxt
       REDASH_DATABASE_URL: postgresql://postgres:postgres_password@postgres/postgres
       REDASH_ADDITIONAL_QUERY_RUNNERS: redash.query_runner.python
+      # 這裡的 celery 就跟前面章節提到的
+      # 分散式概念一樣
       QUEUES: "celery"
       WORKERS_COUNT: 1
     networks:
         - dev
-      
+  
   scheduled_worker:
+    # 分散式中的 worker 
     image: redash/redash:8.0.0.b32245
     depends_on:
       - postgres
@@ -84,28 +110,8 @@ services:
     networks:
         - dev
 
-  adhoc_worker:
-    image: redash/redash:8.0.0.b32245
-    depends_on:
-      - postgres
-      - redis
-    restart: always
-    command: worker
-    environment:
-      PYTHONUNBUFFERED: 0
-      REDASH_LOG_LEVEL: INFO
-      REDASH_REDIS_URL: redis://redis:6379/0
-      POSTGRES_PASSWORD: postgres_password
-      REDASH_COOKIE_SECRET: r4ZKkbdEQpcdzGS0rTEoN53ZzGOrW6jn
-      REDASH_SECRET_KEY: 2pbvFOJeGZ3W7DFyqN6Vh0ggAmV5zzxt
-      REDASH_DATABASE_URL: postgresql://postgres:postgres_password@postgres/postgres
-      REDASH_ADDITIONAL_QUERY_RUNNERS: redash.query_runner.python
-      QUEUES: "queries"
-      WORKERS_COUNT: 2
-    networks:
-        - dev
-
   redis:
+    # redis 資料庫
     image: redis:5.0
     restart: always
     volumes:
@@ -114,6 +120,7 @@ services:
         - dev
 
   postgres:
+    # postgres 資料庫
     image: postgres:9.6-alpine
     environment:
       PYTHONUNBUFFERED: 0
@@ -131,9 +138,10 @@ services:
         - dev
 
   nginx:
+    # 網頁伺服器
     image: redash/nginx:latest
     depends_on:
-      - server
+      - redash
     links:
       - server:redash
     restart: always
@@ -142,13 +150,9 @@ services:
 
 networks:
   dev:
-    # external: true
 
 volumes:
   postgres:
-    # external: true
 
   redis-redash:
-    # external: true
-
 
