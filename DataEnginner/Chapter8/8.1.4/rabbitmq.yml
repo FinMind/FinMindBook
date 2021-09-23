@@ -1,0 +1,41 @@
+version: '3'
+services:
+
+  rabbitmq:
+    image: 'rabbitmq:3.6-management-alpine'
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      RABBITMQ_DEFAULT_USER: "worker"
+      RABBITMQ_DEFAULT_PASS: "worker"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.rabbitmq == true]
+    networks:
+      - my_network
+
+  flower:
+    image: mher/flower:0.9.5
+    command: ["flower", "--broker=amqp://worker:worker@rabbitmq", "--port=5555"]
+    ports:
+      - 5555:5555
+    depends_on:
+      - rabbitmq
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.flower == true]
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    # 加入已經存在的網路
+    external: true
