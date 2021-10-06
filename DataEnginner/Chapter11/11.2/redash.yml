@@ -26,8 +26,8 @@ services:
       REDASH_REDIS_URL: redis://redis:6379/0
       # postgres 的密碼
       POSTGRES_PASSWORD: postgres_password
-      REDASH_COOKIE_SECRET: r4ZKkbdEQpcdzGS0rTEoN53ZzGOrW6jn
-      REDASH_SECRET_KEY: 2pbvFOJeGZ3W7DFyqN6Vh0ggAmV5zzxt
+      REDASH_COOKIE_SECRET: redash_cookie_secret
+      REDASH_SECRET_KEY: redash_secret_key
       # postgres 的連線設定
       REDASH_DATABASE_URL: postgresql://postgres:postgres_password@postgres/postgres
       # 允許在 redash 上使用 python
@@ -37,7 +37,7 @@ services:
       # 未來可根據需求自行增加
       REDASH_WEB_WORKERS: 1
     networks:
-        - my_network
+        - dev
 
   create_table:
     # 相關設定與 redash services 相同
@@ -46,7 +46,7 @@ services:
     depends_on:
       - postgres
       - redis
-    restart: always
+    # restart: always
     # 主要差異在此
     # 初始化需要建立 table
     # 建立完成後，可在 portainer 上刪除此 services
@@ -56,13 +56,13 @@ services:
       REDASH_LOG_LEVEL: INFO
       REDASH_REDIS_URL: redis://redis:6379/0
       POSTGRES_PASSWORD: postgres_password
-      REDASH_COOKIE_SECRET: r4ZKkbdEQpcdzGS0rTEoN53ZzGOrW6jn
-      REDASH_SECRET_KEY: 2pbvFOJeGZ3W7DFyqN6Vh0ggAmV5zzxt
+      REDASH_COOKIE_SECRET: redash_cookie_secret
+      REDASH_SECRET_KEY: redash_secret_key
       REDASH_DATABASE_URL: postgresql://postgres:postgres_password@postgres/postgres
       REDASH_ADDITIONAL_QUERY_RUNNERS: redash.query_runner.python
       REDASH_WEB_WORKERS: 1
     networks:
-        - my_network
+        - dev
 
   scheduler:
     # 用於 redash 相關的 scheduler 排程
@@ -77,8 +77,8 @@ services:
       REDASH_LOG_LEVEL: INFO
       REDASH_REDIS_URL: redis://redis:6379/0
       POSTGRES_PASSWORD: postgres_password
-      REDASH_COOKIE_SECRET: r4ZKkbdEQpcdzGS0rTEoN53ZzGOrW6jn
-      REDASH_SECRET_KEY: 2pbvFOJeGZ3W7DFyqN6Vh0ggAmV5zzxt
+      REDASH_COOKIE_SECRET: redash_cookie_secret
+      REDASH_SECRET_KEY: redash_secret_key
       REDASH_DATABASE_URL: postgresql://postgres:postgres_password@postgres/postgres
       REDASH_ADDITIONAL_QUERY_RUNNERS: redash.query_runner.python
       # 這裡的 celery 就跟前面章節提到的
@@ -86,7 +86,7 @@ services:
       QUEUES: "celery"
       WORKERS_COUNT: 1
     networks:
-        - my_network
+        - dev
   
   scheduled_worker:
     # 分散式中的 worker 
@@ -101,14 +101,39 @@ services:
       REDASH_LOG_LEVEL: INFO
       REDASH_REDIS_URL: redis://redis:6379/0
       POSTGRES_PASSWORD: postgres_password
-      REDASH_COOKIE_SECRET: r4ZKkbdEQpcdzGS0rTEoN53ZzGOrW6jn
-      REDASH_SECRET_KEY: 2pbvFOJeGZ3W7DFyqN6Vh0ggAmV5zzxt
+      REDASH_COOKIE_SECRET: redash_cookie_secret
+      REDASH_SECRET_KEY: redash_secret_key
       REDASH_DATABASE_URL: postgresql://postgres:postgres_password@postgres/postgres
       REDASH_ADDITIONAL_QUERY_RUNNERS: redash.query_runner.python
+      # 負責處理 queue = scheduled_queries,schemas 類型的任務
+      # 與本書中 7.6.3，crawler.yml 中的 -Q twse 概念一樣
       QUEUES: "scheduled_queries,schemas"
       WORKERS_COUNT: 1
     networks:
-        - my_network
+        - dev
+
+  adhoc_worker:
+    image: redash/redash:8.0.0.b32245
+    depends_on:
+      - postgres
+      - redis
+    restart: always
+    command: worker
+    environment:
+      PYTHONUNBUFFERED: 0
+      REDASH_LOG_LEVEL: INFO
+      REDASH_REDIS_URL: redis://redis:6379/0
+      POSTGRES_PASSWORD: postgres_password
+      REDASH_COOKIE_SECRET: redash_cookie_secret
+      REDASH_SECRET_KEY: redash_secret_key
+      REDASH_DATABASE_URL: postgresql://postgres:postgres_password@postgres/postgres
+      REDASH_ADDITIONAL_QUERY_RUNNERS: redash.query_runner.python
+      # 負責處理 queue = queries 類型的任務
+      # 與本書中 7.6.3，crawler.yml 中的 -Q twse 概念一樣
+      QUEUES: "queries"
+      WORKERS_COUNT: 2
+    networks:
+        - dev
 
   redis:
     # redis 資料庫
@@ -117,7 +142,7 @@ services:
     volumes:
       - redis-redash:/bitnami/redis/data
     networks:
-        - my_network
+        - dev
 
   postgres:
     # postgres 資料庫
@@ -127,29 +152,27 @@ services:
       REDASH_LOG_LEVEL: INFO
       REDASH_REDIS_URL: redis://redis:6379/0
       POSTGRES_PASSWORD: postgres_password
-      REDASH_COOKIE_SECRET: r4ZKkbdEQpcdzGS0rTEoN53ZzGOrW6jn
-      REDASH_SECRET_KEY: 2pbvFOJeGZ3W7DFyqN6Vh0ggAmV5zzxt
+      REDASH_COOKIE_SECRET: redash_cookie_secret
+      REDASH_SECRET_KEY: redash_secret_key
       REDASH_DATABASE_URL: postgresql://postgres:postgres_password@postgres/postgres
       REDASH_ADDITIONAL_QUERY_RUNNERS: redash.query_runner.python
     volumes:
       - postgres:/var/lib/postgresql/data
     restart: always
     networks:
-        - my_network
+        - dev
 
   nginx:
     # 網頁伺服器
     image: redash/nginx:latest
     depends_on:
       - redash
-    links:
-      - server:redash
     restart: always
     networks:
-        - my_network
+        - dev
 
 networks:
-  my_network:
+  dev:
     external: true
 
 volumes:
