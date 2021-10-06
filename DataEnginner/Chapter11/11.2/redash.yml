@@ -37,7 +37,7 @@ services:
       # 未來可根據需求自行增加
       REDASH_WEB_WORKERS: 1
     networks:
-        - dev
+        - my_network
 
   create_table:
     # 相關設定與 redash services 相同
@@ -62,7 +62,7 @@ services:
       REDASH_ADDITIONAL_QUERY_RUNNERS: redash.query_runner.python
       REDASH_WEB_WORKERS: 1
     networks:
-        - dev
+        - my_network
 
   scheduler:
     # 用於 redash 相關的 scheduler 排程
@@ -86,7 +86,7 @@ services:
       QUEUES: "celery"
       WORKERS_COUNT: 1
     networks:
-        - dev
+        - my_network
   
   scheduled_worker:
     # 分散式中的 worker 
@@ -110,7 +110,7 @@ services:
       QUEUES: "scheduled_queries,schemas"
       WORKERS_COUNT: 1
     networks:
-        - dev
+        - my_network
 
   adhoc_worker:
     image: redash/redash:8.0.0.b32245
@@ -133,7 +133,7 @@ services:
       QUEUES: "queries"
       WORKERS_COUNT: 2
     networks:
-        - dev
+        - my_network
 
   redis:
     # redis 資料庫
@@ -142,7 +142,7 @@ services:
     volumes:
       - redis-redash:/bitnami/redis/data
     networks:
-        - dev
+        - my_network
 
   postgres:
     # postgres 資料庫
@@ -160,7 +160,7 @@ services:
       - postgres:/var/lib/postgresql/data
     restart: always
     networks:
-        - dev
+        - my_network
 
   nginx:
     # 網頁伺服器
@@ -169,10 +169,10 @@ services:
       - redash
     restart: always
     networks:
-        - dev
+        - my_network
 
 networks:
-  dev:
+  my_network:
     external: true
 
 volumes:
