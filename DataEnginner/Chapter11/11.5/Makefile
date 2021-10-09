@@ -44,7 +44,7 @@ gen-release-env-variable:
 	VERSION=RELEASE python genenv.py
 
 build-image:
-	docker build -f Dockerfile -t crawler:7.2.1 .
+	docker build -f Dockerfile -t crawler:11.5 .
 
 up-crawler:
 	docker-compose -f crawler.yml up
@@ -56,10 +56,10 @@ up-scheduler:
 	docker-compose -f scheduler.yml up
 
 tag-image:
-	docker tag crawler:7.2.1 linsamtw/crawler:7.2.1
+	docker tag crawler:11.5 linsamtw/crawler:11.5
 
 push-image:
-	docker push linsamtw/crawler:7.2.1
+	docker push linsamtw/crawler:11.5
 
 run-scheduler:
 	pipenv run python financialdata/scheduler.py
