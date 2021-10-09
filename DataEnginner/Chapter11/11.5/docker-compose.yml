@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile.cache
     image: linsamtw/crawler:11.5
-    hostname: "twse"
+    hostname: "{{.Node.Hostname}}-{{.Service.Name}}"
     command: pipenv run celery -A financialdata.tasks.worker worker --loglevel=info --concurrency=1  --hostname=%h -Q twse
     restart: always
     # swarm 設定
@@ -24,7 +24,7 @@ services:
       context: .
       dockerfile: Dockerfile.cache
     image: linsamtw/crawler:11.5
-    hostname: "twse"
+    hostname: "{{.Node.Hostname}}-{{.Service.Name}}"
     command: pipenv run celery -A financialdata.tasks.worker worker --loglevel=info --concurrency=1  --hostname=%h -Q tpex
     restart: always
     # swarm 設定
@@ -43,7 +43,7 @@ services:
       context: .
       dockerfile: Dockerfile.cache
     image: linsamtw/crawler:11.5
-    hostname: "twse"
+    hostname: "{{.Node.Hostname}}-{{.Service.Name}}"
     command: pipenv run python financialdata/scheduler.py
     restart: always
     environment:
