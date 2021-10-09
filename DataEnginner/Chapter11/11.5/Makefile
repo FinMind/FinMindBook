@@ -49,15 +49,6 @@ build-latest-image:
 push-latest-image:
 	docker push linsamtw/crawler:latest
 
-up-crawler:
-	docker-compose -f crawler.yml up
-
-up-multi-crawler:
-	docker-compose -f crawler_multi_celery.yml up
-
-up-scheduler:
-	docker-compose -f scheduler.yml up
-
 build-image:
 	docker build -f cache.Dockerfile -t linsamtw/crawler:11.5 .
 
@@ -69,6 +60,9 @@ run-scheduler:
 
 test-cov:
 	pipenv run pytest --cov-report term-missing --cov-config=.coveragerc --cov=./financialdata/ tests/
+
+deploy:
+	docker stack deploy -c docker-compose.yml financialdata
 
 # format
 format:
