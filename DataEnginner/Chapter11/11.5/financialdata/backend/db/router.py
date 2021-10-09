@@ -61,8 +61,8 @@ class Router:
 
     @property
     def mysql_financialdata_conn(self):
-        return (
-            self.check_mysql_financialdata_conn_alive()
+        return self.check_mysql_financialdata_conn_alive().execution_options(
+            autocommit=True
         )
 
     def close_connection(self):

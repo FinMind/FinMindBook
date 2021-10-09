@@ -1,0 +1,25 @@
+version: '3.0'
+services:
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile.cache
+    image: linsamtw/crawler:7.2.1
+    hostname: "twse"
+    command: pipenv run python financialdata/scheduler.py
+    restart: always
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.crawler_scheduler == true]
+    environment:
+      - TZ=Asia/Taipei
+    networks:
+        - my_network
+
+networks:
+  my_network:
+    # 加入已經存在的網路
+    external: true

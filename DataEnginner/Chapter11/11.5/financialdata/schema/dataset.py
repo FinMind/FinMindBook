@@ -17,22 +17,6 @@ class TaiwanStockPrice(BaseModel):
     Date: str
 
 
-class TaiwanFuturesDaily(BaseModel):
-    Date: str
-    FuturesID: str
-    ContractDate: str
-    Open: float
-    Max: float
-    Min: float
-    Close: float
-    Change: float
-    ChangePer: float
-    Volume: float
-    SettlementPrice: float
-    OpenInterest: int
-    TradingSession: str
-
-
 def check_schema(
     df: pd.DataFrame, dataset: str
 ) -> pd.DataFrame:

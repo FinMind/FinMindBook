@@ -1,0 +1,25 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest = "*"
+
+[packages]
+pandas = "*"
+requests = "*"
+pydantic = "*"
+celery = "*"
+sqlalchemy = "*"
+financialdata = {editable = true,path = "."}
+pymysql = "*"
+loguru = "*"
+apscheduler = "*"
+pytest-cov = "==2.11.1"
+pytest-mock = "==3.5.1"
+tqdm = "==4.62.2"
+lxml = "==4.6.3"
+
+[requires]
+python_version = "3.6"

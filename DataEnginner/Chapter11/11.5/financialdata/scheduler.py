@@ -8,20 +8,26 @@ from financialdata.producer import (
     Update,
 )
 from loguru import logger
+from financialdata.backend.db import (
+    mysql_database,
+)
+from financialdata.utility.common import (
+    get_today,
+)
 
 
-def sent_crawler_task():
-    # 將此段，改成發送任務的程式碼
-    # logger.info(f"sent_crawler_task {dataset}")
-    today = (
-        datetime.datetime.today()
-        .date()
-        .strftime("%Y-%m-%d")
+def sent_crawler_task(table: str):
+    mysql_database.create_table(table)
+    start_date = (
+        mysql_database.get_max_date(
+            table
+        )
     )
+    end_date = get_today()
     Update(
-        dataset="taiwan_stock_price",
-        start_date=today,
-        end_date=today,
+        table=table,
+        start_date=start_date,
+        end_date=end_date,
     )
 
 
@@ -32,7 +38,9 @@ def main():
     # 與 crontab 類似，設定何時執行，有小時、分鐘、秒參數，* 星號代表任意時間點
     scheduler.add_job(
         id="sent_crawler_task",
-        func=sent_crawler_task,
+        func=lambda: sent_crawler_task(
+            table="taiwan_stock_price"
+        ),
         trigger="cron",
         hour="15",
         minute="0",

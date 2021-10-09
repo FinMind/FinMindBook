@@ -10,7 +10,7 @@ from financialdata.tasks.task import (
 
 
 def Update(
-    dataset: str,
+    table: str,
     start_date: str,
     end_date: str,
 ):
@@ -19,7 +19,7 @@ def Update(
     # 資料來源 data_source，例如 twse 證交所、tpex 櫃買中心
     parameter_list = getattr(
         importlib.import_module(
-            f"financialdata.crawler.{dataset}"
+            f"financialdata.crawler.{table}"
         ),
         "gen_task_paramter_list",
     )(
@@ -29,10 +29,10 @@ def Update(
     # 用 for loop 發送任務
     for parameter in parameter_list:
         logger.info(
-            f"{dataset}, {parameter}"
+            f"{table}, {parameter}"
         )
         task = crawler.s(
-            dataset, parameter
+            table, parameter
         )
         # queue 參數，可以指定要發送到特定 queue 列隊中
         task.apply_async(

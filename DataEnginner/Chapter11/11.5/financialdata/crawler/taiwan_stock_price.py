@@ -5,11 +5,12 @@
 使用者可再自行調整
 """
 import datetime
-import time
 import typing
 
 import pandas as pd
-import requests
+from financialdata.utility import (
+    request,
+)
 from loguru import logger
 from financialdata.schema.dataset import (
     check_schema,
@@ -179,10 +180,10 @@ def crawler_tpex(
         date=convert_date(date)
     )
     # 避免被櫃買中心 ban ip, 在每次爬蟲時, 先 sleep 5 秒
-    time.sleep(5)
-    # request method
-    res = requests.get(
-        url, headers=tpex_header()
+    res = request.get(
+        url,
+        header=tpex_header(),
+        sleep=5,
     )
     data = res.json().get("aaData", [])
     df = pd.DataFrame(data)
@@ -211,10 +212,10 @@ def crawler_twse(
         date=date.replace("-", "")
     )
     # 避免被證交所 ban ip, 在每次爬蟲時, 先 sleep 5 秒
-    time.sleep(5)
-    # request method
-    res = requests.get(
-        url, headers=twse_header()
+    res = request.get(
+        url,
+        header=twse_header(),
+        sleep=5,
     )
     # 2009 年以後的資料, 股價在 response 中的 data9
     # 2009 年以後的資料, 股價在 response 中的 data8
@@ -297,7 +298,8 @@ def crawler(
                 str, int, float
             ]
         ],
-    ]
+    ],
+    **kwargs,
 ) -> pd.DataFrame:
     logger.info(parameter)
     date = parameter.get("date", "")
