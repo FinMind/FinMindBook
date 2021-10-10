@@ -7,14 +7,14 @@ verify_ssl = true
 pytest = "*"
 
 [packages]
-pandas = "*"
+pandas = "==1.1.5"
 requests = "*"
-pydantic = "*"
+pydantic = "==1.8.2"
 celery = "*"
-sqlalchemy = "*"
+sqlalchemy = "==1.4.20"
 financialdata = {editable = true,path = "."}
-pymysql = "*"
-loguru = "*"
+pymysql = "==1.0.2"
+loguru = "==0.5.3"
 apscheduler = "*"
 pytest-cov = "==2.11.1"
 pytest-mock = "==3.5.1"
