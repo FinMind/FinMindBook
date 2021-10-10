@@ -8,7 +8,7 @@ pytest = "*"
 
 [packages]
 pandas = "==1.1.5"
-requests = "*"
+requests = "==2.25.1"
 pydantic = "==1.8.2"
 celery = "*"
 sqlalchemy = "==1.4.20"
