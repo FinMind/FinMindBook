@@ -6,6 +6,7 @@ from sqlalchemy import (
     create_engine,
     engine,
 )
+from tqdm import tqdm
 import requests
 
 
@@ -36,7 +37,7 @@ def create_taiwan_stock_price_sql():
             `StockID` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
             `Transaction` bigint NOT NULL,
             `TradeVolume` int NOT NULL,
-            `'TradeValue` bigint NOT NULL,
+            `TradeValue` bigint NOT NULL,
             `Open` float NOT NULL,
             `Max` float NOT NULL,
             `Min` float NOT NULL,
@@ -107,7 +108,7 @@ def create_table(
     table: str,
     mysql_conn: engine.base.Connection,
 ):
-    sql = eval(f'create_{table}_sql()')
+    sql = eval(f"create_{table}_sql()")
     try:
         logger.info(
             f"create table {table}"
@@ -123,23 +124,42 @@ def download_data(
     table: str,
     mysql_conn: engine.base.Connection,
 ):
+    chunk_size = 10000
     logger.info("download data")
     url = f"https://github.com/FinMind/FinMindBook/releases/download/data/{table}.csv"
-    resp = requests.get(url)
-    df = pd.read_csv(
-        io.StringIO(
-            resp.content.decode("utf-8")
+    resp = requests.get(
+        url, stream=True
+    )
+    int(resp.headers["content-length"])
+    text = ""
+    for data in tqdm(
+        resp.iter_content(
+            chunk_size=chunk_size
         )
+    ):
+        text += data.decode("utf-8")
+    df = pd.read_csv(io.StringIO(text))
+    logger.info(
+        "download data complete"
     )
     try:
         logger.info("upload to mysql")
-        df.to_sql(
-            name=table,
-            con=mysql_conn,
-            if_exists="append",
-            index=False,
-            chunksize=1000,
+        count = (
+            int(len(df) / chunk_size)
+            + 1
         )
+        for i in tqdm(range(count)):
+            df[
+                (i * chunk_size) : (
+                    i + 1
+                )
+                * chunk_size
+            ].to_sql(
+                name=table,
+                con=mysql_conn,
+                if_exists="append",
+                index=False,
+            )
     except:
         logger.info("already upload")
 
