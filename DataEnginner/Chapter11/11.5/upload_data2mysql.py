@@ -1,13 +1,15 @@
-import pandas as pd
-import io
+import os
 import sys
+
+import pandas as pd
 from loguru import logger
 from sqlalchemy import (
     create_engine,
     engine,
 )
 from tqdm import tqdm
-import requests
+
+import wget
 
 
 def get_mysql_financialdata_conn() -> engine.base.Connection:
@@ -104,10 +106,10 @@ def create_taiwan_stock_holding_shares_per_sql():
     """
 
 
-def create_table(
-    table: str,
-    mysql_conn: engine.base.Connection,
-):
+def create_table(table: str):
+    mysql_conn = (
+        get_mysql_financialdata_conn()
+    )
     sql = eval(f"create_{table}_sql()")
     try:
         logger.info(
@@ -120,41 +122,37 @@ def create_table(
         )
 
 
-def download_data(
-    table: str,
-    mysql_conn: engine.base.Connection,
-):
-    chunk_size = 10000
+def download_data(table: str):
     logger.info("download data")
-    url = f"https://github.com/FinMind/FinMindBook/releases/download/data/{table}.csv"
-    resp = requests.get(
-        url, stream=True
-    )
-    int(resp.headers["content-length"])
-    text = ""
-    for data in tqdm(
-        resp.iter_content(
-            chunk_size=chunk_size
-        )
+    if f"{table}.csv" in os.listdir(
+        "."
     ):
-        text += data.decode("utf-8")
-    df = pd.read_csv(io.StringIO(text))
-    logger.info(
-        "download data complete"
+        logger.info(f"already download")
+    else:
+        url = f"https://github.com/FinMind/FinMindBook/releases/download/data/{table}.csv"
+        wget.download(
+            url, f"{table}.csv"
+        )
+        logger.info(
+            "download data complete"
+        )
+
+
+def upload_data2mysql(table: str):
+    # table = 'taiwan_stock_margin_purchase_short_sale'
+    chunk_size = 100000
+    mysql_conn = (
+        get_mysql_financialdata_conn()
     )
     try:
+        logger.info("load data")
         logger.info("upload to mysql")
-        count = (
-            int(len(df) / chunk_size)
-            + 1
+        reader = pd.read_csv(
+            f"{table}.csv",
+            chunksize=chunk_size,
         )
-        for i in tqdm(range(count)):
-            df[
-                (i * chunk_size) : (
-                    i + 1
-                )
-                * chunk_size
-            ].to_sql(
+        for df_chunk in tqdm(reader):
+            df_chunk.to_sql(
                 name=table,
                 con=mysql_conn,
                 if_exists="append",
@@ -165,17 +163,13 @@ def download_data(
 
 
 def main(table: str):
-    mysql_conn = (
-        get_mysql_financialdata_conn()
-    )
     create_table(
         table=table,
-        mysql_conn=mysql_conn,
     )
     download_data(
         table=table,
-        mysql_conn=mysql_conn,
     )
+    upload_data2mysql(table=table)
 
 
 if __name__ == "__main__":
