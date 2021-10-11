@@ -39,7 +39,7 @@ def futures_header():
 def colname_zh2en(
     df: pd.DataFrame,
 ) -> pd.DataFrame:
-    """資料欄位轉換, 英文有助於我們接下來存入資料庫"""
+    """資料欄位轉換, 英文有助接下來存入資料庫"""
     colname_dict = {
         "交易日期": "Date",
         "契約": "FuturesID",

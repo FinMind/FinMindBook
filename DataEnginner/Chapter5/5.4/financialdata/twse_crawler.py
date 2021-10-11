@@ -61,7 +61,7 @@ def colname_zh2en(
     df: pd.DataFrame,
     colname: typing.List[str],
 ) -> pd.DataFrame:
-    """資料欄位轉換, 英文有助於我們接下來存入資料庫"""
+    """資料欄位轉換, 英文有助於接下來存入資料庫"""
     taiwan_stock_price = {
         "證券代號": "StockID",
         "證券名稱": "",

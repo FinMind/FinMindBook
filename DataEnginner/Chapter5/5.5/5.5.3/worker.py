@@ -6,6 +6,6 @@ app = Celery(
     include=["tasks"],
     # 連線到 rabbitmq,
     # pyamqp://user:password@localhost:5672/
-    # 這裡我們帳號密碼都是 worker
+    # 本書的帳號密碼都是 worker
     broker="pyamqp://worker:worker@localhost:5672/",
 )

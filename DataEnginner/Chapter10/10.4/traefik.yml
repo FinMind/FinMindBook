@@ -13,7 +13,7 @@ services:
       - --log.level=ERROR
       # https://doc.traefik.io/traefik/v2.2/routing/providers/docker/
       # 根據官方文件，有 docker、k8s 等模式可做選擇
-      # 在此我們選擇 docker 
+      # 在此選擇 docker 
       - --providers.docker=true
       - --providers.docker.endpoint=unix:///var/run/docker.sock
       - --providers.docker.swarmMode=true

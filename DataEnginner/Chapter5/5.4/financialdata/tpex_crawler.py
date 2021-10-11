@@ -106,7 +106,7 @@ def crawler_tpex(
 
     if len(df) == 0:
         return pd.DataFrame()
-    # 櫃買中心回傳的資料, 並無資料欄位, 因此這裡我們直接用 index 取特定欄位
+    # 櫃買中心回傳的資料, 並無資料欄位, 因此這裡直接用 index 取特定欄位
     df = df[[0, 2, 3, 4, 5, 6, 7, 8, 9]]
     # 欄位中英轉換
     df = set_column(df.copy())
