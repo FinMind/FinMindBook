@@ -33,18 +33,19 @@ def create_taiwan_stock_info_sql():
 def create_taiwan_stock_price_sql():
     return """
         CREATE TABLE `taiwan_stock_price` (
-            `stock_id` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-            `Trading_turnover` bigint NOT NULL,
-            `Trading_Volume` int NOT NULL,
-            `Trading_money` bigint NOT NULL,
-            `open` float NOT NULL,
-            `max` float NOT NULL,
-            `min` float NOT NULL,
-            `close` float NOT NULL,
-            `spread` float NOT NULL,
-            `date` date NOT NULL
+            `StockID` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+            `Transaction` bigint NOT NULL,
+            `TradeVolume` int NOT NULL,
+            `'TradeValue` bigint NOT NULL,
+            `Open` float NOT NULL,
+            `Max` float NOT NULL,
+            `Min` float NOT NULL,
+            `Close` float NOT NULL,
+            `Change` float NOT NULL,
+            `Date` date NOT NULL,
+            PRIMARY KEY(`StockID`, `Date`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci
-        PARTITION BY KEY (stock_id)
+        PARTITION BY KEY (StockID)
         PARTITIONS 10;
     """
 
