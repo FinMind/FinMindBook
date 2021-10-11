@@ -139,7 +139,6 @@ def download_data(table: str):
 
 
 def upload_data2mysql(table: str):
-    # table = 'taiwan_stock_margin_purchase_short_sale'
     chunk_size = 100000
     mysql_conn = (
         get_mysql_financialdata_conn()
