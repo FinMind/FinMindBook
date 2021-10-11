@@ -2,7 +2,7 @@ from celery import Celery
 
 app = Celery(
     "task",
-    # 只包含 Tasks.py 裡面的程式, 才會成功執行
+    # 只包含 tasks.py 裡面的程式, 才會成功執行
     include=["tasks"],
     # 連線到 rabbitmq,
     # pyamqp://user:password@rabbitmq_ip:5672/
