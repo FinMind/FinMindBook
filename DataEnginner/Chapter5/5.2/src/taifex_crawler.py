@@ -67,7 +67,6 @@ def colname_zh2en(
         colname_dict[col]
         for col in df.columns
     ]
-    df = df.drop([""], axis=1)
     return df
 
 
