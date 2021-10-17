@@ -12,6 +12,7 @@ pydantic = "*"
 sqlalchemy = "*"
 loguru = "*"
 financialdata = {editable = true,path = "."}
+tqdm = "==4.62.3"
 
 [requires]
 python_version = "3.6"
