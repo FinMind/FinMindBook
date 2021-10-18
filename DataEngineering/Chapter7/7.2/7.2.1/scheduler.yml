@@ -1,9 +1,6 @@
 version: '3.0'
 services:
   scheduler:
-    build:
-      context: .
-      dockerfile: cache.Dockerfile
     image: crawler:7.2.1
     hostname: "twse"
     command: pipenv run python financialdata/scheduler.py

@@ -1,9 +1,6 @@
 version: '3.0'
 services:
   api:
-    build:
-      context: .
-      dockerfile: Dockerfile.cache
     image: linsamtw/api:10
     hostname: "api"
     restart: always

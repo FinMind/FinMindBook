@@ -1,9 +1,6 @@
 version: '3.0'
 services:
   crawler_twse:
-    build:
-      context: .
-      dockerfile: cache.Dockerfile
     image: linsamtw/crawler:7.2.1
     hostname: "twse"
     command: pipenv run celery -A financialdata.tasks.worker worker --loglevel=info --concurrency=1  --hostname=%h -Q twse
