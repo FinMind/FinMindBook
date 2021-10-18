@@ -3,7 +3,7 @@ services:
   crawler_twse:
     build:
       context: .
-      dockerfile: Dockerfile.cache
+      dockerfile: cache.Dockerfile
     image: crawler:7.2.1
     hostname: "twse"
     command: pipenv run celery -A financialdata.tasks.worker worker --loglevel=info --concurrency=1  --hostname=%h -Q twse
@@ -16,7 +16,7 @@ services:
   crawler_tpex:
     build:
       context: .
-      dockerfile: Dockerfile.cache
+      dockerfile: cache.Dockerfile
     image: crawler:7.2.1
     hostname: "tpex"
     command: pipenv run celery -A financialdata.tasks.worker worker --loglevel=info --concurrency=1  --hostname=%h -Q tpex
@@ -29,7 +29,7 @@ services:
   crawler_taifex:
     build:
       context: .
-      dockerfile: Dockerfile.cache
+      dockerfile: cache.Dockerfile
     image: crawler:7.2.1
     hostname: "taifex"
     command: pipenv run celery -A financialdata.tasks.worker worker --loglevel=info --concurrency=1  --hostname=%h -Q taifex
