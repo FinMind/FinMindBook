@@ -157,8 +157,8 @@ def upload_data2mysql(table: str):
                 if_exists="append",
                 index=False,
             )
-    except:
-        logger.info("already upload")
+    except Exception as e:
+        logger.info(f"{e}")
 
 
 def main(table: str):

@@ -21,7 +21,9 @@ def update2mysql_by_pandas(
                 chunksize=1000,
             )
         except Exception as e:
-            pass
+            logger.info(e)
+            return False
+    return True
 
 
 def build_update_sql(
