@@ -7,7 +7,7 @@ COPY . /FinMindProject/
 WORKDIR /FinMindProject/
 
 # install package
-RUN pip install pipenv && pipenv sync
+RUN pip install pipenv==2020.6.2 && pipenv sync
 
 # genenv
 RUN VERSION=RELEASE python genenv.py
