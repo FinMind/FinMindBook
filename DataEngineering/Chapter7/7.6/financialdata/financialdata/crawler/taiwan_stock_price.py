@@ -17,7 +17,7 @@ from financialdata.schema.dataset import (
 
 
 def is_weekend(day: int) -> bool:
-    return day in [0, 6]
+    return day in [5, 6]
 
 
 def gen_task_paramter_list(
