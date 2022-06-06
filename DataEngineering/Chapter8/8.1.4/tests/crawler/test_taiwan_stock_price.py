@@ -23,7 +23,9 @@ def test_is_weekend_false():
     """
     測試, 非周末, 輸入周一 1, 回傳 False
     """
-    result = is_weekend(day=1)  # 執行結果
+
+    # bug fix , 周一為 0
+    result = is_weekend(day=0)  # 執行結果
     expected = False
     # 先寫好預期結果, 這樣即使不執行程式,
     # 單純看測試, 也能了解這個程式的執行結果
@@ -36,7 +38,11 @@ def test_is_weekend_true():
     """
     測試, 是周末, 輸入週日 0, 回傳 False
     """
-    result = is_weekend(day=0)  # 執行結果
+
+    # Bug fix: 週日 day = 6
+    # result = is_weekend(day=0)  # 執行結果
+    result = is_weekend(day=6)  # 執行結果
+
     expected = True
     # 先寫好預期結果, 這樣即使不執行程式,
     # 單純看測試, 也能了解這個程式的執行結果
@@ -63,11 +69,15 @@ def test_gen_task_paramter_list():
             "data_source": "tpex",
         },
         {
-            "date": "2021-01-02",
+            # bug fix
+            # "date": "2021-01-02",      
+            "date": "2021-01-04",      
             "data_source": "twse",
         },
         {
-            "date": "2021-01-02",
+            # bug fix
+            # "date": "2021-01-02",
+            "date": "2021-01-04",
             "data_source": "tpex",
         },
         {
@@ -673,3 +683,4 @@ def test_crawler_tpex():
         result_df, "TaiwanStockPrice"
     )
     assert len(result_df) > 0
+0
