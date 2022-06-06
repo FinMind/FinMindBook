@@ -683,4 +683,3 @@ def test_crawler_tpex():
         result_df, "TaiwanStockPrice"
     )
     assert len(result_df) > 0
-0
