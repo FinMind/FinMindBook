@@ -16,5 +16,5 @@ MYSQL_DATA_PORT = int(
 )
 MYSQL_DATA_DATABASE = os.environ.get(
     "MYSQL_DATA_DATABASE",
-    "FinancialData",
+    "financialdata",
 )

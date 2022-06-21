@@ -14,7 +14,7 @@ import wget
 
 def get_mysql_financialdata_conn() -> engine.base.Connection:
     # TODO 請將 IP 換成讀者自己的 IP
-    address = "mysql+pymysql://root:test@139.162.104.54:3306/FinancialData"
+    address = "mysql+pymysql://root:test@139.162.104.54:3306/financialdata"
     engine = create_engine(address)
     connect = engine.connect()
     return connect

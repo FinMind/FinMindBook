@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, engine
 
 
 def get_mysql_financialdata_conn() -> engine.base.Connection:
-    address = "mysql+pymysql://root:test@127.0.0.1:3306/FinancialData"
+    address = "mysql+pymysql://root:test@127.0.0.1:3306/financialdata"
     engine = create_engine(address)
     connect = engine.connect()
     return connect

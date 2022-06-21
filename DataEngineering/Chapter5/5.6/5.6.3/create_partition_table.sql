@@ -1,4 +1,4 @@
-CREATE TABLE `FinancialData`.`taiwan_stock_price`(
+CREATE TABLE `financialdata`.`taiwan_stock_price`(
     `StockID` VARCHAR(10) NOT NULL,
     `TradeVolume` BIGINT NOT NULL,
     `Transaction` INT NOT NULL,
@@ -35,7 +35,7 @@ PARTITION BY RANGE(YEAR(Date)) (
  
 );
  
-CREATE TABLE `FinancialData`.`taiwan_futures_daily`(
+CREATE TABLE `financialdata`.`taiwan_futures_daily`(
     `Date` DATE NOT NULL,
     `FuturesID` VARCHAR(10) NOT NULL,
     `ContractDate` VARCHAR(30) NOT NULL,

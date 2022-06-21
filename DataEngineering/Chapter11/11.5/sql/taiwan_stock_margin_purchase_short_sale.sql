@@ -1,4 +1,4 @@
-CREATE TABLE `FinancialData`.`taiwan_stock_margin_purchase_short_sale`(
+CREATE TABLE `financialdata`.`taiwan_stock_margin_purchase_short_sale`(
     `stock_id` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL COMMENT '股票代碼',
     `MarginPurchaseBuy` BIGINT NOT NULL COMMENT '融資買進',
     `MarginPurchaseSell` BIGINT NOT NULL COMMENT '融資賣出',
