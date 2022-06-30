@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.3"
 
 services:
 
@@ -60,7 +60,6 @@ services:
         order: stop-first
         failure_action: rollback
       placement:
-        max_replicas_per_node: 1
         constraints: [node.role == manager]
     networks:
         - traefik-public
