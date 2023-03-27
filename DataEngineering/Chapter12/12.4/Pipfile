@@ -1,0 +1,14 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+apache-airflow = "==2.2.5"
+pymysql = "==1.0.2"
+dataflow = {editable = true, path = "."}
+
+[dev-packages]
+
+[requires]
+python_version = "3.8"

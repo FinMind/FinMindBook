@@ -1,0 +1,58 @@
+version: '3.0'
+services:
+  initdb:
+    image: linsamtw/dataflow:12.4
+    command: pipenv run airflow db init
+    restart: on-failure
+    networks:
+        - my_network
+
+  create-user:
+    image: linsamtw/dataflow:12.4
+    command: pipenv run airflow users create --username admin --firstname lin --lastname sam --role Admin -p admin --email finmind.tw@gmail.com
+    depends_on:
+      - initdb
+    restart: on-failure
+    networks:
+        - my_network
+  
+  webserver:
+    image: linsamtw/dataflow:12.4
+    hostname: "airflow-webserver"
+    command: pipenv run airflow webserver -p 8888
+    depends_on:
+      - initdb
+    restart: always
+    ports:
+        - 8888:8888
+    environment:
+      - TZ=Asia/Taipei
+    networks:
+        - my_network
+
+  scheduler:
+    image: linsamtw/dataflow:12.4
+    hostname: "airflow-scheduler"
+    command: pipenv run airflow scheduler
+    depends_on:
+      - initdb
+    restart: always
+    environment:
+      - TZ=Asia/Taipei
+    networks:
+        - my_network
+
+  worker:
+    image: puckel/docker-airflow:1.7.1.3-3
+    restart: always
+    networks:
+        - my_network
+    environment:
+        - EXECUTOR=Celery
+    ports:
+        - "8793:8793"
+    command: worker
+
+networks:
+  my_network:
+    external: true

@@ -9,3 +9,4 @@
 *.csv
 .python-version
 .coverage
+build/
