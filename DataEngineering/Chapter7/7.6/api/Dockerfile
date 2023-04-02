@@ -1,4 +1,4 @@
-FROM continuumio/miniconda3:4.3.27
+FROM continuumio/miniconda3:4.5.4
 
 RUN apt-get update
 

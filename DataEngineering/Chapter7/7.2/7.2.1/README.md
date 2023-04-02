@@ -1,7 +1,7 @@
 # FinMindBook
 
 ## run docker
-    docker run -it --rm continuumio/miniconda3:4.3.27 bash
+    docker run -it --rm continuumio/miniconda3:4.5.4 bash
 
 ## build docker
     docker build -f Dockerfile -t crawler:dev .
