@@ -42,17 +42,6 @@ services:
     networks:
         - my_network
 
-  worker:
-    image: puckel/docker-airflow:1.7.1.3-3
-    restart: always
-    networks:
-        - my_network
-    environment:
-        - EXECUTOR=Celery
-    ports:
-        - "8793:8793"
-    command: worker
-
 networks:
   my_network:
     external: true
