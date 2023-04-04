@@ -12,6 +12,6 @@ DEFAULT_ARGS = {
     "execution_timeout": datetime.timedelta(
         minutes=60
     ),
-    "max_active_tasks": 10
+    "max_active_tasks": 10,
 }
 MAX_ACTIVE_RUNS = 1
