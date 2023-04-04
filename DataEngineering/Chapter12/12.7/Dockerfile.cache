@@ -1,0 +1,6 @@
+FROM linsamtw/dataflow:12.7
+
+RUN rm -rf dataflow/dags/*.py
+COPY . /FinMindProject
+
+WORKDIR /FinMindProject/

@@ -39,6 +39,8 @@ services:
     restart: always
     environment:
       - TZ=Asia/Taipei
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
         - my_network
 

@@ -1,6 +1,3 @@
-from datetime import datetime
-
-from airflow import DAG
 from airflow.operators.dummy_operator import (
     DummyOperator,
 )
@@ -34,7 +31,7 @@ def check_crawler():
 
 def create_branch_python_operator_task():
     check_crawler_task = BranchPythonOperator(
-        task_id="BranchPythonOperator",
+        task_id="CheckCrawler",
         python_callable=check_crawler,
     )
     skip_task = create_skip_task()

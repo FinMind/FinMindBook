@@ -19,5 +19,8 @@ build-image:
 push-image:
 	docker push linsamtw/dataflow:12.7
 
+build-cache-image:
+	docker build --no-cache -f Dockerfile.cache -t linsamtw/dataflow:12.7 .
+
 create-airflow:
 	docker stack deploy -c airflow.yml airflow
