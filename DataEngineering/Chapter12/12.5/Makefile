@@ -14,10 +14,10 @@ create-mysql:
 	docker stack deploy -c mysql.yml mysql
 
 build-image:
-	docker build --no-cache -f Dockerfile -t linsamtw/dataflow:12.4 .
+	docker build --no-cache -f Dockerfile -t linsamtw/dataflow:12.5 .
 
 push-image:
-	docker push linsamtw/dataflow:12.4
+	docker push linsamtw/dataflow:12.5
 
 create-airflow:
 	docker stack deploy -c airflow.yml airflow

@@ -1,14 +1,14 @@
 version: '3.0'
 services:
   initdb:
-    image: linsamtw/dataflow:12.4
+    image: linsamtw/dataflow:12.5
     command: pipenv run airflow db init
     restart: on-failure
     networks:
         - my_network
 
   create-user:
-    image: linsamtw/dataflow:12.4
+    image: linsamtw/dataflow:12.5
     command: pipenv run airflow users create --username admin --firstname lin --lastname sam --role Admin -p admin --email finmind.tw@gmail.com
     depends_on:
       - initdb
@@ -17,7 +17,7 @@ services:
         - my_network
   
   webserver:
-    image: linsamtw/dataflow:12.4
+    image: linsamtw/dataflow:12.5
     hostname: "airflow-webserver"
     command: pipenv run airflow webserver -p 8888
     depends_on:
@@ -31,7 +31,7 @@ services:
         - my_network
 
   scheduler:
-    image: linsamtw/dataflow:12.4
+    image: linsamtw/dataflow:12.5
     hostname: "airflow-scheduler"
     command: pipenv run airflow scheduler
     depends_on:
