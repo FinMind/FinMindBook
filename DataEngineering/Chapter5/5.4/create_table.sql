@@ -10,7 +10,7 @@ CREATE TABLE `financialdata`.`TaiwanStockPrice`(
     `Change` FLOAT NOT NULL,
     `Date` DATE NOT NULL,
     PRIMARY KEY(`StockID`, `Date`)
-)
+);
 
 CREATE TABLE `financialdata`.`TaiwanFuturesDaily`(
     `Date` DATE NOT NULL,

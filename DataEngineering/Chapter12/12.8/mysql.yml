@@ -1,0 +1,54 @@
+version: '3'
+services:
+
+  mysql:
+      image: mysql:8.0
+      command: mysqld --default-authentication-plugin=mysql_native_password      
+      ports:
+          - 3306:3306
+      environment:
+          MYSQL_DATABASE: mydb
+          MYSQL_USER: user
+          MYSQL_PASSWORD: test
+          MYSQL_ROOT_PASSWORD: test
+      volumes:
+          - mysql:/var/lib/mysql
+      # swarm 設定
+      deploy:
+        mode: replicated
+        replicas: 1
+        placement:
+          constraints: [node.labels.mysql == true]
+      networks:
+          - my_network
+
+  phpmyadmin:
+      image: phpmyadmin/phpmyadmin:5.1.0
+      links: 
+          - mysql:db
+      ports:
+          - 8080:80
+      environment:
+          MYSQL_USER: user
+          MYSQL_PASSWORD: test
+          MYSQL_ROOT_PASSWORD: test
+          PMA_HOST: mysql
+      depends_on:
+        - mysql
+      # swarm 設定
+      deploy:
+        mode: replicated
+        replicas: 1
+        placement:
+          constraints: [node.labels.mysql == true]
+      networks:
+          - my_network
+     
+networks:
+  my_network:
+    # 加入已經存在的網路
+    external: true
+
+volumes:
+  mysql:
+    external: true
