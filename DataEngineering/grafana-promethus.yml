@@ -52,7 +52,7 @@ services:
         - net
 
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:7.4.3
     ports:
       - '3000:3000'
     user: root
