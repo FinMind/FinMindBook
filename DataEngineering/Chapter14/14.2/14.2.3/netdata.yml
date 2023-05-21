@@ -1,0 +1,22 @@
+version: '3.0'
+
+services:
+  netdata:
+    restart: always
+    hostname: "netdata"
+    ports:
+      - 19999:19999
+    image: netdata/netdata:v1.31.0
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - my_network
+
+networks:
+  my_network:
