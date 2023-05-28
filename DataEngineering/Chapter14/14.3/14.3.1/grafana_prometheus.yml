@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  prometheus:
+    image: linsamtw/prometheus:14.3.1
+    volumes:
+      - prometheus_data:/prometheus
+    ports:
+      - target: 9090
+        published: 9090
+        mode: host
+    user: root
+    deploy:
+      resources: 
+        limits:
+          memory: 1024M
+        reservations:
+          memory: 512M
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 5s
+        order: stop-first
+        failure_action: rollback
+      placement:
+        constraints: [node.labels.grafana == true]
+    restart: always
+    networks:
+        - my_network
+
+  grafana:
+    image: linsamtw/grafana:14.3.1
+    ports:
+      - target: 3000
+        published: 3000
+        mode: host
+    user: root
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=pass
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      placement:
+        constraints: [node.labels.grafana == true]
+    restart: always
+    networks:
+        - my_network
+
+networks:
+  my_network:
+    # 加入已經存在的網路
+    external: true
+
+volumes:
+  prometheus_data: {}
+    

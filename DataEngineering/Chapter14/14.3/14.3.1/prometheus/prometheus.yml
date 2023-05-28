@@ -1,0 +1,38 @@
+global:
+  scrape_interval: 1s
+  scrape_timeout: 1s
+  evaluation_interval: 1s
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets: []
+    scheme: http
+    timeout: 5s
+# 設定 prometheus 監控目標 Targets 
+scrape_configs:
+# 第一個 Targets
+# 監控 prometheus 自己本身
+- job_name: prometheus
+  scrape_interval: 5s
+  scrape_timeout: 3s
+  metrics_path: /metrics
+  scheme: http
+  static_configs:
+  - targets:
+    - localhost:9090
+
+# 第二個 Targets - Netdata
+# 如讀者有兩台以上的機器
+# 可複製以下設定
+# 並將 netdata-manager 改成 netdata-worker1...
+- job_name: 'netdata-manager'
+  scrape_interval: 5s
+  scrape_timeout: 5s
+  # metrics 路徑
+  metrics_path: /api/v1/allmetrics
+  params:
+    # metrics 格式
+    format: [ prometheus ]
+  static_configs:
+    # Targets 路徑
+    - targets: ['netdata-manager:19999']
