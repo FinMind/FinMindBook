@@ -1,13 +1,6 @@
 global:
   scrape_interval: 1s
   scrape_timeout: 1s
-  evaluation_interval: 1s
-alerting:
-  alertmanagers:
-  - static_configs:
-    - targets: []
-    scheme: http
-    timeout: 5s
 # 設定 prometheus 監控目標 Targets 
 scrape_configs:
 # 第一個 Targets
@@ -16,7 +9,6 @@ scrape_configs:
   scrape_interval: 5s
   scrape_timeout: 3s
   metrics_path: /metrics
-  scheme: http
   static_configs:
   - targets:
     - localhost:9090
