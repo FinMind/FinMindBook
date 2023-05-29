@@ -63,6 +63,9 @@ services:
         constraints: [node.labels.airflow == true]
     environment:
       - TZ=Asia/Taipei
+    # 將容器內的 docker 與容器外的 docker 做連結
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
         - my_network
 
