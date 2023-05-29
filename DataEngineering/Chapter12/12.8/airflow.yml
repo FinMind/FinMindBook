@@ -4,6 +4,12 @@ services:
     image: linsamtw/dataflow:12.8
     command: pipenv run airflow db init
     restart: on-failure
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.airflow == true]
     networks:
         - my_network
 
@@ -13,6 +19,12 @@ services:
     depends_on:
       - initdb
     restart: on-failure
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.airflow == true]
     networks:
         - my_network
 
@@ -25,6 +37,12 @@ services:
     environment:
         - ALLOW_EMPTY_PASSWORD=yes
     restart: always
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.airflow == true]
     networks:
         - my_network
 
@@ -39,6 +57,12 @@ services:
         - 8888:8888
     environment:
       - TZ=Asia/Taipei
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.airflow == true]
     networks:
         - my_network
 
@@ -50,6 +74,12 @@ services:
     command: ["flower", "--broker=redis://redis:6379/0", "--port=5555"]
     ports:
         - "5555:5555"
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.airflow == true]
     networks:
         - my_network
   
@@ -64,6 +94,12 @@ services:
       - TZ=Asia/Taipei
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.airflow == true]
     networks:
         - my_network
 

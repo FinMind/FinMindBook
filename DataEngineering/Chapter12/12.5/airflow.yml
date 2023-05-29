@@ -4,6 +4,12 @@ services:
     image: linsamtw/dataflow:12.5
     command: pipenv run airflow db init
     restart: on-failure
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.airflow == true]
     networks:
         - my_network
 
@@ -13,6 +19,12 @@ services:
     depends_on:
       - initdb
     restart: on-failure
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.airflow == true]
     networks:
         - my_network
   
@@ -27,6 +39,12 @@ services:
         - 8888:8888
     environment:
       - TZ=Asia/Taipei
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.airflow == true]
     networks:
         - my_network
 
@@ -37,6 +55,12 @@ services:
     depends_on:
       - initdb
     restart: always
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.airflow == true]
     environment:
       - TZ=Asia/Taipei
     networks:
