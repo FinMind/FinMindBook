@@ -1,4 +1,4 @@
-version: '3.0'
+version: '3.8'
 services:
   crawler_twse:
     image: linsamtw/crawler:7.2.1
@@ -27,6 +27,22 @@ services:
       replicas: 1
       placement:
         constraints: [node.labels.crawler_tpex == true]
+    environment:
+      - TZ=Asia/Taipei
+    networks:
+        - my_network
+
+  sent_task:
+    image: linsamtw/crawler:7.2.1
+    hostname: "sent_task"
+    command: pipenv run python financialdata/producer.py taiwan_stock_price 2021-04-01 2023-04-12
+    restart: on-failure
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.sent_task == true]
     environment:
       - TZ=Asia/Taipei
     networks:

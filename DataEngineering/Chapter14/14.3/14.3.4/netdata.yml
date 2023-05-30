@@ -1,0 +1,59 @@
+version: '3.7'
+
+# 建立模板
+# 由於不同機器，設定都一樣，
+# 因此使用模板
+x-netdata-service: &netdata-service
+    restart: always
+    hostname: "{{.Node.Hostname}}-{{.Service.Name}}"
+    image: netdata/netdata:v1.31.0
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - my_network
+
+services:
+  # 本書以 manager 一台機器為例
+  # 讀者可自行拓展到其餘機器上
+  # 如 41 列
+  netdata-manager:
+    # 引用模板
+    <<: *netdata-service
+    ports:
+      - 19999:19999
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 64M
+      placement:
+        constraints:
+          # 設定，部屬在 manager = true 的機器
+          - node.labels.manager == true
+
+  # netdata-worker1:
+  #   # 引用模板
+  #   <<: *netdata-service
+  #   ports:
+  #     - 19999:19999
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 128M
+  #       reservations:
+  #         memory: 64M
+  #     placement:
+  #       constraints:
+  #         # 設定，部屬在 worker1 = true 的機器
+  #         - node.labels.worker1 == true
+
+networks:
+  my_network:
+    external: true

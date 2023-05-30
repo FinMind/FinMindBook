@@ -1,0 +1,188 @@
+version: '3.8'
+services:
+  initdb:
+    image: linsamtw/dataflow:14.3.4
+    command: pipenv run airflow db init
+    restart: on-failure
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.airflow == true]
+    networks:
+        - my_network
+
+  create-user:
+    image: linsamtw/dataflow:14.3.4
+    command: pipenv run airflow users create --username admin --firstname lin --lastname sam --role Admin -p admin --email finmind.tw@gmail.com
+    depends_on:
+      - initdb
+      - airflow-statsd-exporter
+    restart: on-failure
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.airflow == true]
+    networks:
+        - my_network
+
+  redis:
+    image: 'bitnami/redis:5.0'
+    ports:
+        - 6379:6379
+    volumes:
+        - 'redis_data:/bitnami/redis/data'
+    environment:
+        - ALLOW_EMPTY_PASSWORD=yes
+    restart: always
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.airflow == true]
+    networks:
+        - my_network
+
+  webserver:
+    image: linsamtw/dataflow:14.3.4
+    hostname: "airflow-webserver"
+    command: pipenv run airflow webserver -p 8888
+    depends_on:
+      - initdb
+      - airflow-statsd-exporter
+    restart: always
+    ports:
+        - 8888:8888
+    environment:
+      - TZ=Asia/Taipei
+      - AIRFLOW__SCHEDULER__STATSD_ON=True
+      - AIRFLOW__SCHEDULER__STATSD_HOST=airflow-statsd-exporter
+      - AIRFLOW__SCHEDULER__STATSD_PORT=8125
+      - AIRFLOW__SCHEDULER__STATSD_PREFIX=airflow
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.airflow == true]
+    networks:
+        - my_network
+
+  flower:
+    image: mher/flower:0.9.5
+    restart: always
+    depends_on:
+      - redis
+      - airflow-statsd-exporter
+    command: ["flower", "--broker=redis://redis:6379/0", "--port=5555"]
+    ports:
+        - "5556:5555"
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.airflow == true]
+    networks:
+        - my_network
+  
+  scheduler:
+    image: linsamtw/dataflow:14.3.4
+    hostname: "airflow-scheduler"
+    command: pipenv run airflow scheduler
+    depends_on:
+      - initdb
+      - airflow-statsd-exporter
+    restart: always
+    environment:
+      - TZ=Asia/Taipei
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.airflow == true]
+    networks:
+        - my_network
+
+  worker:
+    image: linsamtw/dataflow:14.3.4
+    hostname: "{{.Service.Name}}.{{.Task.Slot}}"
+    restart: always
+    depends_on:
+      - scheduler
+      - airflow-statsd-exporter
+    command: pipenv run airflow celery worker
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.worker == true]
+    networks:
+        - my_network
+
+  crawler_twse:
+    image: linsamtw/dataflow:14.3.4
+    hostname: "{{.Service.Name}}.{{.Task.Slot}}"
+    restart: always
+    depends_on:
+      - scheduler
+      - airflow-statsd-exporter
+    command: pipenv run airflow celery worker -q twse
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        max_replicas_per_node: 1
+        constraints: [node.labels.crawler_twse == true]
+    networks:
+        - my_network
+
+  crawler_tpex:
+    image: linsamtw/dataflow:14.3.4
+    hostname: "{{.Service.Name}}.{{.Task.Slot}}"
+    restart: always
+    depends_on:
+      - scheduler
+      - airflow-statsd-exporter
+    command: pipenv run airflow celery worker -q tpex
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        max_replicas_per_node: 1
+        constraints: [node.labels.crawler_tpex == true]
+    networks:
+        - my_network
+
+  airflow-statsd-exporter:
+    image: prom/statsd-exporter:v0.23.0
+    container_name: airflow-statsd-exporter
+    command: "--statsd.listen-udp=:8125 --web.listen-address=:9102"
+    ports:
+      - 9102:9102
+      - 8125:8125/udp
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.airflow == true]
+    networks:
+        - my_network
+
+networks:
+  my_network:
+    external: true
+
+volumes:
+  redis_data:

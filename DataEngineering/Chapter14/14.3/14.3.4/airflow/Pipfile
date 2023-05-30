@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+apache-airflow = "==2.2.5"
+pymysql = "==1.0.2"
+dataflow = {editable = true, path = "."}
+apache-airflow-providers-docker = "==3.0.0"
+apache-airflow-providers-celery = "==3.0.0"
+flower = "==1.0.0"
+importlib-metadata = "==4.13.0"
+celery = {extras = ["redis"], version = "*"}
+pydantic = "==1.8.2"
+pandas = "==1.1.5"
+loguru = "==0.5.3"
+
+[dev-packages]
+
+[requires]
+python_version = "3.7"
