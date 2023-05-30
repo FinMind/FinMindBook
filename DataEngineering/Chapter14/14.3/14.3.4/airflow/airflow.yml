@@ -164,22 +164,6 @@ services:
     networks:
         - my_network
 
-  airflow-statsd-exporter:
-    image: prom/statsd-exporter:v0.23.0
-    container_name: airflow-statsd-exporter
-    command: "--statsd.listen-udp=:8125 --web.listen-address=:9102"
-    ports:
-      - 9102:9102
-      - 8125:8125/udp
-    # swarm 設定
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.labels.airflow == true]
-    networks:
-        - my_network
-
 networks:
   my_network:
     external: true

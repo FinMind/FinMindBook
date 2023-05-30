@@ -29,7 +29,10 @@
   "liveNow": false,
   "panels": [
     {
-      "datasource": "MySQL-Airflow",
+      "datasource": {
+        "type": "mysql",
+        "uid": "P3F31358D13C083AB"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -54,7 +57,7 @@
       },
       "gridPos": {
         "h": 5,
-        "w": 3,
+        "w": 4,
         "x": 0,
         "y": 0
       },
@@ -81,7 +84,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT count(1) FROM `dag`\r\nwhere is_active = 1 and is_paused = 1",
+          "rawSql": "SELECT count(1) FROM `dag`\r\nwhere is_active = 1",
           "refId": "A",
           "select": [
             [
@@ -134,8 +137,8 @@
       },
       "gridPos": {
         "h": 5,
-        "w": 3,
-        "x": 3,
+        "w": 4,
+        "x": 4,
         "y": 0
       },
       "id": 16,
@@ -215,7 +218,7 @@
       "gridPos": {
         "h": 5,
         "w": 4,
-        "x": 6,
+        "x": 8,
         "y": 0
       },
       "id": 8,
@@ -294,7 +297,7 @@
       "gridPos": {
         "h": 5,
         "w": 4,
-        "x": 10,
+        "x": 12,
         "y": 0
       },
       "id": 10,
@@ -370,7 +373,7 @@
       "gridPos": {
         "h": 5,
         "w": 4,
-        "x": 14,
+        "x": 16,
         "y": 0
       },
       "id": 12,
@@ -488,7 +491,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\r\n    dag.dag_id,\r\n    dag.is_paused,\r\n    dag.is_active,\r\n    dag.schedule_interval,\r\n    dag.next_dagrun,\r\n    task_instance.task_count\r\nFROM\r\n    dag\r\nLEFT JOIN(\r\n    SELECT\r\n        dag_id,\r\n        COUNT(DISTINCT(task_id)) AS task_count\r\n    FROM\r\n        `task_instance`\r\n    GROUP BY\r\n        dag_id\r\n) AS task_instance\r\nON\r\n    dag.dag_id = task_instance.dag_id",
+          "rawSql": "SELECT\r\n    dag.dag_id,\r\n    dag.schedule_interval,\r\n    dag.next_dagrun,\r\n    task_instance.task_count\r\nFROM\r\n    dag\r\nLEFT JOIN(\r\n    SELECT\r\n        dag_id,\r\n        COUNT(DISTINCT(task_id)) AS task_count\r\n    FROM\r\n        `task_instance`\r\n    GROUP BY\r\n        dag_id\r\n) AS task_instance\r\nON\r\n    dag.dag_id = task_instance.dag_id",
           "refId": "A",
           "select": [
             [
@@ -700,7 +703,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\r\n    dag.dag_id,\r\n    task_instance.task_id,\r\n    -- dag.is_paused,\r\n    -- dag.is_active,\r\n    -- dag.schedule_interval,\r\n    -- dag.next_dagrun,\r\n    task_instance.avg_duration_seconds,\r\n    task_instance.total_execution_times,\r\n    task_instance.failed_count,\r\n    task_instance.success_count\r\nFROM\r\n    dag\r\nLEFT JOIN(\r\n    SELECT\r\n        dag_id,\r\n        task_id,\r\n        ROUND(AVG(duration)) AS avg_duration_seconds,\r\n        COUNT(1) AS total_execution_times,\r\n        SUM(IF(state = \"failed\", 1, 0)) AS failed_count,\r\n    \tSUM(IF(state = \"success\", 1, 0)) AS success_count\r\n    FROM\r\n        `task_instance`\r\n    GROUP BY\r\n        dag_id,\r\n        task_id\r\n) AS task_instance\r\nON\r\n    dag.dag_id = task_instance.dag_id",
+          "rawSql": "SELECT\r\n    dag.dag_id,\r\n    task_instance.task_id,\r\n    task_instance.avg_duration_seconds,\r\n    task_instance.total_execution_times,\r\n    task_instance.failed_count,\r\n    task_instance.success_count\r\nFROM\r\n    dag\r\nLEFT JOIN(\r\n    SELECT\r\n        dag_id,\r\n        task_id,\r\n        ROUND(AVG(duration)) AS avg_duration_seconds,\r\n        COUNT(1) AS total_execution_times,\r\n        SUM(IF(state = \"failed\", 1, 0)) AS failed_count,\r\n    \tSUM(IF(state = \"success\", 1, 0)) AS success_count\r\n    FROM\r\n        `task_instance`\r\n    GROUP BY\r\n        dag_id,\r\n        task_id\r\n) AS task_instance\r\nON\r\n    dag.dag_id = task_instance.dag_id",
           "refId": "A",
           "select": [
             [
