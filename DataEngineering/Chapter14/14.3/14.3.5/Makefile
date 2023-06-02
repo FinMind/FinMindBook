@@ -42,3 +42,9 @@ deploy-crawler:
 
 deploy-airflow:
 	docker stack deploy -c airflow/airflow.yml airflow
+
+deploy-traefik:
+	docker stack deploy -c traefik.yml tr
+
+deploy-api:
+	docker stack deploy -c api.yml api

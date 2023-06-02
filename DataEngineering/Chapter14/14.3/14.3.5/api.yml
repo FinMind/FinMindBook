@@ -1,0 +1,53 @@
+version: '3.0'
+services:
+  api:
+    image: linsamtw/api:10
+    hostname: "api"
+    restart: always
+    # swarm 設定
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.api == true]
+      labels:
+        - traefik.enable=true
+        - traefik.frontend.passHostHeader=true
+        # routers 設定，
+        # 這裡根據 fastapi 所需的 router 做額外設定
+        # fastapi 預設在 /docs 作為文件頁面，
+        # 並根據 /openapi.json 去製作文件
+        # 因此需額外設定 
+        # testapi.ddns.net/docs 與 
+        # testapi.ddns.net/openapi.json
+        # 可被 traefik 訪問，方法如下
+        # 指定 Host 與 Path
+        # &&：代表 and，將 Host 與 Path 連在一起使用
+        # ||：代表 or，在多個 router 時使用
+        - traefik.http.routers.api-https.rule=
+          Host(`testapi2.ddns.net`) && PathPrefix(`/docs`) || 
+          Host(`testapi2.ddns.net`) && PathPrefix(`/openapi.json`) || 
+          Host(`testapi2.ddns.net`)
+        # api loading balance 的 port
+        # traefik 的好處之一，會幫你處理分流
+        - traefik.http.services.api-https.loadbalancer.server.port=80
+        # SSL 設定
+        - traefik.http.routers.api-https.tls.certresolver=myresolver
+        # http 自動導向 https
+        - "traefik.http.routers.api-http-catchall.rule=hostregexp(`{host:.+}`)"
+        - "traefik.http.routers.api-http-catchall.entrypoints=web"
+        - "traefik.http.routers.api-http-catchall.middlewares=api-redirect-to-https@docker"
+        - "traefik.http.middlewares.api-redirect-to-https.redirectscheme.scheme=https"
+    environment:
+      - TZ=Asia/Taipei
+    networks:
+        - my_network
+        - traefik-public
+
+networks:
+  my_network:
+    # 加入已經存在的網路
+    external: true
+  traefik-public:
+    # 需加入 traefik 的網路
+    external: true
