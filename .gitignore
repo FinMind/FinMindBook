@@ -7,6 +7,6 @@
 *.egg-info
 .cache
 *.csv
-.python-version
+*.python-version
 .coverage
 build/

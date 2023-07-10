@@ -29,7 +29,7 @@ def taiwan_stock_price(
     end_date: str = "",
 ):
     sql = f"""
-    select * from taiwan_stock_price
+    select * from TaiwanStockPrice
     where StockID = '{stock_id}'
     and Date>= '{start_date}'
     and Date<= '{end_date}'

@@ -23,8 +23,12 @@ def crawler(
         "crawler",
     )(parameter=parameter)
     # 上傳資料庫
+    db_dataset = dict(
+        taiwan_stock_price="TaiwanStockPrice",
+        taiwan_futures_daily="TaiwanFuturesDaily",
+    )
     db.upload_data(
         df,
-        dataset,
+        db_dataset,
         db.router.mysql_financialdata_conn,
     )

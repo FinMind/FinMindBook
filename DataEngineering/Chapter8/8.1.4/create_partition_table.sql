@@ -1,5 +1,5 @@
 CREATE DATABASE `financialdata`;
-CREATE TABLE `financialdata`.`taiwan_stock_price`(
+CREATE TABLE `financialdata`.`TaiwanStockPrice`(
     `StockID` VARCHAR(10) NOT NULL,
     `TradeVolume` BIGINT NOT NULL,
     `Transaction` INT NOT NULL,
@@ -33,10 +33,9 @@ PARTITION BY RANGE(YEAR(Date)) (
     PARTITION p2022 VALUES LESS THAN (2023),
     PARTITION p2023 VALUES LESS THAN (2024),
     PARTITION p2024 VALUES LESS THAN (2025)
- 
 );
  
-CREATE TABLE `financialdata`.`taiwan_futures_daily`(
+CREATE TABLE `financialdata`.`TaiwanFuturesDaily`(
     `Date` DATE NOT NULL,
     `FuturesID` VARCHAR(10) NOT NULL,
     `ContractDate` VARCHAR(30) NOT NULL,
