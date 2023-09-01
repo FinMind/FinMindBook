@@ -29,6 +29,6 @@ def crawler(
     )
     db.upload_data(
         df,
-        db_dataset,
+        db_dataset.get(dataset),
         db.router.mysql_financialdata_conn,
     )
