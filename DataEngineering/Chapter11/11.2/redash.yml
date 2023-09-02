@@ -2,7 +2,7 @@ version: "3.8"
 services:
   redash:
     # 選用此版本的 redash image
-    image: redash/redash:8.0.0.b32245
+    image: redash/redash:10.1.0.b50633
     # depends 代表依賴關係
     # 需要等 postgres、redis 先架設完成
     # 才會開始架設 redash services
@@ -36,13 +36,15 @@ services:
       # 這是做範例，設定 1，
       # 未來可根據需求自行增加
       REDASH_WEB_WORKERS: 1
+      # 修正 mysql 斷線問題
+      SQLALCHEMY_ENABLE_POOL_PRE_PING: True
     networks:
         - my_network
 
   create_table:
     # 相關設定與 redash services 相同
     # 也用相同的 image
-    image: redash/redash:8.0.0.b32245
+    image: redash/redash:10.1.0.b50633
     depends_on:
       - postgres
       - redis
@@ -61,12 +63,14 @@ services:
       REDASH_DATABASE_URL: postgresql://postgres:postgres_password@postgres/postgres
       REDASH_ADDITIONAL_QUERY_RUNNERS: redash.query_runner.python
       REDASH_WEB_WORKERS: 1
+      # 修正 mysql 斷線問題
+      SQLALCHEMY_ENABLE_POOL_PRE_PING: True
     networks:
         - my_network
 
   scheduler:
     # 用於 redash 相關的 scheduler 排程
-    image: redash/redash:8.0.0.b32245
+    image: redash/redash:10.1.0.b50633
     depends_on:
       - postgres
       - redis
@@ -85,12 +89,14 @@ services:
       # 分散式概念一樣
       QUEUES: "celery"
       WORKERS_COUNT: 1
+      # 修正 mysql 斷線問題
+      SQLALCHEMY_ENABLE_POOL_PRE_PING: True
     networks:
         - my_network
   
   scheduled_worker:
     # 分散式中的 worker 
-    image: redash/redash:8.0.0.b32245
+    image: redash/redash:10.1.0.b50633
     depends_on:
       - postgres
       - redis
@@ -109,11 +115,13 @@ services:
       # 與本書中 7.6.3，crawler.yml 中的 -Q twse 概念一樣
       QUEUES: "scheduled_queries,schemas"
       WORKERS_COUNT: 1
+      # 修正 mysql 斷線問題
+      SQLALCHEMY_ENABLE_POOL_PRE_PING: True
     networks:
         - my_network
 
   adhoc_worker:
-    image: redash/redash:8.0.0.b32245
+    image: redash/redash:10.1.0.b50633
     depends_on:
       - postgres
       - redis
@@ -132,6 +140,8 @@ services:
       # 與本書中 7.6.3，crawler.yml 中的 -Q twse 概念一樣
       QUEUES: "queries"
       WORKERS_COUNT: 2
+      # 修正 mysql 斷線問題
+      SQLALCHEMY_ENABLE_POOL_PRE_PING: True
     networks:
         - my_network
 
