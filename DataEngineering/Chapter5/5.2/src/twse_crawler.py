@@ -108,7 +108,7 @@ def crawler_twse(
     """
     # headers 中的 Request url
     url = (
-        "https://www.twse.com.tw/exchangeReport/MI_INDEX"
+        "https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX"
         "?response=json&date={date}&type=ALL"
     )
     url = url.format(
@@ -126,30 +126,12 @@ def crawler_twse(
     ):
         # 如果 date 是周末，會回傳很抱歉，沒有符合條件的資料!
         return pd.DataFrame()
-    # 2009 年以後的資料, 股價在 response 中的 data9
-    # 2009 年以後的資料, 股價在 response 中的 data8
-    # 不同格式, 在證交所的資料中, 是很常見的,
-    # 沒資料的情境也要考慮進去，例如現在週六沒有交易，但在 2007 年週六是有交易的
+    df = pd.DataFrame()
+    # 證交所資料格式改變，更新程式碼
     try:
-        if "data9" in res.json():
-            df = pd.DataFrame(
-                res.json()["data9"]
-            )
-            colname = res.json()[
-                "fields9"
-            ]
-        elif "data8" in res.json():
-            df = pd.DataFrame(
-                res.json()["data8"]
-            )
-            colname = res.json()[
-                "fields8"
-            ]
-        elif res.json()["stat"] in [
-            "查詢日期小於93年2月11日，請重新查詢!",
-            "很抱歉，沒有符合條件的資料!",
-        ]:
-            return pd.DataFrame()
+        data = res.json()["tables"][8]
+        df = pd.DataFrame(data["data"])
+        colname = data["fields"]
     except BaseException:
         return pd.DataFrame()
 
