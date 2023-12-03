@@ -13,6 +13,7 @@ sqlalchemy = "*"
 loguru = "*"
 financialdata = {editable = true,path = "."}
 tqdm = "==4.62.3"
+pymysql = "==1.0.2"
 
 [requires]
 python_version = "3.6"
