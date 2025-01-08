@@ -150,6 +150,16 @@ def crawler_twse(
             "很抱歉，沒有符合條件的資料!",
         ]:
             return pd.DataFrame()
+        else:
+            tables = res.json().get(
+                "tables", [{}]
+            )
+            df = pd.DataFrame(
+                tables[8]["data"]
+            )
+            colname = tables[8][
+                "fields"
+            ]
     except BaseException:
         return pd.DataFrame()
 
