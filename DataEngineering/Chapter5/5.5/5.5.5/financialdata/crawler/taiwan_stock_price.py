@@ -4,10 +4,10 @@ import typing
 
 import pandas as pd
 import requests
-from loguru import logger
 from financialdata.schema.dataset import (
     check_schema,
 )
+from loguru import logger
 
 
 def is_weekend(day: int) -> bool:
@@ -135,7 +135,7 @@ def tpex_header():
         "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
         "Connection": "keep-alive",
         "Host": "www.tpex.org.tw",
-        "Referer": "https://www.tpex.org.tw/web/stock/aftertrading/otc_quotes_no1430/stk_wn1430.php?l=zh-tw",
+        "Referer": "https://www.tpex.org.tw/zh-tw/mainboard/trading/info/pricing.html",
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36",
         "X-Requested-With": "XMLHttpRequest",
     }
@@ -164,24 +164,33 @@ def crawler_tpex(
 ) -> pd.DataFrame:
     """
     櫃買中心網址
-    https://www.tpex.org.tw/web/stock/aftertrading/otc_quotes_no1430/stk_wn1430.php?l=zh-tw
+    https://www.tpex.org.tw/zh-tw/mainboard/trading/info/pricing.html
     """
     logger.info("crawler_tpex")
     # headers 中的 Request url
-    url = "https://www.tpex.org.tw/web/stock/aftertrading/otc_quotes_no1430/stk_wn1430_result.php?l=zh-tw&d={date}&se=AL"
-    url = url.format(
-        date=convert_date(date)
-    )
+    url = "https://www.tpex.org.tw/www/zh-tw/afterTrading/dailyQuotes"
     # 避免被櫃買中心 ban ip, 在每次爬蟲時, 先 sleep 5 秒
     time.sleep(5)
     # request method
-    res = requests.get(
-        url, headers=tpex_header()
+    res = requests.post(
+        url,
+        headers=tpex_header(),
+        data={
+            "date": date.replace(
+                "-", "/"
+            ),
+            "response": "json",
+        },
     )
-    data = res.json().get("aaData", [])
-    df = pd.DataFrame(data)
-    if not data or len(df) == 0:
+    data = res.json().get(
+        "tables", [{}]
+    )
+    total_count = data[0].get(
+        "totalCount", 0
+    )
+    if total_count == 0:
         return pd.DataFrame()
+    df = pd.DataFrame(data[0]["data"])
     # 櫃買中心回傳的資料, 並無資料欄位, 因此這裡我們直接用 index 取特定欄位
     df = df[[0, 2, 3, 4, 5, 6, 7, 8, 9]]
     # 欄位中英轉換

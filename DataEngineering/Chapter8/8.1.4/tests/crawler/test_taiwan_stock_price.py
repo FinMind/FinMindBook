@@ -1,22 +1,19 @@
 import pandas as pd
-
 from financialdata.crawler.taiwan_stock_price import (
     clear_data,
     colname_zh2en,
     convert_change,
     convert_date,
     crawler,
+    crawler_tpex,
+    crawler_twse,
     gen_task_paramter_list,
     is_weekend,
     set_column,
-    twse_header,
     tpex_header,
-    crawler_twse,
-    crawler_tpex,
+    twse_header,
 )
-from financialdata.schema.dataset import (
-    check_schema,
-)
+from financialdata.schema.dataset import check_schema
 
 
 def test_is_weekend_false():
@@ -316,7 +313,7 @@ def test_tpex_header():
         "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
         "Connection": "keep-alive",
         "Host": "www.tpex.org.tw",
-        "Referer": "https://www.tpex.org.tw/web/stock/aftertrading/otc_quotes_no1430/stk_wn1430.php?l=zh-tw",
+        "Referer": "https://www.tpex.org.tw/zh-tw/mainboard/trading/info/pricing.html",
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36",
         "X-Requested-With": "XMLHttpRequest",
     }
