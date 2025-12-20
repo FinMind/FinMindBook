@@ -11,7 +11,7 @@ from sqlalchemy import engine
 
 from api.main import (
     app,
-    get_mysql_financialdata_conn,
+    get_mysql_financialdata_engine,
 )
 
 client = TestClient(app)
@@ -22,12 +22,12 @@ client = TestClient(app)
 
 # 測試對資料庫的連線,
 # assert 回傳的物件, 是一個 sqlalchemy 的 connect 物件
-def test_get_mysql_financialdata_conn():
+def test_get_mysql_financialdata_engine():
     conn = (
-        get_mysql_financialdata_conn()
+        get_mysql_financialdata_engine()
     )
     assert isinstance(
-        conn, engine.Connection
+        conn, engine.Engine
     )
 
 
