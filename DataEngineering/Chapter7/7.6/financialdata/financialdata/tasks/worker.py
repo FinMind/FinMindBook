@@ -12,6 +12,8 @@ broker = (
 )
 app = Celery(
     "task",
-    include=["financialdata.tasks.task"],
+    include=[
+        "financialdata.tasks.task"
+    ],
     broker=broker,
 )

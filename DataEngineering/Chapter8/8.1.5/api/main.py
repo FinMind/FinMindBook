@@ -7,7 +7,9 @@ from sqlalchemy import (
 from api import config
 
 
-def get_mysql_financialdata_conn() -> engine.base.Connection:
+def get_mysql_financialdata_conn() -> (
+    engine.base.Connection
+):
     address = (
         f"mysql+pymysql://{config.MYSQL_DATA_USER}:{config.MYSQL_DATA_PASSWORD}"
         f"@{config.MYSQL_DATA_HOST}:{config.MYSQL_DATA_PORT}/{config.MYSQL_DATA_DATABASE}"

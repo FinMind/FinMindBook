@@ -300,7 +300,7 @@ def crawler(
                 str, int, float
             ]
         ],
-    ]
+    ],
 ) -> pd.DataFrame:
     logger.info(parameter)
     date = parameter.get("date", "")

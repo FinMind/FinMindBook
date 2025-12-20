@@ -13,7 +13,9 @@ from financialdata.crawler.taiwan_stock_price import (
     tpex_header,
     twse_header,
 )
-from financialdata.schema.dataset import check_schema
+from financialdata.schema.dataset import (
+    check_schema,
+)
 
 
 def test_is_weekend_false():
@@ -22,7 +24,9 @@ def test_is_weekend_false():
     """
 
     # bug fix , 周一為 0
-    result = is_weekend(day=0)  # 執行結果
+    result = is_weekend(
+        day=0
+    )  # 執行結果
     expected = False
     # 先寫好預期結果, 這樣即使不執行程式,
     # 單純看測試, 也能了解這個程式的執行結果
@@ -38,7 +42,9 @@ def test_is_weekend_true():
 
     # Bug fix: 週日 day = 6
     # result = is_weekend(day=0)  # 執行結果
-    result = is_weekend(day=6)  # 執行結果
+    result = is_weekend(
+        day=6
+    )  # 執行結果
 
     expected = True
     # 先寫好預期結果, 這樣即使不執行程式,
@@ -67,8 +73,8 @@ def test_gen_task_paramter_list():
         },
         {
             # bug fix
-            # "date": "2021-01-02",      
-            "date": "2021-01-04",      
+            # "date": "2021-01-02",
+            "date": "2021-01-04",
             "data_source": "twse",
         },
         {
@@ -644,10 +650,10 @@ def test_convert_change():
 
 
 def test_convert_date():
-    date = (
-        "2021-07-01"  #  準備好 input 的假資料
-    )
-    result = convert_date(date)  # 執行結果
+    date = "2021-07-01"  #  準備好 input 的假資料
+    result = convert_date(
+        date
+    )  # 執行結果
     expected = "110/07/01"  # 預期結果
     assert (
         result == expected

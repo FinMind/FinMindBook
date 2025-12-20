@@ -3,7 +3,9 @@ from airflow.operators.python_operator import (
 )
 
 
-def create_crawler1_task() -> PythonOperator:
+def create_crawler1_task() -> (
+    PythonOperator
+):
     return PythonOperator(
         task_id="crawler1",
         python_callable=lambda: print(
@@ -12,7 +14,9 @@ def create_crawler1_task() -> PythonOperator:
     )
 
 
-def create_crawler2_task() -> PythonOperator:
+def create_crawler2_task() -> (
+    PythonOperator
+):
     return PythonOperator(
         task_id="crawler2",
         python_callable=lambda: print(
@@ -21,7 +25,9 @@ def create_crawler2_task() -> PythonOperator:
     )
 
 
-def create_crawler3_task() -> PythonOperator:
+def create_crawler3_task() -> (
+    PythonOperator
+):
     return PythonOperator(
         task_id="crawler3",
         python_callable=lambda: print(
@@ -30,7 +36,9 @@ def create_crawler3_task() -> PythonOperator:
     )
 
 
-def create_stock_strategy_task() -> PythonOperator:
+def create_stock_strategy_task() -> (
+    PythonOperator
+):
     return PythonOperator(
         task_id="stock_strategy",
         python_callable=lambda: print(

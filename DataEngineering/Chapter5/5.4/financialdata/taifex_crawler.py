@@ -98,9 +98,9 @@ def clean_data(
             }
         )
     else:
-        df[
-            "TradingSession"
-        ] = "Position"
+        df["TradingSession"] = (
+            "Position"
+        )
     for col in [
         "Open",
         "Max",

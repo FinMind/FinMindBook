@@ -19,6 +19,7 @@ client = TestClient(app)
 # https://fastapi.tiangolo.com/tutorial/testing/
 # 測試框架
 
+
 # 測試對資料庫的連線,
 # assert 回傳的物件, 是一個 sqlalchemy 的 connect 物件
 def test_get_mysql_financialdata_conn():

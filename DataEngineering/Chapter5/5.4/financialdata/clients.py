@@ -4,7 +4,9 @@ from sqlalchemy import (
 )
 
 
-def get_mysql_financialdata_conn() -> engine.base.Connection:
+def get_mysql_financialdata_conn() -> (
+    engine.base.Connection
+):
     """
     user: root
     password: test

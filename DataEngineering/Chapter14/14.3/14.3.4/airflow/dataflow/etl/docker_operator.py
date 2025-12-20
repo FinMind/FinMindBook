@@ -3,7 +3,9 @@ from airflow.operators.docker_operator import (
 )
 
 
-def create_docker_operator_task() -> DockerOperator:
+def create_docker_operator_task() -> (
+    DockerOperator
+):
     return DockerOperator(
         task_id="DockerOperator",
         image="linsamtw/dataflow:12.7",

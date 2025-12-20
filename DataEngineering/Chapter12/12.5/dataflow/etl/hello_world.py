@@ -3,7 +3,9 @@ from airflow.operators.python_operator import (
 )
 
 
-def create_hello_world_task() -> PythonOperator:
+def create_hello_world_task() -> (
+    PythonOperator
+):
     return PythonOperator(
         task_id="hello_world",
         python_callable=lambda: print(

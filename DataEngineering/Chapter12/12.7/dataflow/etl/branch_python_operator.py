@@ -11,7 +11,9 @@ def create_skip_task() -> DummyOperator:
     return DummyOperator(task_id="skip")
 
 
-def create_crawler_task() -> PythonOperator:
+def create_crawler_task() -> (
+    PythonOperator
+):
     return PythonOperator(
         task_id="crawler",
         python_callable=lambda: print(

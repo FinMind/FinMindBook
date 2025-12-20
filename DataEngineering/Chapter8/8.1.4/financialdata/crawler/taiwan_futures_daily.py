@@ -95,9 +95,9 @@ def clean_data(
             }
         )
     else:
-        df[
-            "TradingSession"
-        ] = "Position"
+        df["TradingSession"] = (
+            "Position"
+        )
     for col in [
         "Open",
         "Max",
@@ -202,7 +202,7 @@ def crawler(
                 str, int, float
             ]
         ],
-    ]
+    ],
 ) -> pd.DataFrame:
     date = parameter.get("date", "")
     df = crawler_futures(date)

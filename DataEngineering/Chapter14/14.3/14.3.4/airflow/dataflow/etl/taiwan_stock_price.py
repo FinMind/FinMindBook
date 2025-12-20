@@ -64,7 +64,9 @@ def crawler_taiwan_stock_price_tpex(
     )
 
 
-def create_crawler_taiwan_stock_price_task() -> PythonOperator:
+def create_crawler_taiwan_stock_price_task() -> (
+    PythonOperator
+):
     return [
         # 建立任務
         PythonOperator(
