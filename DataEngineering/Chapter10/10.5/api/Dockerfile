@@ -21,4 +21,4 @@ RUN pipenv sync
 RUN VERSION=RELEASE python3 genenv.py
  
 # 預設執行的指令
-CMD ["pipenv", "run", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["pipenv", "run", "--env-file=.env", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "80"]

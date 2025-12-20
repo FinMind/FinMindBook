@@ -1,7 +1,7 @@
 version: '3.0'
 services:
   api:
-    image: linsamtw/api:10
+    image: linsamtw/api3:10
     hostname: "api"
     restart: always
     # swarm 設定

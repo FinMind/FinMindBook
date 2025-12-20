@@ -15,13 +15,13 @@ gen-release-env-variable:
 	VERSION=RELEASE python genenv.py
 
 build-image:
-	docker build -f Dockerfile -t linsamtw/api:10 .
+	docker build -f Dockerfile -t linsamtw/api3:10 .
 
 up-api:
 	docker compose -f api.yml up
 
 push-image:
-	docker push linsamtw/api:10
+	docker push linsamtw/api3:10
 
 test-cov:
 	pipenv run pytest --cov-report term-missing --cov-config=.coveragerc --cov=./api/ tests/
