@@ -44,19 +44,24 @@ def clear_data(
 
 def set_column(
     df: pd.DataFrame,
+    colname_list: typing.List[str],
 ) -> pd.DataFrame:
     """設定資料欄位名稱"""
-    df.columns = [
-        "StockID",
-        "Close",
-        "Change",
-        "Open",
-        "Max",
-        "Min",
-        "TradeVolume",
-        "TradeValue",
-        "Transaction",
-    ]
+    mapping = {
+        "代號": "StockID",
+        "收盤": "Close",
+        "漲跌": "Change",
+        "開盤": "Open",
+        "最高": "Max",
+        "最低": "Min",
+        "成交股數": "TradeVolume",
+        "成交金額(元)": "TradeValue",
+        "成交筆數": "Transaction",
+    }
+    df.columns = colname_list
+    df.columns = df.columns.map(mapping)
+    # 刪除沒 map 到的欄位（欄名是 NaN）
+    df = df.loc[:, df.columns.notna()]
     return df
 
 
@@ -112,9 +117,11 @@ def crawler_tpex(
         return pd.DataFrame()
     df = pd.DataFrame(data[0]["data"])
     # 櫃買中心回傳的資料, 並無資料欄位, 因此這裡直接用 index 取特定欄位
-    df = df[[0, 2, 3, 4, 5, 6, 7, 8, 9]]
+    colname_list = data[0]["fields"]
     # 欄位中英轉換
-    df = set_column(df.copy())
+    df = set_column(
+        df.copy(), colname_list
+    )
     df["Date"] = date
     return df
 
