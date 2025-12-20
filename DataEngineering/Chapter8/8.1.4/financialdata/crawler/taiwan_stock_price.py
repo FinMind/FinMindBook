@@ -257,7 +257,17 @@ def crawler_twse(
             "查詢日期小於93年2月11日，請重新查詢!",
             "很抱歉，沒有符合條件的資料!",
         ]:
-            pass
+            return pd.DataFrame()
+        else:
+            tables = res.json().get(
+                "tables", [{}]
+            )
+            df = pd.DataFrame(
+                tables[8]["data"]
+            )
+            colname = tables[8][
+                "fields"
+            ]
     except Exception as e:
         logger.error(e)
         return pd.DataFrame()

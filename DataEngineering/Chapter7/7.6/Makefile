@@ -19,3 +19,6 @@ deploy-crawler-scheduler:
 
 deploy-api:
 	docker stack deploy --with-registry-auth -c api/api.yml api
+
+send-task:
+	uv run --env-file=.env python -m financialdata.producer taiwan_stock_price 2021-04-01 2021-04-12

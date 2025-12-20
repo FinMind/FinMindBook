@@ -1,0 +1,9 @@
+[project]
+name = "8-1-2"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pytest>=9.0.2",
+]

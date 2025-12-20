@@ -366,7 +366,18 @@ def test_set_column():
         ]
     )
     result_df = set_column(
-        df
+        df,
+        colname_list=[
+            "代號",
+            "收盤",
+            "漲跌",
+            "開盤",
+            "最高",
+            "最低",
+            "成交股數",
+            "成交金額(元)",
+            "成交筆數",
+        ],
     )  # 輸入函數, 得到結果
     expected_df = pd.DataFrame(
         [
@@ -420,13 +431,13 @@ def test_crawler_twse_data9():
     data 在 response 底下的 key, data9
     一般政府網站, 長時間的資料, 格式常常不一致
     """
-    result_df = crawler_twse(
+    df = crawler_twse(
         date="2021-01-05"
     )  # 執行結果
     assert (
-        len(result_df) == 20596
+        len(df) == 20596
     )  # 檢查, 資料量是否正確
-    assert list(result_df.columns) == [
+    assert list(df.columns) == [
         "StockID",
         "TradeVolume",
         "Transaction",
@@ -446,13 +457,11 @@ def test_crawler_twse_data8():
     data 在 response 底下的 key, data8
     一般政府網站, 長時間的資料, 格式常常不一致
     """
-    result_df = crawler_twse(
-        date="2008-01-04"
-    )
+    df = crawler_twse(date="2008-01-04")
     assert (
-        len(result_df) == 2760
+        len(df) == 2760
     )  # 檢查, 資料量是否正確
-    assert list(result_df.columns) == [
+    assert list(df.columns) == [
         "StockID",
         "TradeVolume",
         "Transaction",

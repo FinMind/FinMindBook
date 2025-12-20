@@ -1,0 +1,19 @@
+[project]
+name = "financialdata"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "apscheduler>=3.11.1",
+    "celery>=5.6.0",
+    "loguru>=0.7.3",
+    "pandas>=2.3.3",
+    "pydantic>=2.12.5",
+    "pymysql>=1.1.2",
+    "pytest>=9.0.2",
+    "pytest-cov>=7.0.0",
+    "pytest-mock>=3.15.1",
+    "requests>=2.32.5",
+    "sqlalchemy>=2.0.45",
+]
