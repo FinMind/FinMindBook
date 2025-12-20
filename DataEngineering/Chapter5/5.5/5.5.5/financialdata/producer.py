@@ -3,7 +3,6 @@ import sys
 
 from loguru import logger
 
-from financialdata.backend import db
 from financialdata.tasks.task import (
     crawler,
 )

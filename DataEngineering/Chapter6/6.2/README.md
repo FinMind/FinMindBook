@@ -2,4 +2,4 @@
 FinMind Book
 
 ## run
-    pipenv run flask run
+    uv run flask run

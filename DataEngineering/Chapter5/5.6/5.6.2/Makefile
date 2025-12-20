@@ -1,3 +1,3 @@
 # run scheduler
 run-scheduler:
-	pipenv run python scheduler.py
+	uv run python scheduler.py

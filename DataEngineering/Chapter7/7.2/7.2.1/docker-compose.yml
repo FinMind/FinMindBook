@@ -3,7 +3,7 @@ services:
   crawler_twse:
     image: crawler:7.2.1
     hostname: "twse"
-    command: pipenv run celery -A financialdata.tasks.worker worker --loglevel=info --concurrency=1  --hostname=%h -Q twse
+    command: uv run celery -A financialdata.tasks.worker worker --loglevel=info --concurrency=1  --hostname=%h -Q twse
     restart: always
     environment:
       - TZ=Asia/Taipei
