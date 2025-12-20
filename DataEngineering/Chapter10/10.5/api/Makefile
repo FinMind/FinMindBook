@@ -18,7 +18,7 @@ build-image:
 	docker build -f Dockerfile -t linsamtw/api:10 .
 
 up-api:
-	docker-compose -f api.yml up
+	docker compose -f api.yml up
 
 push-image:
 	docker push linsamtw/api:10

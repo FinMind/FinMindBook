@@ -18,7 +18,7 @@ build-image:
 	docker build -f Dockerfile -t api:7.2.2 .
 
 up-api:
-	docker-compose -f api.yml up
+	docker compose -f api.yml up
 
 tag-image:
 	docker tag api:7.2.2 linsamtw/api:7.2.2

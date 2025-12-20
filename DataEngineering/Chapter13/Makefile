@@ -1,7 +1,7 @@
 up-redis:
-	docker-compose -f redis.yml up -d
+	docker compose -f redis.yml up -d
 
 down-redis:
-	docker-compose -f redis.yml down
+	docker compose -f redis.yml down
 
 

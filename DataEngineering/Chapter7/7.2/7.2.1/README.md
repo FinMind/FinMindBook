@@ -10,11 +10,11 @@
     docker network create my_network
 
 ## up mysql, rabbitmq
-    docker-compose -f rabbitmq.yml up -d
-    docker-compose -f mysql.yml up -d
+    docker compose -f rabbitmq.yml up -d
+    docker compose -f mysql.yml up -d
 
 ## up celery
-    docker-compose -f crawler.yml up
+    docker compose -f crawler.yml up
 
 ## up multi celery
-    docker-compose -f crawler_multi_celery.yml up
+    docker compose -f crawler_multi_celery.yml up

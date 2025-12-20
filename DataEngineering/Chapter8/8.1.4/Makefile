@@ -9,11 +9,11 @@ create-mysql-volume:
 
 # 啟動 mysql
 create-mysql:
-	docker-compose -f mysql.yml up -d
+	docker compose -f mysql.yml up -d
 
 # 啟動 rabbitmq
 create-rabbitmq:
-	docker-compose -f rabbitmq.yml up -d
+	docker compose -f rabbitmq.yml up -d
 
 # 安裝環境
 install-python-env:
@@ -47,13 +47,13 @@ build-image:
 	docker build -f Dockerfile -t crawler:7.2.1 .
 
 up-crawler:
-	docker-compose -f crawler.yml up
+	docker compose -f crawler.yml up
 
 up-multi-crawler:
-	docker-compose -f crawler_multi_celery.yml up
+	docker compose -f crawler_multi_celery.yml up
 
 up-scheduler:
-	docker-compose -f scheduler.yml up
+	docker compose -f scheduler.yml up
 
 tag-image:
 	docker tag crawler:7.2.1 linsamtw/crawler:7.2.1

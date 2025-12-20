@@ -1,7 +1,7 @@
 # FinMindBook 5.5.3
 
 ### run rabbitmq
-    docker-compose -f rabbitmq.yml up -d
+    docker compose -f rabbitmq.yml up -d
 
 ### install package
     pipenv sync

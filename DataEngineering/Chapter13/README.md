@@ -1,7 +1,7 @@
 # FinMindBook 13
 
 ### run redis
-    docker-compose -f redis.yml up -d
+    docker compose -f redis.yml up -d
 
 ### install package
     pipenv sync
