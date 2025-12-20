@@ -3,7 +3,7 @@ services:
   scheduler:
     image: linsamtw/crawler:7.2.1
     hostname: "twse"
-    command: uv run python -m financialdata.scheduler
+    command: uv run --env-file=.env python -m financialdata.scheduler
     restart: always
     # swarm 設定
     deploy:

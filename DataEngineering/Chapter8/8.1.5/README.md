@@ -2,5 +2,5 @@
 FinMind Book
 
 ## run
-    uv run uvicorn main:app --reload --port 8888
+    uv run --env-file=.env uvicorn main:app --reload --port 8888
 

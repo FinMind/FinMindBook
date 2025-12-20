@@ -21,15 +21,15 @@ install-python-env:
 
 # 啟動 celery, 專門執行 twse queue 列隊的任務，
 run-celery-twse:
-	uv run celery -A financialdata.tasks.worker worker --loglevel=info --concurrency=1  --hostname=%h -Q twse
+	uv run --env-file=.env celery -A financialdata.tasks.worker worker --loglevel=info --concurrency=1  --hostname=%h -Q twse
 
 # 啟動 celery, 專門執行 tpex queue 列隊的任務，
 run-celery-tpex:
-	uv run celery -A financialdata.tasks.worker worker --loglevel=info --concurrency=1  --hostname=%h -Q tpex
+	uv run --env-file=.env celery -A financialdata.tasks.worker worker --loglevel=info --concurrency=1  --hostname=%h -Q tpex
 
 # sent task
 sent-taiwan-stock-price-task:
-	uv run python -m financialdata.producer taiwan_stock_price 2021-04-01 2021-04-12
+	uv run --env-file=.env python -m financialdata.producer taiwan_stock_price 2021-04-01 2021-04-12
 
 # 建立 dev 環境變數
 gen-dev-env-variable:
@@ -62,10 +62,10 @@ push-image:
 	docker push linsamtw/crawler:7.2.1
 
 run-scheduler:
-	uv run python -m financialdata.scheduler
+	uv run --env-file=.env python -m financialdata.scheduler
 
 test-cov:
-	uv run pytest --cov-report term-missing --cov-config=.coveragerc --cov=./financialdata/ tests/
+	uv run --env-file=.env pytest --cov-report term-missing --cov-config=.coveragerc --cov=./financialdata/ tests/
 
 # format
 format:
