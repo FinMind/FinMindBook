@@ -1,4 +1,4 @@
-from financialdata import clients
+from financialdata.backend.db import clients
 
 
 class Router:
