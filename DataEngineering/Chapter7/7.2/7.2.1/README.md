@@ -4,7 +4,7 @@
     docker run -it --rm continuumio/miniconda3:4.5.4 bash
 
 ## build docker
-    docker build -f Dockerfile -t crawler:dev .
+    docker build -f Dockerfile -t crawler3:dev .
 
 ## create docker network
     docker network create my_network

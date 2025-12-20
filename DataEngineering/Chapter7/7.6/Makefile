@@ -11,7 +11,7 @@ deploy-mysql:
 deploy-rabbitmq:
 	docker stack deploy --with-registry-auth -c rabbitmq.yml rabbitmq
 
-deploy-crawler:
+deploy-crawler3:
 	docker stack deploy --with-registry-auth -c financialdata/crawler.yml financialdata
 
 deploy-crawler-scheduler:

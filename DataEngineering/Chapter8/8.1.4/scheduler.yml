@@ -1,7 +1,7 @@
 version: '3.0'
 services:
   scheduler:
-    image: linsamtw/crawler:7.2.1
+    image: linsamtw/crawler3:7.2.1
     hostname: "twse"
     command: --env-file=.env python -m financialdata.scheduler
     restart: always

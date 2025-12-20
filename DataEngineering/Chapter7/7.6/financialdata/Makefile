@@ -44,22 +44,22 @@ gen-release-env-variable:
 	VERSION=RELEASE python genenv.py
 
 build-image:
-	docker build -f Dockerfile -t crawler:7.2.1 .
+	docker build -f Dockerfile -t crawler3:7.2.1 .
 
-up-crawler:
+up-crawler3:
 	docker compose -f crawler.yml up
 
-up-multi-crawler:
+up-multi-crawler3:
 	docker compose -f crawler_multi_celery.yml up
 
 up-scheduler:
 	docker compose -f scheduler.yml up
 
 tag-image:
-	docker tag crawler:7.2.1 linsamtw/crawler:7.2.1
+	docker tag crawler3:7.2.1 linsamtw/crawler3:7.2.1
 
 push-image:
-	docker push linsamtw/crawler:7.2.1
+	docker push linsamtw/crawler3:7.2.1
 
 run-scheduler:
 	uv run --env-file=.env python -m financialdata.scheduler

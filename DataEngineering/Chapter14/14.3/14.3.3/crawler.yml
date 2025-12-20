@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   crawler_twse:
-    image: linsamtw/crawler:7.2.1
+    image: linsamtw/crawler3:7.2.1
     hostname: "twse"
     command: pipenv run celery -A financialdata.tasks.worker worker --loglevel=info --concurrency=1  --hostname=%h -Q twse
     restart: always
@@ -17,7 +17,7 @@ services:
         - my_network
 
   crawler_tpex:
-    image: linsamtw/crawler:7.2.1
+    image: linsamtw/crawler3:7.2.1
     hostname: "tpex"
     command: pipenv run celery -A financialdata.tasks.worker worker --loglevel=info --concurrency=1  --hostname=%h -Q tpex
     restart: always
@@ -33,7 +33,7 @@ services:
         - my_network
 
   sent_task:
-    image: linsamtw/crawler:7.2.1
+    image: linsamtw/crawler3:7.2.1
     hostname: "sent_task"
     command: pipenv run python financialdata/producer.py taiwan_stock_price 2021-04-01 2023-04-12
     restart: on-failure

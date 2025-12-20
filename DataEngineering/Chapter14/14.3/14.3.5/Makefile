@@ -37,7 +37,7 @@ deploy-mysql:
 deploy-rabbitmq:
 	docker stack deploy -c rabbitmq.yml rabbitmq
 
-deploy-crawler:
+deploy-crawler3:
 	docker stack deploy -c crawler.yml crawler
 
 deploy-airflow:
