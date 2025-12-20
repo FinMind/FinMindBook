@@ -36,7 +36,7 @@ def crawler_taiwan_stock_price_twse(
     db.upload_data(
         df,
         "TaiwanStockPrice",
-        db.router.mysql_financialdata_conn,
+        db.router.mysql_financialdata_engine,
     )
 
 
@@ -60,7 +60,7 @@ def crawler_taiwan_stock_price_tpex(
     db.upload_data(
         df,
         "TaiwanStockPrice",
-        db.router.mysql_financialdata_conn,
+        db.router.mysql_financialdata_engine,
     )
 
 

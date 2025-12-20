@@ -1,12 +1,9 @@
 from sqlalchemy import (
     create_engine,
-    engine,
 )
 
 
-def get_mysql_financialdata_conn() -> (
-    engine.base.Connection
-):
+def get_mysql_financialdata_engine():
     """
     user: root
     password: test
@@ -17,5 +14,4 @@ def get_mysql_financialdata_conn() -> (
     """
     address = "mysql+pymysql://root:test@localhost:3306/financialdata"
     engine = create_engine(address)
-    connect = engine.connect()
-    return connect
+    return engine

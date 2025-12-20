@@ -5,21 +5,18 @@ import pandas as pd
 from loguru import logger
 from sqlalchemy import (
     create_engine,
-    engine,
+    text,
 )
 from tqdm import tqdm
 
 import wget
 
 
-def get_mysql_financialdata_conn() -> (
-    engine.base.Connection
-):
+def get_mysql_financialdata_engine():
     # TODO 請將 IP 換成讀者自己的 IP
     address = "mysql+pymysql://root:test@139.162.104.54:3306/financialdata"
     engine = create_engine(address)
-    connect = engine.connect()
-    return connect
+    return engine
 
 
 def create_taiwan_stock_info_sql():
@@ -109,15 +106,17 @@ def create_taiwan_stock_holding_shares_per_sql():
 
 
 def create_table(table: str):
-    mysql_conn = (
-        get_mysql_financialdata_conn()
+    mysql_engine = (
+        get_mysql_financialdata_engine()
     )
     sql = eval(f"create_{table}_sql()")
     try:
-        logger.info(
-            f"create table {table}"
-        )
-        mysql_conn.execute(sql)
+        # Engine 會自動從 pool 拿 connection
+        with mysql_engine.begin() as conn:
+            logger.info(
+                f"create table {table}"
+            )
+            conn.execute(text(sql))
     except:
         logger.info(
             f"{table} already exists"
@@ -129,7 +128,7 @@ def download_data(table: str):
     if f"{table}.csv" in os.listdir(
         "."
     ):
-        logger.info(f"already download")
+        logger.info("already download")
     else:
         url = f"https://github.com/FinMind/FinMindBook/releases/download/data/{table}.csv"
         wget.download(
@@ -142,8 +141,8 @@ def download_data(table: str):
 
 def upload_data2mysql(table: str):
     chunk_size = 100000
-    mysql_conn = (
-        get_mysql_financialdata_conn()
+    mysql_engine = (
+        get_mysql_financialdata_engine()
     )
     try:
         logger.info("load data")
@@ -155,7 +154,7 @@ def upload_data2mysql(table: str):
         for df_chunk in tqdm(reader):
             df_chunk.to_sql(
                 name=table,
-                con=mysql_conn,
+                con=mysql_engine,
                 if_exists="append",
                 index=False,
             )

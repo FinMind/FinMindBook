@@ -41,8 +41,6 @@ def Update(
             )
         )
 
-    db.router.close_connection()
-
 
 if __name__ == "__main__":
     dataset, start_date, end_date = (

@@ -241,7 +241,7 @@ def main(
             try:
                 df.to_sql(
                     name="TaiwanFutures",
-                    con=db_router.mysql_financialdata_conn,
+                    con=db_router.mysql_financialdata_engine,
                     if_exists="append",
                     index=False,
                     chunksize=1000,

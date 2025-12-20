@@ -3,7 +3,6 @@ import sys
 
 from loguru import logger
 
-from financialdata.backend import db
 from financialdata.tasks.task import (
     crawler,
 )
@@ -40,8 +39,6 @@ def Update(
                 "data_source", ""
             )
         )
-
-    db.router.close_connection()
 
 
 if __name__ == "__main__":

@@ -3,19 +3,19 @@ import typing
 import pandas as pd
 import pymysql
 from loguru import logger
-from sqlalchemy import engine
+from sqlalchemy import engine, text
 
 
 def update2mysql_by_pandas(
     df: pd.DataFrame,
     table: str,
-    mysql_conn: engine.base.Connection,
+    mysql_engine: engine.base.Engine,
 ):
     if len(df) > 0:
         try:
             df.to_sql(
                 name=table,
-                con=mysql_conn,
+                con=mysql_engine,
                 if_exists="append",
                 index=False,
                 chunksize=1000,
@@ -88,11 +88,12 @@ def build_df_update_sql(
 def update2mysql_by_sql(
     df: pd.DataFrame,
     table: str,
-    mysql_conn: engine.base.Connection,
+    mysql_engine: engine.base.Engine,
 ):
     sql = build_df_update_sql(table, df)
     commit(
-        sql=sql, mysql_conn=mysql_conn
+        sql=sql,
+        mysql_engine=mysql_engine,
     )
 
 
@@ -100,47 +101,47 @@ def commit(
     sql: typing.Union[
         str, typing.List[str]
     ],
-    mysql_conn: engine.base.Connection = None,
+    mysql_engine: engine.base.Engine,
 ):
     logger.info("commit")
     try:
-        trans = mysql_conn.begin()
-        if isinstance(sql, list):
-            for s in sql:
-                try:
-                    mysql_conn.execution_options(
-                        autocommit=False
-                    ).execute(
-                        s
-                    )
-                except Exception as e:
-                    logger.info(e)
-                    logger.info(s)
-                    break
+        # Engine 會自動從 pool 拿 connection
+        with mysql_engine.begin() as conn:
+            if isinstance(sql, list):
+                for s in sql:
+                    try:
+                        conn.execute(
+                            text(s)
+                        )
+                    except (
+                        Exception
+                    ) as e:
+                        logger.info(e)
+                        logger.info(s)
+                        raise
+            elif isinstance(sql, str):
+                conn.execute(text(sql))
 
-        elif isinstance(sql, str):
-            mysql_conn.execution_options(
-                autocommit=False
-            ).execute(
-                sql
-            )
-        trans.commit()
+        # with block 正常結束 → auto commit
+        # 發生例外 → auto rollback
+
     except Exception as e:
-        trans.rollback()
-        logger.info(e)
+        logger.info(
+            f"commit error: {e}"
+        )
 
 
 def upload_data(
     df: pd.DataFrame,
     table: str,
-    mysql_conn: engine.base.Connection,
+    mysql_engine: engine.base.Connection,
 ):
     if len(df) > 0:
         # 直接上傳
         if update2mysql_by_pandas(
             df=df,
             table=table,
-            mysql_conn=mysql_conn,
+            mysql_engine=mysql_engine,
         ):
             pass
         else:
@@ -149,5 +150,5 @@ def upload_data(
             update2mysql_by_sql(
                 df=df,
                 table=table,
-                mysql_conn=mysql_conn,
+                mysql_engine=mysql_engine,
             )
