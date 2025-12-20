@@ -1,7 +1,7 @@
 version: '3.0'
 services:
   crawler_twse:
-    image: crawler:7.2.1
+    image: crawler3:7.2.1
     hostname: "twse"
     command: uv run --env-file=.env celery -A financialdata.tasks.worker worker --loglevel=info --concurrency=1  --hostname=%h -Q twse
     restart: always
@@ -11,7 +11,7 @@ services:
         - my_network
 
   crawler_tpex:
-    image: crawler:7.2.1
+    image: crawler3:7.2.1
     hostname: "tpex"
     command: uv run --env-file=.env celery -A financialdata.tasks.worker worker --loglevel=info --concurrency=1  --hostname=%h -Q tpex
     restart: always
@@ -21,7 +21,7 @@ services:
         - my_network
 
   crawler_taifex:
-    image: crawler:7.2.1
+    image: crawler3:7.2.1
     hostname: "taifex"
     command: uv run  --env-file=.env celery -A financialdata.tasks.worker worker --loglevel=info --concurrency=1  --hostname=%h -Q taifex
     restart: always

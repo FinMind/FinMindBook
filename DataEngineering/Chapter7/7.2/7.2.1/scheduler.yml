@@ -1,7 +1,7 @@
 version: '3.0'
 services:
   scheduler:
-    image: crawler:7.2.1
+    image: crawler3:7.2.1
     hostname: "twse"
     command: uv run  --env-file=.env python -m financialdata.scheduler
     restart: always
