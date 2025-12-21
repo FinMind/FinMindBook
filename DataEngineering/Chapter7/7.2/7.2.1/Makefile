@@ -17,7 +17,7 @@ create-rabbitmq:
 
 # 安裝環境
 install-python-env:
-	pipenv sync
+	uv sync
 
 # 啟動 celery, 專門執行 twse queue 列隊的任務，
 run-celery-twse:

@@ -3,7 +3,7 @@ services:
   crawler_twse:
     image: linsamtw/crawler3:7.2.1
     hostname: "twse"
-    command: pipenv run celery -A financialdata.tasks.worker worker --loglevel=info --concurrency=1  --hostname=%h -Q twse
+    command: uv run --env-file=.env celery -A financialdata.tasks.worker worker --loglevel=info --concurrency=1  --hostname=%h -Q twse
     restart: always
     # swarm 設定
     deploy:
@@ -19,7 +19,7 @@ services:
   crawler_tpex:
     image: linsamtw/crawler3:7.2.1
     hostname: "tpex"
-    command: pipenv run celery -A financialdata.tasks.worker worker --loglevel=info --concurrency=1  --hostname=%h -Q tpex
+    command: uv run --env-file=.env celery -A financialdata.tasks.worker worker --loglevel=info --concurrency=1  --hostname=%h -Q tpex
     restart: always
     # swarm 設定
     deploy:
@@ -35,7 +35,7 @@ services:
   sent_task:
     image: linsamtw/crawler3:7.2.1
     hostname: "sent_task"
-    command: pipenv run python financialdata/producer.py taiwan_stock_price 2021-04-01 2023-04-12
+    command: uv run --env-file=.env python financialdata/producer.py taiwan_stock_price 2021-04-01 2023-04-12
     restart: on-failure
     # swarm 設定
     deploy:

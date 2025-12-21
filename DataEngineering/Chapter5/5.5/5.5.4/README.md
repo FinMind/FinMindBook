@@ -4,7 +4,7 @@
     docker compose -f rabbitmq.yml up -d
 
 ### install package
-    pipenv sync
+    uv sync
 
 ### run worker
     uv run celery -A worker worker --loglevel=info

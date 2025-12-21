@@ -2,7 +2,7 @@ version: '3.8'
 services:
   initdb:
     image: linsamtw/dataflow3:12.8
-    command: pipenv run airflow db init
+    command: uv run --env-file=.env airflow db init
     restart: on-failure
     # swarm 設定
     deploy:
@@ -15,7 +15,7 @@ services:
 
   create-user:
     image: linsamtw/dataflow3:12.8
-    command: pipenv run airflow users create --username admin --firstname lin --lastname sam --role Admin -p admin --email finmind.tw@gmail.com
+    command: uv run --env-file=.env airflow users create --username admin --firstname lin --lastname sam --role Admin -p admin --email finmind.tw@gmail.com
     depends_on:
       - initdb
     restart: on-failure
@@ -49,7 +49,7 @@ services:
   webserver:
     image: linsamtw/dataflow3:12.8
     hostname: "airflow-webserver"
-    command: pipenv run airflow webserver -p 8888
+    command: uv run --env-file=.env airflow webserver -p 8888
     depends_on:
       - initdb
     restart: always
@@ -86,7 +86,7 @@ services:
   scheduler:
     image: linsamtw/dataflow3:12.8
     hostname: "airflow-scheduler"
-    command: pipenv run airflow scheduler
+    command: uv run --env-file=.env airflow scheduler
     depends_on:
       - initdb
     restart: always
@@ -109,7 +109,7 @@ services:
     restart: always
     depends_on:
         - scheduler
-    command: pipenv run airflow celery worker
+    command: uv run --env-file=.env airflow celery worker
     # swarm 設定
     deploy:
       mode: replicated
@@ -125,7 +125,7 @@ services:
     restart: always
     depends_on:
         - scheduler
-    command: pipenv run airflow celery worker -q twse
+    command: uv run --env-file=.env airflow celery worker -q twse
     # swarm 設定
     deploy:
       mode: replicated
@@ -142,7 +142,7 @@ services:
     restart: always
     depends_on:
         - scheduler
-    command: pipenv run airflow celery worker -q tpex
+    command: uv run --env-file=.env airflow celery worker -q tpex
     # swarm 設定
     deploy:
       mode: replicated

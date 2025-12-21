@@ -4,10 +4,10 @@
     docker compose -f redis.yml up -d
 
 ### install package
-    pipenv sync
+    uv sync
 
 ### run worker
-    pipenv run celery -A worker worker --loglevel=info
+    uv run --env-file=.env celery -A worker worker --loglevel=info
 
 ### sent task
-    pipenv run python producer.py
+    uv run --env-file=.env python producer.py

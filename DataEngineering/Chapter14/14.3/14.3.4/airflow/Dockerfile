@@ -16,7 +16,7 @@ ENV LANG=C.UTF-8
 
 # install package
 RUN pip3 install pipenv==2020.6.2
-RUN pipenv sync
+RUN uv sync
 
 # airflow
 ARG AIRFLOW_USER_HOME=/FinMindProject/dataflow

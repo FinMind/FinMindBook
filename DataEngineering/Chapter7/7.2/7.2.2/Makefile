@@ -1,6 +1,6 @@
 # 安裝環境
 install-python-env:
-	pipenv sync
+	uv sync
 
 # 建立 dev 環境變數
 gen-dev-env-variable:
