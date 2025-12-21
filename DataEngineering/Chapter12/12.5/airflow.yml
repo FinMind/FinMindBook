@@ -2,7 +2,7 @@ version: '3.0'
 services:
   initdb:
     image: linsamtw/dataflow3:12.5
-    command: pipenv run airflow db init
+    command: uv run airflow db init
     restart: on-failure
     # swarm 設定
     deploy:
@@ -15,7 +15,7 @@ services:
 
   create-user:
     image: linsamtw/dataflow3:12.5
-    command: pipenv run airflow users create --username admin --firstname lin --lastname sam --role Admin -p admin --email finmind.tw@gmail.com
+    command: uv run airflow users create --username admin --firstname lin --lastname sam --role Admin -p admin --email finmind.tw@gmail.com
     depends_on:
       - initdb
     restart: on-failure
@@ -31,7 +31,7 @@ services:
   webserver:
     image: linsamtw/dataflow3:12.5
     hostname: "airflow-webserver"
-    command: pipenv run airflow webserver -p 8888
+    command: uv run airflow webserver -p 8888
     depends_on:
       - initdb
     restart: always
@@ -51,7 +51,7 @@ services:
   scheduler:
     image: linsamtw/dataflow3:12.5
     hostname: "airflow-scheduler"
-    command: pipenv run airflow scheduler
+    command: uv run airflow scheduler
     depends_on:
       - initdb
     restart: always

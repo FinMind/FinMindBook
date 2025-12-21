@@ -24,7 +24,7 @@ push-image:
 	docker push linsamtw/api3:10
 
 test-cov:
-	pipenv run pytest --cov-report term-missing --cov-config=.coveragerc --cov=./api/ tests/
+	uv run pytest --cov-report term-missing --cov-config=.coveragerc --cov=./api/ tests/
 
 format:
 	black -l 40 api tests
