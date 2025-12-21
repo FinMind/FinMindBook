@@ -36,7 +36,7 @@ services:
       placement:
         constraints:
           # 設定，部屬在 manager = true 的機器
-          - node.labels.manager == true
+          - node.labels.manager==true
 
   # netdata-worker1:
   #   # 引用模板
@@ -52,7 +52,7 @@ services:
   #     placement:
   #       constraints:
   #         # 設定，部屬在 worker1 = true 的機器
-  #         - node.labels.worker1 == true
+  #         - node.labels.worker1==true
 
 networks:
   my_network:

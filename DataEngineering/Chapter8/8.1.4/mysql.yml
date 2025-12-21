@@ -18,7 +18,7 @@ services:
         mode: replicated
         replicas: 1
         placement:
-          constraints: [node.labels.mysql == true]
+          constraints: [node.labels.mysql==true]
       networks:
           - my_network
 
@@ -40,7 +40,7 @@ services:
         mode: replicated
         replicas: 1
         placement:
-          constraints: [node.labels.mysql == true]
+          constraints: [node.labels.mysql==true]
       networks:
           - my_network
      

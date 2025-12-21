@@ -15,7 +15,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.labels.rabbitmq == true]
+        constraints: [node.labels.rabbitmq==true]
     networks:
       - my_network
 
@@ -31,7 +31,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.labels.flower == true]
+        constraints: [node.labels.flower==true]
     networks:
       - my_network
 

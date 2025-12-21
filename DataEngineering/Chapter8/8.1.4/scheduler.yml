@@ -10,7 +10,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.labels.crawler_scheduler == true]
+        constraints: [node.labels.crawler_scheduler==true]
     environment:
       - TZ=Asia/Taipei
     networks:

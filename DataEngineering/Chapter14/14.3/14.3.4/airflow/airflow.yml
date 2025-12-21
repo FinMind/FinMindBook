@@ -9,7 +9,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.labels.airflow == true]
+        constraints: [node.labels.airflow==true]
     networks:
         - my_network
 
@@ -25,7 +25,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.labels.airflow == true]
+        constraints: [node.labels.airflow==true]
     networks:
         - my_network
 
@@ -43,7 +43,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.labels.airflow == true]
+        constraints: [node.labels.airflow==true]
     networks:
         - my_network
 
@@ -68,7 +68,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.labels.airflow == true]
+        constraints: [node.labels.airflow==true]
     networks:
         - my_network
 
@@ -86,7 +86,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.labels.airflow == true]
+        constraints: [node.labels.airflow==true]
     networks:
         - my_network
   
@@ -107,7 +107,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.labels.airflow == true]
+        constraints: [node.labels.airflow==true]
     networks:
         - my_network
 
@@ -124,7 +124,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.labels.worker == true]
+        constraints: [node.labels.worker==true]
     networks:
         - my_network
 
@@ -142,7 +142,7 @@ services:
       replicas: 1
       placement:
         max_replicas_per_node: 1
-        constraints: [node.labels.crawler_twse == true]
+        constraints: [node.labels.crawler_twse==true]
     networks:
         - my_network
 
@@ -160,7 +160,7 @@ services:
       replicas: 1
       placement:
         max_replicas_per_node: 1
-        constraints: [node.labels.crawler_tpex == true]
+        constraints: [node.labels.crawler_tpex==true]
     networks:
         - my_network
 

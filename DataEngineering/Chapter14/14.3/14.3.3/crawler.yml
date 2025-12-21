@@ -10,7 +10,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.labels.crawler_twse == true]
+        constraints: [node.labels.crawler_twse==true]
     environment:
       - TZ=Asia/Taipei
     networks:
@@ -26,7 +26,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.labels.crawler_tpex == true]
+        constraints: [node.labels.crawler_tpex==true]
     environment:
       - TZ=Asia/Taipei
     networks:
@@ -42,7 +42,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.labels.sent_task == true]
+        constraints: [node.labels.sent_task==true]
     environment:
       - TZ=Asia/Taipei
     networks:

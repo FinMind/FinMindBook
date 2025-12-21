@@ -9,7 +9,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.labels.airflow == true]
+        constraints: [node.labels.airflow==true]
     networks:
         - my_network
 
@@ -24,7 +24,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.labels.airflow == true]
+        constraints: [node.labels.airflow==true]
     networks:
         - my_network
   
@@ -44,7 +44,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.labels.airflow == true]
+        constraints: [node.labels.airflow==true]
     networks:
         - my_network
 
@@ -60,7 +60,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.labels.airflow == true]
+        constraints: [node.labels.airflow==true]
     environment:
       - TZ=Asia/Taipei
     networks:

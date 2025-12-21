@@ -23,7 +23,7 @@ services:
         order: stop-first
         failure_action: rollback
       placement:
-        constraints: [node.labels.grafana == true]
+        constraints: [node.labels.grafana==true]
     restart: always
     networks:
         - my_network
@@ -43,7 +43,7 @@ services:
         parallelism: 1
         delay: 10s
       placement:
-        constraints: [node.labels.grafana == true]
+        constraints: [node.labels.grafana==true]
     restart: always
     networks:
         - my_network

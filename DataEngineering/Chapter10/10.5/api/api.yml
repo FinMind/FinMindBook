@@ -9,7 +9,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.labels.api == true]
+        constraints: [node.labels.api==true]
       labels:
         - traefik.enable=true
         - traefik.frontend.passHostHeader=true
