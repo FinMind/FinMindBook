@@ -18,16 +18,16 @@ services:
         # fastapi 預設在 /docs 作為文件頁面，
         # 並根據 /openapi.json 去製作文件
         # 因此需額外設定 
-        # testapi.ddns.net/docs 與 
-        # testapi.ddns.net/openapi.json
+        # testapifinmind.ddns.net/docs 與 
+        # testapifinmind.ddns.net/openapi.json
         # 可被 traefik 訪問，方法如下
         # 指定 Host 與 Path
         # &&：代表 and，將 Host 與 Path 連在一起使用
         # ||：代表 or，在多個 router 時使用
         - traefik.http.routers.api-https.rule=
-          Host(`testapi.ddns.net`) && PathPrefix(`/docs`) || 
-          Host(`testapi.ddns.net`) && PathPrefix(`/openapi.json`) || 
-          Host(`testapi.ddns.net`)
+          Host(`testapifinmind.ddns.net`) && PathPrefix(`/docs`) || 
+          Host(`testapifinmind.ddns.net`) && PathPrefix(`/openapi.json`) || 
+          Host(`testapifinmind.ddns.net`)
         # api loading balance 的 port
         # traefik 的好處之一，會幫你處理分流
         - traefik.http.services.api-https.loadbalancer.server.port=80
