@@ -125,7 +125,7 @@ services:
     restart: always
     depends_on:
         - scheduler
-    command: uv run --env-file=.env airflow celery worker -q twse
+    command: uv run --env-file=.env airflow celery worker --queues twse
     # swarm 設定
     deploy:
       mode: replicated
@@ -142,7 +142,7 @@ services:
     restart: always
     depends_on:
         - scheduler
-    command: uv run --env-file=.env airflow celery worker -q tpex
+    command: uv run --env-file=.env airflow celery worker --queues tpex
     # swarm 設定
     deploy:
       mode: replicated
