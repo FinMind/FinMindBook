@@ -9,7 +9,7 @@ create-rabbitmq-docker-image:
 	docker build --no-cache -f rabbitmq/Dockerfile -t linsamtw/rabbitmq:14.3.3 .
 
 create-airflow-docker-image:
-	docker build --no-cache -f airflow/Dockerfile -t linsamtw/dataflow:14.3.4 .
+	docker build --no-cache -f airflow/Dockerfile -t linsamtw/dataflow3:14.3.4 .
 
 # push
 push-grafana-docker-image:
@@ -22,7 +22,7 @@ push-rabbitmq-docker-image:
 	docker push linsamtw/rabbitmq:14.3.3
 
 push-airflow-docker-image:
-	docker push linsamtw/dataflow:14.3.4
+	docker push linsamtw/dataflow3:14.3.4
 
 # deploy
 deploy-grafana-prometheus:

@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   initdb:
-    image: linsamtw/dataflow:12.8
+    image: linsamtw/dataflow3:12.8
     command: pipenv run airflow db init
     restart: on-failure
     # swarm 設定
@@ -14,7 +14,7 @@ services:
         - my_network
 
   create-user:
-    image: linsamtw/dataflow:12.8
+    image: linsamtw/dataflow3:12.8
     command: pipenv run airflow users create --username admin --firstname lin --lastname sam --role Admin -p admin --email finmind.tw@gmail.com
     depends_on:
       - initdb
@@ -47,7 +47,7 @@ services:
         - my_network
 
   webserver:
-    image: linsamtw/dataflow:12.8
+    image: linsamtw/dataflow3:12.8
     hostname: "airflow-webserver"
     command: pipenv run airflow webserver -p 8888
     depends_on:
@@ -84,7 +84,7 @@ services:
         - my_network
   
   scheduler:
-    image: linsamtw/dataflow:12.8
+    image: linsamtw/dataflow3:12.8
     hostname: "airflow-scheduler"
     command: pipenv run airflow scheduler
     depends_on:
@@ -104,7 +104,7 @@ services:
         - my_network
 
   worker:
-    image: linsamtw/dataflow:12.8
+    image: linsamtw/dataflow3:12.8
     hostname: "{{.Service.Name}}.{{.Task.Slot}}"
     restart: always
     depends_on:
@@ -120,7 +120,7 @@ services:
         - my_network
 
   crawler_twse:
-    image: linsamtw/dataflow:12.8
+    image: linsamtw/dataflow3:12.8
     hostname: "{{.Service.Name}}.{{.Task.Slot}}"
     restart: always
     depends_on:
@@ -137,7 +137,7 @@ services:
         - my_network
 
   crawler_tpex:
-    image: linsamtw/dataflow:12.8
+    image: linsamtw/dataflow3:12.8
     hostname: "{{.Service.Name}}.{{.Task.Slot}}"
     restart: always
     depends_on:

@@ -8,7 +8,7 @@ def create_docker_operator_task() -> (
 ):
     return DockerOperator(
         task_id="DockerOperator",
-        image="linsamtw/dataflow:12.7",
+        image="linsamtw/dataflow3:12.7",
         command="pipenv run python dataflow/crawler.py",
         # 每次執行時，先拉取最新的 docker image
         force_pull=True,
