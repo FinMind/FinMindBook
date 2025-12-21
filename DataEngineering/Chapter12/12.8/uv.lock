@@ -259,16 +259,17 @@ wheels = [
 
 [[package]]
 name = "apache-airflow-providers-celery"
-version = "3.0.0"
+version = "3.6.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "apache-airflow" },
     { name = "celery" },
     { name = "flower" },
+    { name = "google-re2" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/7a/05/d8cd601cd1707d74689b58cac0396838935ddcb4fd1a1e1edb04ccb1fc08/apache-airflow-providers-celery-3.0.0.tar.gz", hash = "sha256:e827386271030ba7c5a43c9a77b165acc670109776aa98682105c130d3b9572c", size = 9253, upload-time = "2022-06-13T18:55:11.143Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/fc/34/074ab4489c916e2b8a682e703e5d78c1038584f11c8a40440f3442dc193e/apache_airflow_providers_celery-3.6.0.tar.gz", hash = "sha256:7a5f4311799b8fb547dc84f90da7e4f7e974b73ede038714f1e5b89c32d8ac83", size = 24195, upload-time = "2024-02-15T15:45:54.116Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/09/2b/1378ce30d82cf4b3f7af2f642124ac7729b277e6fe05e167b7ed9bae8eca/apache_airflow_providers_celery-3.0.0-py3-none-any.whl", hash = "sha256:abd334e01c9aa4c706166ca82cd24de99b7388e3eaa55e93f6e1de7bb3558dd3", size = 12305, upload-time = "2022-06-13T18:53:01.92Z" },
+    { url = "https://files.pythonhosted.org/packages/c2/2a/2ab5364787f5eb5ccf4d7139effeb1f372e7dd2a2f55b02389da26b0f50e/apache_airflow_providers_celery-3.6.0-py3-none-any.whl", hash = "sha256:5a83112525711da36cced492e8e92b6e707bbc4a4b4d68f756f33eb5bdb81998", size = 32754, upload-time = "2024-02-15T15:44:42.64Z" },
 ]
 
 [[package]]
@@ -855,7 +856,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "apache-airflow", specifier = "==2.7.3" },
-    { name = "apache-airflow-providers-celery", specifier = "==3.0.0" },
+    { name = "apache-airflow-providers-celery", specifier = "==3.6.0" },
     { name = "apache-airflow-providers-docker", specifier = "==3.0.0" },
     { name = "celery", extras = ["redis"], specifier = ">=5.6.0" },
     { name = "flower", specifier = "==1.0.0" },

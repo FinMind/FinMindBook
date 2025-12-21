@@ -45,5 +45,8 @@ ARG PYTHON_DEPS=""
 ENV PYTHONPATH=/FinMindProject
 ENV AIRFLOW_HOME=${AIRFLOW_USER_HOME}
 
+# genenv
+RUN VERSION=RELEASE uv run python genenv.py
+
 # 再次設定工作目錄，確保後續命令在正確目錄下執行
 WORKDIR /FinMindProject/

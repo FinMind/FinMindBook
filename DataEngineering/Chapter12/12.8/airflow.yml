@@ -29,7 +29,7 @@ services:
         - my_network
 
   redis:
-    image: 'bitnami/redis:5.0'
+    image: 'bitnami/redis:latest'
     ports:
         - 6379:6379
     volumes:
