@@ -1,0 +1,15 @@
+[project]
+name = "11-5"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "loguru>=0.7.3",
+    "pandas>=2.3.3",
+    "pymysql>=1.1.2",
+    "requests>=2.32.5",
+    "sqlalchemy>=2.0.45",
+    "tqdm>=4.67.1",
+    "wget>=3.2",
+]
