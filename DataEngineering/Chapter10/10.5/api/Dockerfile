@@ -19,4 +19,4 @@ RUN uv sync
 RUN VERSION=RELEASE uv run python genenv.py
  
 # 預設執行的指令
-CMD ["uv", "run", "--env-file=.env", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8888"]
+CMD ["uv", "run", "--env-file=.env", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "80"]
