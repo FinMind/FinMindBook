@@ -37,7 +37,7 @@ services:
       # 未來可根據需求自行增加
       REDASH_WEB_WORKERS: 1
       # 修正 mysql 斷線問題
-      SQLALCHEMY_ENABLE_POOL_PRE_PING: True
+      SQLALCHEMY_ENABLE_POOL_PRE_PING: "True"
     networks:
         - my_network
 
@@ -64,7 +64,7 @@ services:
       REDASH_ADDITIONAL_QUERY_RUNNERS: redash.query_runner.python
       REDASH_WEB_WORKERS: 1
       # 修正 mysql 斷線問題
-      SQLALCHEMY_ENABLE_POOL_PRE_PING: True
+      SQLALCHEMY_ENABLE_POOL_PRE_PING: "True"
     networks:
         - my_network
 
@@ -90,7 +90,7 @@ services:
       QUEUES: "celery"
       WORKERS_COUNT: 1
       # 修正 mysql 斷線問題
-      SQLALCHEMY_ENABLE_POOL_PRE_PING: True
+      SQLALCHEMY_ENABLE_POOL_PRE_PING: "True"
     networks:
         - my_network
   
@@ -116,7 +116,7 @@ services:
       QUEUES: "scheduled_queries,schemas"
       WORKERS_COUNT: 1
       # 修正 mysql 斷線問題
-      SQLALCHEMY_ENABLE_POOL_PRE_PING: True
+      SQLALCHEMY_ENABLE_POOL_PRE_PING: "True"
     networks:
         - my_network
 
@@ -141,7 +141,7 @@ services:
       QUEUES: "queries"
       WORKERS_COUNT: 2
       # 修正 mysql 斷線問題
-      SQLALCHEMY_ENABLE_POOL_PRE_PING: True
+      SQLALCHEMY_ENABLE_POOL_PRE_PING: "True"
     networks:
         - my_network
 
