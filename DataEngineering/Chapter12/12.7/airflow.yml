@@ -2,7 +2,7 @@ version: '3.0'
 services:
   initdb:
     image: linsamtw/dataflow3:12.7
-    command: uv run airflow db init
+    command: uv run airflow db migrate
     restart: on-failure
     # swarm 設定
     deploy:
