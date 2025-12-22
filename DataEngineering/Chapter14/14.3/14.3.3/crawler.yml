@@ -35,7 +35,7 @@ services:
   sent_task:
     image: linsamtw/crawler3:7.2.1
     hostname: "sent_task"
-    command: uv run --env-file=.env python financialdata/producer.py taiwan_stock_price 2021-04-01 2023-04-12
+    command: uv run --env-file=.env python -m financialdata.producer taiwan_stock_price 2021-04-01 2023-04-12
     restart: on-failure
     # swarm 設定
     deploy:

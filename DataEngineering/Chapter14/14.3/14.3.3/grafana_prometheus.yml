@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   prometheus:
-    image: linsamtw/prometheus:14.3.3
+    image: linsamtw/prometheus3:14.3.3
     volumes:
       - prometheus_data:/prometheus
     ports:
@@ -29,7 +29,7 @@ services:
         - my_network
 
   grafana:
-    image: linsamtw/grafana:14.3.3
+    image: linsamtw/grafana3:14.3.3
     ports:
       - target: 3000
         published: 3000

@@ -2,7 +2,7 @@ version: '3'
 services:
 
   rabbitmq:
-    image: 'linsamtw/rabbitmq:14.3.3'
+    image: 'linsamtw/rabbitmq3:14.3.3'
     ports:
       - '5672:5672'
       - '15672:15672'
