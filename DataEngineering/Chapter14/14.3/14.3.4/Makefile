@@ -9,7 +9,7 @@ create-rabbitmq-docker-image:
 	docker build --no-cache -f rabbitmq/Dockerfile -t linsamtw/rabbitmq:14.3.3 .
 
 create-airflow-docker-image:
-	docker build --no-cache -f airflow/Dockerfile -t linsamtw/dataflow3:14.3.4 .
+	docker build --no-cache -f Dockerfile -t linsamtw/dataflow3:14.3.4 .
 
 # push
 push-grafana-docker-image:
@@ -41,4 +41,4 @@ deploy-crawler3:
 	docker stack deploy -c crawler.yml crawler
 
 deploy-airflow:
-	docker stack deploy -c airflow/airflow.yml airflow
+	docker stack deploy -c airflow.yml airflow

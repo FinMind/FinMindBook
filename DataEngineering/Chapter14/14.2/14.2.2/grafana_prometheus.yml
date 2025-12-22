@@ -1,36 +1,87 @@
-version: '3.0'
+version: '3.8'
+# docker-compose 規格版本
+# 3.8 是目前最常見、與 Docker 20+ / Swarm / WSL 都相容的版本
 
 services:
   prometheus:
-    image: prom/prometheus:v2.1.0
+    image: prom/prometheus:v2.52.0
+    # 使用 Prometheus 官方映像
+    # v2.52.0 為新格式（OCI / schema2），可避免 Docker deprecated image 警告
+
+    container_name: prometheus
+    # 指定容器名稱，方便使用 docker ps / docker logs prometheus 查看
+
     volumes:
       - prometheus_data:/prometheus
+      # 將 Prometheus 的資料目錄掛載成 Docker volume
+      # 用來保存時間序列資料（TSDB）
+      # 即使容器刪除，資料仍會保留
+
     ports:
       - target: 9090
         published: 9090
         mode: host
+        # 將容器內的 9090（Prometheus Web UI）
+        # 直接對外開在主機的 9090 port
+        # 瀏覽器可用 http://localhost:9090 存取
+
     user: root
+    # 以 root 身份執行容器
+    # 教學環境可保留，正式環境可移除以提升安全性
+
     restart: always
+    # 當容器異常停止或主機重開時，自動重新啟動
+
     networks:
-        - my_network
+      - my_network
+      # 指定使用自訂 Docker network
+      # 讓 Prometheus 能與 Grafana 或其他服務互相通訊
 
   grafana:
-    image: grafana/grafana:8.5.25
+    image: grafana/grafana:10.4.3
+    # 使用 Grafana 官方映像
+    # 10.x 為目前主流版本，介面與 Prometheus 相容性佳
+
+    container_name: grafana
+    # 指定容器名稱，方便管理與除錯
+
     ports:
       - target: 3000
         published: 3000
         mode: host
-    user: root
+        # 將 Grafana Web UI 對外開在 3000 port
+        # 瀏覽器可用 http://localhost:3000 存取
+
     environment:
-      # 設定密碼
+      - GF_SECURITY_ADMIN_USER=admin
+      # 設定 Grafana 管理者帳號
+
       - GF_SECURITY_ADMIN_PASSWORD=pass
+      # 設定 Grafana 管理者密碼
+      # 教學用可用簡單密碼，正式環境請務必修改
+
+    volumes:
+      - grafana_data:/var/lib/grafana
+      # Grafana 的資料目錄
+      # 用來保存 dashboard、datasource、帳號設定等
+      # 避免容器重建後設定消失
+
     restart: always
+    # 容器異常或主機重啟時自動重啟
+
     networks:
-        - my_network
+      - my_network
+      # 與 Prometheus 使用相同 network
+      # Grafana 才能透過服務名稱（prometheus）連線
 
 networks:
   my_network:
+  # 定義自訂 Docker network
+  # 用來隔離並管理這組監控服務
 
 volumes:
-  prometheus_data: {}
-    
+  prometheus_data:
+  # Prometheus 資料 volume（TSDB）
+
+  grafana_data:
+  # Grafana 設定與 dashboard 資料 volume

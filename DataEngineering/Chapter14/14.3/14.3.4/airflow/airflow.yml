@@ -113,12 +113,13 @@ services:
 
   worker:
     image: linsamtw/dataflow3:14.3.4
-    hostname: "{{.Service.Name}}.{{.Task.Slot}}"
     restart: always
     depends_on:
       - scheduler
       - airflow-statsd-exporter
-    command: uv run --env-file=.env airflow celery worker
+    hostname: "worker-{{.Task.Slot}}"
+    # 直接在 command 帶入參數，Swarm 會在啟動時自動把 {{...}} 換成實際的編號
+    command: sh -c "exec uv run --env-file=.env airflow celery worker -H $${HOSTNAME}"
     # swarm 設定
     deploy:
       mode: replicated
@@ -135,7 +136,8 @@ services:
     depends_on:
       - scheduler
       - airflow-statsd-exporter
-    command: uv run --env-file=.env airflow celery worker -q twse
+    # 直接在 command 帶入參數，Swarm 會在啟動時自動把 {{...}} 換成實際的編號
+    command: sh -c "exec uv run --env-file=.env airflow celery worker  --queues twse -H $${HOSTNAME}"
     # swarm 設定
     deploy:
       mode: replicated
@@ -153,7 +155,8 @@ services:
     depends_on:
       - scheduler
       - airflow-statsd-exporter
-    command: uv run --env-file=.env airflow celery worker -q tpex
+    # 直接在 command 帶入參數，Swarm 會在啟動時自動把 {{...}} 換成實際的編號
+    command: sh -c "exec uv run --env-file=.env airflow celery worker  --queues twse -H $${HOSTNAME}"
     # swarm 設定
     deploy:
       mode: replicated
